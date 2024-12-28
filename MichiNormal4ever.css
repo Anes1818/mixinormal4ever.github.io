@@ -1,0 +1,1213 @@
+/* إعدادات الجسم */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    height: 400vh; 
+    background: linear-gradient(to bottom, #3b4e9c,  #3c6a90, #191970, #000000); /* التدرج ينتهي بالأسود */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding: 0;
+}
+
+/* إعدادات البانر */
+.banner {
+    width: 100%;
+    height:auto;
+    background: url(https://i.postimg.cc/XYW05xbq/Green-White-Natural-Notes-Background-A4-Document-20241222-214607-0000-min.png) no-repeat center center;
+    background-size: 100% 100%; /* لتغطية كامل البانر بالصورة */
+    max-width: 980px; /* الحد الأقصى للعرض */
+    margin: 0 auto; /* توسيط البانر */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 20px; /* إضافة تباعد داخلي */
+    border-radius: 8px; /* زاوية مستديرة للبانر */
+    max-width: 1024px;
+    aspect-ratio: 3/0.7;
+    ;
+    
+}
+
+/* ضبط استجابة التصميم لأحجام الشاشات المختلفة */
+@media (max-width: 768px) {
+    .banner {
+        max-width: 100%; /* تكييف العرض للشاشات الصغيرة */
+        padding: 15px;
+    }
+}
+
+@media (max-width: 480px) {
+    .banner {
+        padding: 10px; /* تقليل التباعد للشاشات الصغيرة جدًا */
+    }
+}
+
+.nbghik {
+    margin: 0;
+    font-size: 2.8rem;
+    text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.5);
+    position: relative;
+}
+
+.batata { 
+    color: #000000;
+    font-family: cursive;
+    font-size:xx-large;
+}
+
+/* إعدادات الخط الفاصل */
+.divider {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: absolute; /* لضبط المكان بدقة */
+    top: 190%; /* عند النقطة التي يبدأ فيها التدرج الأزرق الغامق */
+    left: 0;
+    transform: translateY(-50%); /* لضمان التوسيط العمودي */
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw; /* حجم الخط مستجيب بناءً على عرض الشاشة */
+}
+
+.middle-section {
+    width: 100%;
+    height: 30vh; /* نسبة مئوية من ارتفاع الشاشة */
+    background-image: url(https://i.postimg.cc/KYqM7884/Handdrawn-Blue-Sky-Stars-Good-Night-Facebook-Post-20241222-230539-0000.png);
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    margin: 10px 0; /* مسافة بين الخطين */
+    align-content: center;
+    position: relative;
+    display: flex;
+    font-size: 4vw; /* حجم الخط مستجيب بناءً على عرض الشاشة */
+    text-align: center;
+    max-width: 100%;
+    max-height: 40vh; /* لضبط الحد الأقصى للطول */
+}
+
+/* BOTTON T3 MEMO HUB*/
+.creative-button {
+    background: linear-gradient(to right, #000033, #003366);
+    color: white;
+    font-size: 1.2rem;
+    font-family: 'Cairo', sans-serif;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+    
+}
+
+.creative-button:hover {
+    transform: scale(1.1);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
+}
+/* إعدادات حاوية الستيكر */
+/* الحاوية التي تحتوي على الستيكر */
+.sticker-wrapper {
+    position: absolute;
+    top: calc(133%); /* تحديد الموقع أعلى الخط مباشرة */
+    left: 50%; /* تحديد الموقع الأفقى إلى المنتصف */
+    transform: translateX(-50%); /* إبقاء الحاوية في المنتصف */
+    z-index: 10; /* التأكد من الظهور */
+    width: 650px; /* نفس عرض الستيكر */
+    height: 300px; /* نفس ارتفاع الستيكر */
+    display: block; /* استخدام display:block بدلاً من flex */
+}
+
+/* إعدادات الستيكر */
+.sticker {
+    width: 100%; /* تأكيد أن الستيكر يغطي كامل عرض الحاوية */
+    height: 100%; /* تأكيد أن الستيكر يغطي كامل ارتفاع الحاوية */
+    opacity: 1; /* مرئي دائمًا */
+    transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* تأثيرات سلسة */
+    box-shadow: 0px 10px 5px -5px rgba(255, 255, 0, 0.5);
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+}
+
+/* إعدادات كلمة Anes */
+.anes {
+    display: none; /* مخفية بشكل افتراضي */
+    position: absolute;
+    top: 50%; /* محاذاة عمودية */
+    left: 50%; /* محاذاة أفقية */
+    color: gold; /* لون النص */
+    font-size: 3rem; /* حجم النص */
+    font-weight: bold; /* زيادة سمك الخط */
+    transform: translate(-50%, -50%); /* محاذاة النص بشكل دقيق في المنتصف */
+    text-shadow: 2px 2px 10px rgba(0, 0, 0, 0.7); /* تأثير الظل للنص */
+    z-index: 10; /* تأكيد أن النص يكون فوق الستيكر */
+}
+
+/* عند تمرير الفأرة على حاوية الستيكر */
+.sticker-wrapper:hover .sticker {
+    opacity: 1; /* إظهار الستيكر */
+    transform: scale(1.1); /* تكبير الستيكر */
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1)); /* تحسين تأثير الظل */
+}
+
+/* عند تمرير الفأرة على حاوية الستيكر، إظهار كلمة Anes */
+.sticker-wrapper:hover .anes {
+    display: block; /* إظهار كلمة Anes عند التمرير */
+}
+/* إعدادات الخيط */
+.line {
+    position: absolute;
+    width: 2px; /* عرض الخيط */
+    height: 250px; /* طول الخيط */
+    background-color: #aca4b1; /* لون الخيط (أبيض) */
+    top: 205%; /* موقع البداية من الشريط */
+    left: 50%; /* توسيط الخيط في منتصف الشريط */
+    transform: translateX(-50%);
+    box-shadow: 0px 0px 5px 0px  #aca4b1;
+}
+
+.moon-sticker-container {
+    position: absolute;
+    top: calc(205% + 248px); /* إحداثيات الستيكر */
+    left: 50%; /* لضمان محاذاة الستيكر في المنتصف */
+    transform: translateX(-50%); /* محاذاة دقيقة */
+    cursor: pointer;
+    z-index: 1010;
+    pointer-events: auto;
+}
+
+.moon-sticker {
+    width: 200px; /* حجم الستيكر */
+    height: auto;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+    pointer-events: none;
+    transition: transform 0.3s ease, filter 0.3s ease; /* حركة سلسة للتحولات */
+}
+
+.khadija {
+    display: none; /* الحرف مخفي بشكل افتراضي */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 2rem; /* حجم الحرف */
+    color: rgb(212, 210, 168); /* لون الحرف */
+    font-weight: bold;
+}
+
+.moon-sticker-container:hover .khadija {
+    display: block; /* إظهار النص عند التمرير */
+}
+
+.moon-sticker-container:hover .moon-sticker {
+    transform: scale(1.1); /* تكبير الستيكر عند التمرير */
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1)); /* زيادة تأثير الظل */
+}
+
+.moon-sticker-container:active .moon-sticker {
+    transform: scale(2); /* تصغير الستيكر عند النقر */
+    filter: drop-shadow(0 0 200px rgba(255, 255, 0, 1)); /* تكبير الظل باللون الأصفر */
+    transition: transform 0.2s ease, filter 0.2s ease; /* حركة سلسة للنقر */
+}
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100vh; /* تغطية كامل الصفحة من مستوى القمر */
+    top: 205%; /* يبدأ من مستوى القمر */
+    left: 0;
+    overflow: hidden; /* منع أي عناصر تتعدى الحدود */
+}
+
+
+
+
+
+.stars::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background: radial-gradient(circle, #fff 1px, transparent 1px);
+    background-size: 50px 50px; /* حجم المسافة بين النجوم */
+    animation: twinkling 5s infinite ease-in-out; /* حركة النجوم */
+}
+
+@keyframes twinkling {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.01);
+    }
+}
+/* so7obe*/
+.clouds {
+    position: absolute;
+    top: 290%; /* بداية الشريط بعد النجوم مباشرة */
+    left: 0;
+    width: 100%;
+    height: 300px; /* سمك السحب، يمكن تعديله حسب الرغبة */
+    background-image: url(https://i.postimg.cc/rmSNy5Xb/Clipped-image-20241224-161745.png); /* ضع رابط الصورة هنا */
+    background-repeat: 4;
+    background-position: center center; /* توسيط الصورة */
+    background-size: contain; /* التأكد من تغطية المساحة بالكامل */
+    z-index: 1; /* تأكد من أن السحب فوق الخلفية ولكن أسفل العناصر الأخرى مثل الستيكر */
+    overflow: hidden; /* منع السحب من الخروج عن الحدود */
+}
+
+
+@keyframes cloudAnimation {
+    0% {
+        left: 0;
+    }
+    100% {
+        left: -100%; /* ضمان أن السحب لا تخرج عن الصفحة */
+    }
+}
+
+.clouds::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 100%;
+    background: inherit;
+    animation: cloudAnimation 30s linear infinite; /* حركة السحب */
+    top: 0;
+    left: 0;
+}
+
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100vh; /* تغطية كامل الصفحة */
+    top: 205%; /* يبدأ من مستوى القمر */
+    left: 0;
+    overflow: hidden; /* منع أي عناصر تتعدى الحدود */
+}
+
+.stars::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background: radial-gradient(circle, #fff 1px, transparent 1px);
+    background-size: 50px 50px; /* حجم المسافة بين النجوم */
+    animation: twinkling 5s infinite ease-in-out; /* حركة النجوم */
+}
+
+
+@keyframes twinkling {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.01);
+    }
+}
+
+.stars {
+    position: absolute;
+    width: 100%;
+    height: 100vh; /* تغطية كامل الصفحة */
+    top: 205%; /* يبدأ من مستوى القمر */
+    left: 0;
+    overflow: hidden; /* منع أي عناصر تتعدى الحدود */
+}
+
+.stars::after {
+    content: '';
+    position: absolute;
+    width: 200%;
+    height: 200%;
+    top: -50%;
+    left: -50%;
+    background: radial-gradient(circle, #fff 1px, transparent 1px);
+    background-size: 50px 50px; /* حجم المسافة بين النجوم */
+    animation: twinkling 5s infinite ease-in-out; /* حركة النجوم */
+}
+
+/* mini fake njime twink lik a freak*/
+@keyframes twinkling {
+    0%, 100% {
+        opacity: 0.3;
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.01);
+    }
+}
+
+/* njum*/
+.star-stickers {
+    position: absolute;
+    top: calc(205%); 
+    left: 50%;
+    transform: translateX(-50%); 
+    width: 100%; 
+    height: 100vh; 
+    z-index: 999; 
+}
+
+/* إعدادات ستيكرات النجوم */
+.star-sticker {
+    top: 200%;
+    width: 15px; /* نصف حجم القمر */
+    height: 15px;
+    opacity: 1; /* مرئية دائمًا */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+    position: absolute;
+    pointer-events:auto;
+
+}
+
+/* توزيع النجوم بشكل عشوائي */
+.star1 {
+    top: calc(12% + 20px); /* أعلى القمر */
+    left: 10%; /* على اليسار */
+    width: 50px; /* نصف حجم القمر */
+    height: 50px;
+    pointer-events:auto;
+    z-index: 1010;
+
+}
+
+.star2 {
+    top: calc(21% + 20px); /* أسفل القمر */
+    left: 67%; /* في المنتصف */
+    width: 50px; /* نصف حجم القمر */
+    height: 50px;
+    z-index: 999
+}
+
+.star3 {
+    top: calc(50% + 20px); /* فوق القمر */
+    left: 80%; /* على اليمين */
+    width: 50px; /* نصف حجم القمر */
+    height: 50px
+}
+
+.star4 {
+    top: calc(21% + 50px); /* أسفل القمر */
+    left: 30%; /* في المنتصف */
+    width: 50px; /* نصف حجم القمر */
+    height: 50px
+}
+.star5 {
+    top: calc(29% + 50px); /* أسفل القمر */
+    left: 39%; /* في المنتصف */
+    width: 50px; /* نصف حجم القمر */
+    height: 50px
+}
+.star6 {
+    top: calc(50% + 20px); /* فوق القمر */
+    left: 10%; /* على اليمين */
+    width: 50px; /* نصف حجم القمر */
+    height: 50px
+}
+.star7{
+    top: calc(40% + 20px); /* فوق القمر */
+    left: 87%; /* على اليمين */
+    width: 50px; /* نصف حجم القمر */
+    height: 50px
+}
+.star8 {
+    top: calc(10% + 20px); /* فوق القمر */
+    left: 90%; /* على اليمين */
+    width: 50px; /* نصف حجم القمر */
+    height: 50px
+}
+.star9 {
+    top: calc(10% + 20px); /* فوق القمر */
+    left: 25%; /* على اليمين */
+    width: 50px; /* نصف حجم القمر */
+    height: 50px
+}
+.star10 {
+    top: calc(10% + 20px); /* فوق القمر */
+    left: 58%; /* على اليمين */
+    width: 50px; /* نصف حجم القمر */
+    height: 50px
+}
+/* عند تمرير الفأرة على ستيكرات النجوم */
+.star-sticker:hover .star-sticker {
+    transform: scale(1.1); /* تكبير ستيكر النجمة عند التمرير */
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 1)); /* زيادة تأثير الظل */
+}
+/* الحاوية الرئيسية لزر القائمة */
+.menu-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+/* زر القائمة */
+.menu-button {
+    background: linear-gradient(to right, #003366, #000033);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease, transform 0.3s ease;
+}
+
+/* تأثير عند تمرير الفأرة على الزر */
+.menu-button:hover {
+    background: linear-gradient(to right, #0055cc, #001144);
+    transform: scale(1.05);
+}
+
+/* خيارات القائمة */
+.menu-options {
+    display: none; /* إخفاء القائمة افتراضيًا */
+    position: absolute;
+    top: 50px; /* أسفل الزر مباشرة */
+    right: 0;
+    background: #003366;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+/* الروابط داخل القائمة */
+.menu-options a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    transition:  1s ease, color 1s ease;
+}
+
+/* تأثير عند تمرير الفأرة على الروابط */
+.menu-options a:hover {
+    background: #0055cc;
+    color: #ffffff;
+}
+
+/* عرض القائمة عند تمرير الفأرة على الزر */
+.menu-container:hover .menu-options {
+    display: block;
+    transition: all 1s;
+}
+
+.lard{width: 100%;
+    height: 10px; /* عرض الخط */
+    background-color: #050505; /* اللون البني */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* إضافة ظل للخط */
+    top: 0px;
+    position: relative;
+} 
+.cat-sticker {
+    position: absolute;
+    bottom: 100%; /* وضع الصورة فوق الخط */
+    width: 200px; /* عرض الصورة */
+    height: auto;
+}
+  
+.container {
+    position: relative;
+    width: 80%;
+    height: 500px;
+    overflow: hidden;
+    border: 0px solid #ff9a9e,#fad0c4;
+    border-radius: 15px;
+    top: 50px;
+    object-fit: cover;
+}
+
+.image-box {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+.image-box:nth-child(1) {
+    animation: changeImage 16s infinite 0s;
+}
+
+.image-box:nth-child(2) {
+    animation: changeImage 16s infinite 4s;
+}
+
+.image-box:nth-child(3) {
+    animation: changeImage 16s infinite 8s;
+}
+
+.image-box:nth-child(4) {
+    animation: changeImage 16s infinite 12s;
+}
+
+.image {
+    max-width: 100%;
+    max-height: 100%;
+    box-shadow: 0 10px 20px#000000;
+    object-fit:cover;
+    object-position: center;
+    position: relative;
+}
+
+.text {
+    position: absolute;
+    bottom: 50px;
+    color: white;
+    padding: 5px 10px;
+    border-radius: 50%;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    font-family: cursive;
+    font-size: xx-large;
+    top: 50%;
+}
+
+@keyframes changeImage {
+    0%, 20% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    25%, 100% {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+}
+
+@keyframes showText {
+    0%, 20% {
+        opacity: 1;
+    }
+    25%, 100% {
+        opacity: 0;
+    }
+}
+
+.image-box:nth-child(1) .text {
+    animation: showText 16s infinite 0s;
+}
+
+.image-box:nth-child(2) .text {
+    animation: showText 16s infinite 4s;
+}
+
+.image-box:nth-child(3) .text {
+    animation: showText 16s infinite 8s;
+}
+
+.image-box:nth-child(4) .text {
+    animation: showText 16s infinite 12s;
+}
+
+/* الحاوية */
+.background-text {
+    position: relative;
+    z-index: -1; /* يجعل الخلفية تحت العناصر الأخرى */
+    display: flex;
+    
+    align-items: center;
+    height: 100%; /* حسب المساحة التي تريدها */
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  /* الحروف */
+ /* الحاوية */
+.background-text {
+    position: relative;
+    z-index: -1; /* يجعل الخلفية تحت العناصر الأخرى */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%; /* حسب المساحة التي تريدها */
+    width: 100%;
+    overflow: hidden;
+  }
+  
+  /* الحروف */
+  .background-text .letter {
+    font-size: 200px; /* حجم الحروف */
+    font-weight: bold;
+    color: rgba(0, 0, 0, 0.05); /* لون شفاف ليكون خلفية خفيفة */
+    position: absolute;
+    transform: rotate(-15deg); /* دوران بسيط لإضافة حركة */
+  }
+  
+  /* تحديد مواقع الحروف */
+  .background-text .letter:nth-child(1) {
+    top: 3%;
+    left: 20%;
+  }
+  
+  .background-text .letter:nth-child(2) {
+   top:  0%;
+    right: 20%;
+  }
+ /* الحاوية الرئيسية */
+/* الحاوية الرئيسية */
+
+/* الحاوية الرئيسية */
+.butterfly {
+    position: absolute;
+    width: 100%;
+    height: 100vh; /* استخدام وحدات مرنة */
+    overflow: hidden;
+    border: 0px solid #ff9a9e, #fad0c4;
+    border-radius: 15px;
+    top: 40vh; /* المسافة من الأعلى باستخدام وحدات مرنة */
+  
+  }
+  
+  /* khadijaaaaaa when 9a3ed seting position t3 buterfkys  sra afunyy problemmm ta3i 9a3da ttbe3 ta3kk cz of position settings >~<*/
+  .t3i {
+    position: absolute;
+    top: 10%; 
+    left: 5%; 
+    width: 20%; /* حجم مرن للفراشة */
+    height: auto; /* الحفاظ على نسبة الطول إلى العرض */
+    filter: drop-shadow(0 0 5px rgba(199, 223, 170, 0.8));
+    transition: transform 0.3s ease, filter 0.3s ease; /* إضافة حركة سلسة */
+    z-index: 999;
+    cursor: pointer;
+  }
+  
+  
+  
+  
+  
+ 
+  .t3k {
+    position: absolute;
+    top: 21%; 
+    left: 70%; 
+    width: 22%; /* حجم مرن للفراشة */
+    height: auto; 
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
+    transition: transform 0.3s ease, filter 0.3s ease; /* إضافة حركة سلسة */
+    z-index: 999;
+    cursor: pointer;
+  }
+  
+  
+  
+  /* تأثير التمرير (Hover) */
+  .t3i:hover, .t3k:hover {
+    transform: scale(1.1); /* تكبير العنصر قليلاً */
+    filter: drop-shadow(0 0 10px rgba(255, 200, 200, 0.9)); /* زيادة الظل */
+  }
+  
+  /* تأثير الضغط (Active) */
+  .t3i:active, .t3k:active {
+    transform: scale(0.95); /* تصغير العنصر قليلاً عند الضغط */
+    filter: drop-shadow(0 0 15px rgba(255, 150, 150, 1)); /* ظلال أقوى */
+  }
+  /* لجعل التصميم متجاوبًا */
+  @media screen and (max-width: 768px) {
+    .t3i  {
+      width: 30%; /* تصغير الحجم للشاشات الأصغر */
+      left: -10%;}
+        .t3k{ width: 30%; /* تصغير الحجم للشاشات الأصغر */
+        left: 70%;}
+  
+    .butterfly {
+      height: 60vh; /* تعديل الارتفاع */
+      top: 30vh;
+    }}
+  
+  
+  @media screen and (max-width: 480px) {
+    .t3i {
+      width: 40%; /* حجم أصغر للهواتف */
+      left: -15%;
+      .t3k{ width: 30%; /* تصغير الحجم للشاشات الأصغر */
+        left: 70%;}
+    }
+  
+    .butterfly {
+      height: 70vh; /* تكبير الحاوية قليلاً */
+      top: 20vh;
+    }
+    .t3k{ width: 30%; /* تصغير الحجم للشاشات الأصغر */
+        left: 70%;}
+  }
+  /* تصميم البانر مع حركة الأمواج */
+/* تصميم البانر مع تكرار الأمواج */
+.waves {
+    width: 100%;
+    height: 200px;
+    background: url(https://i.postimg.cc/vmWfP1wJ/06324b73101b11adad017e08e4b1e6c0.jpg) repeat-x;
+    background-size: 100% auto; /* ضبط الخلفية لتتناسب مع العرض */
+    border-radius: 0;
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    padding: 20px;
+    border-radius: 8px;
+    animation: wave-movement 5s infinite linear;
+}
+
+@keyframes wavesAnimation {
+    0% {
+        transform: translateX(0); /* بداية الحركة من اليسار */
+    }
+    100% {
+        transform: translateX(-100%); /* انتقال كامل نحو اليسار */
+    }
+}
+
+
+/* تصميم النص المتوهج */
+.batata2 {
+    color: #ffffff;
+    font-family: cursive;
+    font-size: xx-large;
+    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 
+                 0 0 10px rgba(255, 255, 255, 0.6), 
+                 0 0 15px rgba(255, 255, 0, 0.8), 
+                 0 0 20px rgba(255, 255, 0, 1);
+    animation: text-glow 1.5s infinite alternate;
+}
+
+/* توهج النص المتحرك */
+@keyframes text-glow {
+    0% {
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 
+                     0 0 10px rgba(255, 255, 255, 0.6), 
+                     0 0 15px rgba(255, 255, 0, 0.8), 
+                     0 0 20px rgba(255, 255, 0, 1);
+    }
+    100% {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 1), 
+                     0 0 20px rgba(255, 255, 255, 1), 
+                     0 0 25px rgba(255, 255, 0, 1), 
+                     0 0 30px rgba(255, 255, 0, 1);
+    }
+}
+
+/* ضبط استجابة التصميم لأحجام الشاشات المختلفة */
+@media (max-width: 100%) {
+    .waves {
+        max-width: 100%;
+        padding: 15px;
+    }
+
+    .batata2 {
+        font-size: large;
+    }
+}
+
+@media (max-width: 480px) {
+    .waves {
+        padding: 10px;
+    }
+
+    .batata2 {
+        font-size: medium;
+    }
+}
+/* إعدادات الجسم */
+.body2 {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    color: white;
+    height: 200vh; 
+    background: linear-gradient(to bottom, #4e5984, #191970, #000000); /* التدرج ينتهي بالأسود */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: start;
+    padding: 0;}
+    .carrot{ 
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 3cm;
+        color: #000000;
+    }.star10 {
+        top: calc(12% + 20px); /* أعلى القمر */
+        left: 10%; /* على اليسار */
+        width: 50px; /* نصف حجم القمر */
+        height: 50px;
+        pointer-events:auto;
+        z-index: 1010;
+    
+    }
+    
+    .star20 {
+        top: calc(29% + 20px); /* أسفل القمر */
+        left: 97%; /* في المنتصف */
+        width: 50px; /* نصف حجم القمر */
+        height: 50px;
+        z-index: 999
+    }
+    
+    .star30 {
+        top: calc(50% + 20px); /* فوق القمر */
+        left: 80%; /* على اليمين */
+        width: 50px; /* نصف حجم القمر */
+        height: 50px
+    }
+    
+    .star4 {
+        top: calc(21% + 50px); /* أسفل القمر */
+        left: 15%; /* في المنتصف */
+        width: 50px; /* نصف حجم القمر */
+        height: 50px
+    }
+    .star50 {
+        top: calc(29% + 50px); /* أسفل القمر */
+        left: 17%; /* في المنتصف */
+        width: 50px; /* نصف حجم القمر */
+        height: 50px
+    }
+    .star60 {
+        top: calc(50% + 20px); /* فوق القمر */
+        left: 18%; /* على اليمين */
+        width: 50px; /* نصف حجم القمر */
+        height: 50px
+    }
+    .star70{
+        top: calc(40% + 20px); /* فوق القمر */
+        left: 87%; /* على اليمين */
+        width: 50px; /* نصف حجم القمر */
+        height: 50px
+    }
+    .star80 {
+        top: calc(28% + 20px); /* فوق القمر */
+        left: 90%; /* على اليمين */
+        width: 50px; /* نصف حجم القمر */
+        height: 50px
+    }
+    .star90 {
+        top: calc(50% + 20px); /* فوق القمر */
+        left: 9%; /* على اليمين */
+        width: 50px; /* نصف حجم القمر */
+        height: 50px
+    }
+    .star100 {
+        top: calc(10% + 20px); /* فوق القمر */
+        left: 88%; /* على اليمين */
+        width: 50px; /* نصف حجم القمر */
+        height: 50px
+    }
+    .star-stickers2 {
+        top: 50%;
+        width: 100%; /* نصف حجم القمر */
+        height: 1000px;
+        opacity: 1; /* مرئية دائمًا */
+        transition: transform 0.3s ease, box-shadow 0.3s ease;
+        filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+        position: absolute;
+        pointer-events:auto;}/* styles.css */
+
+        /* تنسيق الحاوية التي تحتوي على الفيديو */
+        .video-container {
+            display: flex;
+            justify-content: center; /* توسيط أفقياً */
+            align-items:center; /* توسيط عمودياً */
+            height: auto; /* ملء الشاشة */
+            width: 50%; /* ملء العرض */
+            left: auto;
+            background: #000; /* خلفية سوداء لتظهر الفيديو بوضوح */
+        }
+        
+        iframe {
+            width: 80%; /* عرض الفيديو بنسبة 80% من الشاشة */
+            height: 45vw; /* نسبة العرض إلى الارتفاع 16:9 */
+            max-width: 1280px; /* أقصى عرض للفيديو */
+            max-height: 720px; /* أقصى ارتفاع للفيديو */
+            border: none; /* إزالة الحدود */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* إضافة ظل خفيف حول الفيديو */
+            border-radius: 10px; /* حواف مستديرة */
+        }
+.body3 {
+    margin: 0;
+    font-family: "Arial", sans-serif;
+    background:  linear-gradient(to bottom, #3b4e9c,  #3c6a90, #2b0a5d, #000000); /* التدرج ينتهي بالأسود */
+    
+    height: 370vh;
+    color: #333;
+    flex-direction: column;
+  }
+  
+  .container4 {
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    top: 100px;
+    margin-top: 150px;
+  
+}
+
+header {
+    text-align: center;
+    margin-bottom: 50px;
+}
+
+header h1 {
+    font-size: 3rem;
+    color: #444;
+}
+
+header p {
+    font-size: 1.5rem;
+    color: #666;
+}
+
+.grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* عنصران في كل سطر */
+    gap: 30px; /* مسافة أكبر بين العناصر */
+    width: 100%;
+    max-width: 1200px;
+}
+
+.item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-decoration: none;
+    background: #000000;
+    border-radius: 20px;
+    padding: 20px;
+    box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.item:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
+}
+
+.item img {
+    width: 350px; /* تكبير الصورة */
+    height: 350px; /* تكبير الصورة */
+    border-radius: 20ox;
+    margin-bottom: 15px;
+}
+
+.item p {
+    margin: 0;
+    font-size: 1.3rem; /* تكبير النص */
+    color: #9b9b9b;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+/* تصميم خاص للأجهزة الصغيرة */
+@media (max-width: 768px) {
+    .grid {
+        grid-template-columns: 1fr; /* عنصر واحد في كل سطر */
+        gap: 20px; /* تقليل المسافات */
+    }
+
+    header h1 {
+        font-size: 2rem; /* تصغير حجم النص */
+    }
+
+    header p {
+        font-size: 1.2rem; /* تصغير النص */
+    }
+
+    .item img {
+        width: 250px; /* تقليل حجم الصورة */
+        height: 250px; /* تقليل حجم الصورة */
+    }
+
+    .item p {
+        font-size: 1rem; /* تصغير النص */
+    }
+}
+
+@media (max-width: 480px) {
+    header h1 {
+        font-size: 1.8rem;
+    }
+
+    header p {
+        font-size: 1rem;
+    }
+
+    .item img {
+        width: 200px;
+        height: 200px;
+    }
+
+    .item p {
+        font-size: 0.9rem;
+    }
+}
+
+  
+ 
+
+.cat-sticker1 {
+    position: absolute;
+    bottom: 100%; /* وضع الصورة فوق الخط */
+    width: 200px; /* عرض الصورة */
+    height: auto;}
+
+    .lard1 {
+        width: 100%;
+        height: 10px; /* عرض الخط */
+        left: 0;
+        background-color: #050505; /* اللون البني */
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* إضافة ظل للخط */
+        top: 280px;
+        position: absolute;
+    }
+    
+    /* تصميم خاص للأجهزة الصغيرة */
+    @media (max-width: 768px) {
+        .lard1 {
+            height: 8px; /* تقليل عرض الخط */
+            top: 250px; /* تعديل الموضع ليناسب الأجهزة الصغيرة */
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .lard1 {
+            height: 6px; /* تقليل عرض الخط أكثر للأجهزة الصغيرة جدًا */
+            top: 220px; /* تعديل الموضع للأجهزة الأصغر */
+        }
+    }
+    .star-container-khadija {
+        position: relative;
+        width: 100%;
+        height: 900px; /* ارتفاع الحاوية */
+        overflow: hidden; /* لإخفاء الأجزاء الزائدة */
+        background: transparent; /* خلفية شفافة */
+      }
+      
+      .star-khadija, .clickable-khadija {
+        position: absolute;
+        width: 50px; /* عرض النجمة */
+        height: 50px; /* ارتفاع النجمة */
+      }
+      
+      .star-khadija:nth-child(1) { top: 10%; left: 5%; }
+      .star-khadija:nth-child(2) { top: 20%; left: 15%; }
+      .star-khadija:nth-child(3) { top: 30%; left: 25%; }
+      .star-khadija:nth-child(4) { top: 40%; left: 35%; }
+      .star-khadija:nth-child(5) { top: 50%; left: 45%; }
+      .star-khadija:nth-child(6) { top: 60%; left: 85%; }
+      .star-khadija:nth-child(7) { top: 70%; left: 65%; }
+      .star-khadija:nth-child(8) { top: 70%; left: 15%; }
+      .star-khadija:nth-child(9) { top: 60%; left: 25%; }
+      .star-khadija:nth-child(10) { top: 15%; left: 80%; }
+      .star-khadija:nth-child(11) { top: 25%; left: 70%; }
+      .star-khadija:nth-child(12) { top: 35%; left: 60%; }
+      .star-khadija:nth-child(13) { top: 45%; left: 50%; }
+      .star-khadija:nth-child(14) { top: 15%; left: 90%; }
+      .clickable-khadija { top: 70%; left: 90%; }
+      
+      .clickable-khadija {
+        cursor: pointer;
+        transition: transform 0.3s;
+           
+          }
+      
+      
+      .clickable-khadija:hover {
+        transform: scale(1.2); /* تكبير النجمة عند تمرير الماوس */
+      }
+     /* تصميم الصورة في وضع ملء الشاشة */
+.modal {
+    display: none; /* مخفي بشكل افتراضي */
+    position: fixed; /* ثابت على الشاشة */
+    z-index: 1000; /* وضعها فوق المحتويات الأخرى */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.8); /* خلفية شبه شفافة */
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* عند النقر على الرابط، يظهر الـ Modal */
+  #imageModal:target {
+    display: flex; /* عرض الـ Modal عند التفاعل مع الرابط */
+  }
+  
+  .modal-content {
+    max-width: 80%;
+    max-height: 80%;
+    margin: auto;
+    display: block;
+  }
+  
+  .close {
+    position: absolute;
+    top: 20px;
+    right: 40px;
+    color: #fff;
+    font-size: 40px;
+    font-weight: bold;
+    cursor: pointer;
+  }
+  
+  .close:hover,
+  .close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+  }
+  .cm{
+    bottom: 0px;
+    position: absolute;
+  }
+  /* تصميم الفوتر */
+ /* الفوتر */
+.footer1 {
+    width: 100%;
+
+  bottom: 0;
+    color: white; /* لون النص */
+    display: flex;
+    flex-direction: column; /* ترتيب النصوص عموديًا */
+    justify-content: center; /* توسيط النص عموديًا */
+    align-items: center; /* توسيط النص أفقيًا */
+    padding: 20px 0; /* مسافة داخلية */
+    font-size: 1.2rem;
+    font-family: 'Arial', sans-serif;
+    text-align: center; /* توسيط النص داخل الفوتر */
+    position: relative; /* لا تستخدم الثبات، ليكون في نهاية الصفحة */
+    margin-top: 0px; /* مساحة بين محتوى الصفحة والفوتر */
+}
+
+.batata22 {
+    margin: 5px 0; /* المسافة بين النصوص */
+    font-family: 'Arial', sans-serif;
+    color: white;
+    text-shadow: 0 0 5px #ff0000, 0 0 10px #ff0000, 0 0 15px #ff0000, 0 0 20px #ff4d4d, 0 0 30px #ff4d4d, 0 0 40px #ff4d4d, 0 0 50px #ff4d4d, 0 0 75px #ff4d4d; /* تأثير التوهج */
+    transition: text-shadow 0.3s ease-in-out; /* تأثير التوهج عند التحويم */
+    position: relative;
+}
+
+.batata22:hover {
+    text-shadow: 0 0 10px #ff8000, 0 0 15px #ff8000, 0 0 20px #ff8000, 0 0 30px #ff8000, 0 0 40px #ff8000, 0 0 50px #ff8000, 0 0 75px #ff8000; /* تغيير التوهج عند تحويم الفأرة */
+}
