@@ -4,7 +4,7 @@ body {
     font-family: Arial, sans-serif;
     color: white;
     height: 400vh; 
-    background: linear-gradient(to bottom, #3b4e9c,  #3c6a90, #191970, #000000); /* التدرج ينتهي بالأسود */
+    background: linear-gradient(to bottom, #4a6ea3,  #4b8dc6, #2b1a82, #000000); /* التدرج ينتهي بالأسود */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -925,11 +925,13 @@ body {
         /* تنسيق الحاوية التي تحتوي على الفيديو */
         .video-container {
             display: flex;
+            margin-top: 40px;
             justify-content: center; /* توسيط أفقياً */
             align-items:center; /* توسيط عمودياً */
             height: auto; /* ملء الشاشة */
-            width: 50%; /* ملء العرض */
-            left: auto;
+            width: 40%; /* ملء العرض */
+            z-index: 1010;
+            left: 200px;
             background: #000; /* خلفية سوداء لتظهر الفيديو بوضوح */
         }
         
@@ -1162,7 +1164,7 @@ header p {
   
   .close {
     position: absolute;
-    top: 20px;
+    top: 50px;
     right: 40px;
     color: #fff;
     font-size: 40px;
@@ -1211,3 +1213,47 @@ header p {
 .batata22:hover {
     text-shadow: 0 0 10px #ff8000, 0 0 15px #ff8000, 0 0 20px #ff8000, 0 0 30px #ff8000, 0 0 40px #ff8000, 0 0 50px #ff8000, 0 0 75px #ff8000; /* تغيير التوهج عند تحويم الفأرة */
 }
+    
+    
+.creative-button1 {
+    background: linear-gradient(to right, #000033, #003366);
+    color: white;
+    font-size: 1.2rem;
+    font-family: 'Cairo', sans-serif;
+    padding: 15px 30px;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: transform 0.3s, box-shadow 0.3s;
+  z-index: 1010;
+    
+}
+.divider1 {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    position: absolute; /* لضبط المكان بدقة */
+    top: 180%; /* عند النقطة التي يبدأ فيها التدرج الأزرق الغامق */
+    left: 0;
+    transform: translateY(-50%); /* لضمان التوسيط العمودي */
+    align-items: center;
+    justify-content: center;
+    font-size: 2vw; /* حجم الخط مستجيب بناءً على عرض الشاشة */
+}
+
+.middle-section1{
+    width: 100%;
+    height: 30vh; 
+    background-image: url(https://i.postimg.cc/KYqM7884/Handdrawn-Blue-Sky-Stars-Good-Night-Facebook-Post-20241222-230539-0000.png);
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+    margin: 10px 0; /* مسافة بين الخطين */
+    align-content: center;
+    position: relative;
+    display: flex;
+    font-size: 4vw; /* حجم الخط مستجيب بناءً على عرض الشاشة */
+    text-align: center;
+    max-width: 100%;
+    max-height: 40vh; /* لضبط الحد الأقصى للطول */}
