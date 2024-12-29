@@ -1,4 +1,4 @@
-/* إعدادات الجسم */
+
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -12,39 +12,39 @@ body {
     padding: 0;
 }
 
-/* إعدادات البانر */
+
 .banner {
     width: 100%;
     height:auto;
     background: url(https://i.postimg.cc/XYW05xbq/Green-White-Natural-Notes-Background-A4-Document-20241222-214607-0000-min.png) no-repeat center center;
-    background-size: 100% 100%; /* لتغطية كامل البانر بالصورة */
-    max-width: 980px; /* الحد الأقصى للعرض */
-    margin: 0 auto; /* توسيط البانر */
+    background-size: 100% 100%; 
+    max-width: 980px; 
+    margin: 0 auto; 
     display: flex;
     align-items: center;
     justify-content: center;
     text-align: center;
     color: white;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    padding: 20px; /* إضافة تباعد داخلي */
-    border-radius: 8px; /* زاوية مستديرة للبانر */
+    padding: 20px; 
+    border-radius: 8px; 
     max-width: 1024px;
     aspect-ratio: 3/0.7;
     ;
     
 }
 
-/* ضبط استجابة التصميم لأحجام الشاشات المختلفة */
+
 @media (max-width: 768px) {
     .banner {
-        max-width: 100%; /* تكييف العرض للشاشات الصغيرة */
+        max-width: 100%; 
         padding: 15px;
     }
 }
 
 @media (max-width: 480px) {
     .banner {
-        padding: 10px; /* تقليل التباعد للشاشات الصغيرة جدًا */
+        padding: 10px; 
     }
 }
 
@@ -61,38 +61,38 @@ body {
     font-size:xx-large;
 }
 
-/* إعدادات الخط الفاصل */
+
 .divider {
     display: flex;
     flex-direction: column;
     width: 100%;
-    position: absolute; /* لضبط المكان بدقة */
-    top: 190%; /* عند النقطة التي يبدأ فيها التدرج الأزرق الغامق */
+    position: absolute;
+    top: 190%; 
     left: 0;
-    transform: translateY(-50%); /* لضمان التوسيط العمودي */
+    transform: translateY(-50%); 
     align-items: center;
     justify-content: center;
-    font-size: 2vw; /* حجم الخط مستجيب بناءً على عرض الشاشة */
+    font-size: 2vw; 
 }
 
 .middle-section {
     width: 100%;
-    height: 30vh; /* نسبة مئوية من ارتفاع الشاشة */
+    height: 30vh; 
     background-image: url(https://i.postimg.cc/KYqM7884/Handdrawn-Blue-Sky-Stars-Good-Night-Facebook-Post-20241222-230539-0000.png);
     align-items: center;
     justify-content: center;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-    margin: 10px 0; /* مسافة بين الخطين */
+    margin: 10px 0; 
     align-content: center;
     position: relative;
     display: flex;
-    font-size: 4vw; /* حجم الخط مستجيب بناءً على عرض الشاشة */
+    font-size: 4vw;
     text-align: center;
     max-width: 100%;
-    max-height: 40vh; /* لضبط الحد الأقصى للطول */
+    max-height: 40vh; 
 }
 
-/* BOTTON T3 MEMO HUB*/
+/* BOTTON T3 intro*/
 .creative-button {
     background: linear-gradient(to right, #000033, #003366);
     color: white;
@@ -104,6 +104,7 @@ body {
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s, box-shadow 0.3s;
+    z-index: 1010;
     
 }
 
@@ -111,20 +112,19 @@ body {
     transform: scale(1.1);
     box-shadow: 0 6px 8px rgba(0, 0, 0, 0.5);
 }
-/* إعدادات حاوية الستيكر */
-/* الحاوية التي تحتوي على الستيكر */
+
 .sticker-wrapper {
     position: absolute;
-    top: calc(133%); /* تحديد الموقع أعلى الخط مباشرة */
+    top: calc(133%); /* im lazy n7edef all bs ToT*/
     left: 50%; /* تحديد الموقع الأفقى إلى المنتصف */
     transform: translateX(-50%); /* إبقاء الحاوية في المنتصف */
     z-index: 10; /* التأكد من الظهور */
     width: 650px; /* نفس عرض الستيكر */
     height: 300px; /* نفس ارتفاع الستيكر */
-    display: block; /* استخدام display:block بدلاً من flex */
+    display: block;
 }
 
-/* إعدادات الستيكر */
+
 .sticker {
     width: 100%; /* تأكيد أن الستيكر يغطي كامل عرض الحاوية */
     height: 100%; /* تأكيد أن الستيكر يغطي كامل ارتفاع الحاوية */
@@ -134,9 +134,9 @@ body {
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
 }
 
-/* إعدادات كلمة Anes */
+/* Anes elcapriceee */
 .anes {
-    display: none; /* مخفية بشكل افتراضي */
+    display: none; 
     position: absolute;
     top: 50%; /* محاذاة عمودية */
     left: 50%; /* محاذاة أفقية */
@@ -158,6 +158,37 @@ body {
 /* عند تمرير الفأرة على حاوية الستيكر، إظهار كلمة Anes */
 .sticker-wrapper:hover .anes {
     display: block; /* إظهار كلمة Anes عند التمرير */
+}
+
+/* استعلام الوسائط لتكييف التصميم مع الأجهزة المختلفة */
+@media (max-width: 768px) {
+    .sticker-wrapper {
+        width: 90%; /* تقليل العرض للأجهزة الأصغر */
+        height: auto; /* السماح بارتفاع ديناميكي */
+        top: calc(145%); /* تعديل الموضع */
+    }
+
+    .sticker {
+        box-shadow: 0px 5px 3px -3px rgba(255, 255, 0, 0.5);
+        filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.6));
+    }
+
+    .anes {
+        font-size: 2rem; /* تصغير حجم النص */
+        text-shadow: 1px 1px 5px rgba(0, 0, 0, 0.5); /* تقليل الظل */
+    }
+}
+
+@media (max-width: 480px) {
+    .sticker-wrapper {
+        width: 100%; /* تغطية العرض بالكامل للهواتف */
+        height: auto; /* ضبط الارتفاع تلقائيًا */
+        top: calc(145%); /* تعديل الموضع للهواتف */
+    }
+
+    .anes {
+        font-size: 1.5rem; /* تصغير النص أكثر */
+    }
 }
 /* إعدادات الخيط */
 .line {
@@ -484,7 +515,7 @@ body {
     overflow: hidden;
 }
 
-/* الروابط داخل القائمة */
+
 .menu-options a {
     display: block;
     color: white;
@@ -494,31 +525,52 @@ body {
     transition:  1s ease, color 1s ease;
 }
 
-/* تأثير عند تمرير الفأرة على الروابط */
+
 .menu-options a:hover {
     background: #0055cc;
     color: #ffffff;
 }
 
-/* عرض القائمة عند تمرير الفأرة على الزر */
+
 .menu-container:hover .menu-options {
     display: block;
     transition: all 1s;
 }
 
-.lard{width: 100%;
-    height: 10px; /* عرض الخط */
-    background-color: #050505; /* اللون البني */
-    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* إضافة ظل للخط */
+.lard {
+    width: 100%;
+    height: 10px;
+    background-color: #050505;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
     top: 0px;
     position: relative;
-} 
+}
+
+/* إعدادات الملصق */
 .cat-sticker {
     position: absolute;
-    bottom: 100%; /* وضع الصورة فوق الخط */
-    width: 200px; /* عرض الصورة */
-    height: auto;
+    bottom: 100%;
+    width: 200px; /* حجم افتراضي */
+    max-width: 100%; /* لجعل الملصق متجاوبًا مع العرض */
+    height: auto; /* الحفاظ على نسبة العرض إلى الارتفاع */
 }
+
+/* استعلامات الوسائط للتصميم المتجاوب */
+@media (max-width: 768px) {
+    .cat-sticker {
+        width: 150px; /* تقليل الحجم للأجهزة المتوسطة */
+    }
+}
+
+@media (max-width: 480px) {
+    .cat-sticker {
+        width: 90px; /* تقليل الحجم أكثر للأجهزة الصغيرة */
+    }
+    .lard {
+        height: 8px; /* تقليل الارتفاع للأشرطة العلوية */
+    }
+}
+
   
 .container {
     position: relative;
@@ -835,7 +887,7 @@ body {
     font-family: Arial, sans-serif;
     color: white;
     height: 200vh; 
-    background: linear-gradient(to bottom, #4e5984, #191970, #000000); /* التدرج ينتهي بالأسود */
+    background: linear-gradient(to bottom, #3e62ef, #301449, #000000); /* التدرج ينتهي بالأسود */
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1066,36 +1118,85 @@ header p {
   
  
 
-.cat-sticker1 {
+.cat-stickera {
     position: absolute;
-    bottom: 100%; /* وضع الصورة فوق الخط */
-    width: 200px; /* عرض الصورة */
-    height: auto;}
+    bottom: 100%; /* anaaa we nti ;D */
+    width: 200px; 
+    height: auto;
+    left: 0;
+    transition: left 0.3s ease; /* تأثير انتقال سلس */
+}
 
+.cat-stickerk {
+    position: absolute;
+    bottom: 100%; /* anaaa we nti ;D */
+    width: 200px; 
+    height: auto;
+    left: 85%;
+    transition: left 0.3s ease; /* تأثير انتقال سلس */
+}
+
+.lard1 {
+    width: 100%;
+    height: 10px; 
+    left: 0;
+    background-color: #050505; 
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); 
+    top: 280px;
+    position: absolute;
+    transition: top 0.3s ease; /* تأثير انتقال سلس */
+}
+
+/* التكييف حسب حجم الشاشة */
+@media (max-width: 1200px) {
+    .cat-stickerk {
+        left: 70%;
+    }
     .lard1 {
-        width: 100%;
-        height: 10px; /* عرض الخط */
-        left: 0;
-        background-color: #050505; /* اللون البني */
-        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); /* إضافة ظل للخط */
-        top: 280px;
-        position: absolute;
+        top: 250px; /* تقليل المسافة مع صغر الشاشة */
     }
+}
+
+@media (max-width: 992px) {
+    .cat-stickera,
+    .cat-stickerk {
+        width: 150px; /* تصغير الصور */
+    }
+    .cat-stickerk {
+        left: 60%;
+    }
+    .lard1 {
+        top: 220px;
+    }
+}
+
+@media (max-width: 768px) {
+    .cat-stickera,
+    .cat-stickerk {
+        width: 120px;
+    }
+    .cat-stickerk {
+        left: 70%;
+    }
+    .lard1 {
+        top: 200px;
+    }
+}
+
+@media (max-width: 576px) {
+    .cat-stickera,
+    .cat-stickerk {
+        width: 100px;
+    }
+    .cat-stickerk {
+        left: 70%;
+    }
+    .lard1 {
+        top: 180px;
+    }
+}
+      
     
-    /* تصميم خاص للأجهزة الصغيرة */
-    @media (max-width: 768px) {
-        .lard1 {
-            height: 8px; /* تقليل عرض الخط */
-            top: 250px; /* تعديل الموضع ليناسب الأجهزة الصغيرة */
-        }
-    }
-    
-    @media (max-width: 480px) {
-        .lard1 {
-            height: 6px; /* تقليل عرض الخط أكثر للأجهزة الصغيرة جدًا */
-            top: 220px; /* تعديل الموضع للأجهزة الأصغر */
-        }
-    }
     .star-container-khadija {
         position: relative;
         width: 100%;
@@ -1125,7 +1226,6 @@ header p {
       .star-khadija:nth-child(13) { top: 45%; left: 50%; }
       .star-khadija:nth-child(14) { top: 15%; left: 90%; }
       .clickable-khadija { top: 70%; left: 90%; }
-      
       .clickable-khadija {
         cursor: pointer;
         transition: transform 0.3s;
@@ -1257,3 +1357,41 @@ header p {
     text-align: center;
     max-width: 100%;
     max-height: 40vh; /* لضبط الحد الأقصى للطول */}
+    .lard3 {
+        width: 100%;
+        height: 10px;
+        background-color: #050505;
+        box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+        top: 0px;
+        position: absolute;}
+        .divider2 {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+            position: absolute;
+            top: 180%; 
+            left: 0;
+            z-index:1010 ;
+            transform: translateY(-50%); 
+            align-items: center;
+            justify-content: center;
+            font-size: 2vw; 
+        }
+        
+        .middle-section {
+            width: 100%;
+            height: 30vh; 
+            background-image: url(https://i.postimg.cc/KYqM7884/Handdrawn-Blue-Sky-Stars-Good-Night-Facebook-Post-20241222-230539-0000.png);
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+            margin: 10px 0; 
+            align-content: center;
+            position: relative;
+            display: flex;
+            font-size: 4vw;
+            text-align: center;
+            max-width: 100%;
+            max-height: 40vh; 
+        }
+        
