@@ -95,6 +95,41 @@
         </div>
         
     </div> 
+    <div id="overlay" class="overlay" onclick="hideOverlay()">
+      <div class="slideshow">
+        <img id="slideshow-image" src="https://i.postimg.cc/kgryjry9/Blue-Watercolor-Sea-Underwater-Page-Border-A4-20241230-220343-0000-min.png" alt="Image">
+        <button class="next-buttonbait" onclick="nextImage(event)">&#8594;</button>
+      </div>
+    </div>
+    
+    <img src="https://i.postimg.cc/Y2nnzyVq/Clipped-image-20241230-214735.png" alt="Sticker" class="stickerbait" onclick="showOverlay()">
+    <script>const images = [
+      "https://i.postimg.cc/kgryjry9/Blue-Watercolor-Sea-Underwater-Page-Border-A4-20241230-220343-0000-min.png",
+      "https://i.postimg.cc/Z5BrpJv4/1000030006.jpg",
+      "https://i.postimg.cc/QMc1YSqz/Screenshot-20241230-222221-Canva.jpg"
+    ];
+    
+    let currentIndex = 0;
+    
+    function showOverlay() {
+      const overlay = document.getElementById('overlay');
+      const slideshowImage = document.getElementById('slideshow-image');
+      slideshowImage.src = images[currentIndex];
+      overlay.style.display = 'flex';
+    }
+    
+    function hideOverlay() {
+      const overlay = document.getElementById('overlay');
+      overlay.style.display = 'none';
+    }
+    
+    function nextImage(event) {
+      event.stopPropagation(); // لمنع إغلاق الـ overlay عند النقر على الزر
+      currentIndex = (currentIndex + 1) % images.length;
+      const slideshowImage = document.getElementById('slideshow-image');
+      slideshowImage.src = images[currentIndex];
+    }</script>
+  
 <footer><header class="waves"> <!-- ahh yalwehraniya-->
   <h1 class="batata2" >we fi 3ech9ek rani ghare9 netnefes corage</h1></footer>
   <p>all right reserved 2025© lmao</p>

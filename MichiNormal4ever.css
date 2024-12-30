@@ -3,14 +3,32 @@ body {
     font-family: Arial, sans-serif;
     color: white;
     height: 400vh; 
-    background: linear-gradient(to bottom, #4a6ea3,  #4b8dc6, #2b1a82, #000000); /* التدرج ينتهي بالأسود */
+    background: linear-gradient(to bottom, #191e79,  #65267e, hsl(267, 71%, 20%), #000000); /* التدرج ينتهي بالأسود */
     display: flex;
     flex-direction: column;
     align-items: center;
     justify-content: start;
-    padding: 0;
-}
+    padding: 0; /* مؤشر على شكل يد */
+ 
+      
+    }
+    
+    /* مؤشر على شكل دوائر */
+    .custom-cursor {
+        cursor: url('https://i.postimg.cc/3x6NTt9m/1000028310-removebg-preview.png') 16 16, auto;
+      }
+      
+    
 
+
+/* مؤشر على شكل يد */
+.custom-cursor {
+    cursor: pointer;
+  }
+  
+  .custom-cursor {
+    cursor: url('https://i.postimg.cc/3x6NTt9m/1000028310-removebg-preview.png'), auto;
+  }
 
 .banner {
     width: 100%;
@@ -109,6 +127,7 @@ body {
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     transition: transform 0.3s, box-shadow 0.3s;
     z-index: 1010;
+    cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
     
 }
 
@@ -136,6 +155,7 @@ body {
     transition: opacity 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease; /* تأثيرات سلسة */
     box-shadow: 0px 10px 5px -5px rgba(255, 255, 0, 0.5);
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+    cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
 }
 
 /* Anes elcapriceee */
@@ -214,6 +234,7 @@ body {
     cursor: pointer;
     z-index: 1010;
     pointer-events: auto;
+    cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
 }
 
 .moon-sticker {
@@ -222,6 +243,7 @@ body {
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
     pointer-events: none;
     transition: transform 0.3s ease, filter 0.3s ease; /* حركة سلسة للتحولات */
+    cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
 }
 
 .khadija {
@@ -499,6 +521,7 @@ body {
     cursor: pointer;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
     transition: background 0.3s ease, transform 0.3s ease;
+    cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
 }
 
 /* تأثير عند تمرير الفأرة على الزر */
@@ -745,6 +768,7 @@ body {
     transition: transform 0.3s ease, filter 0.3s ease; /* إضافة حركة سلسة */
     z-index: 999;
     cursor: pointer;
+    cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
   }
   
   
@@ -762,6 +786,7 @@ body {
     transition: transform 0.3s ease, filter 0.3s ease; /* إضافة حركة سلسة */
     z-index: 999;
     cursor: pointer;
+    cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
   }
   
   
@@ -906,7 +931,7 @@ justify-content: center;
     font-family: Arial, sans-serif;
     color: white;
     height: 200vh; 
-    background: linear-gradient(to bottom, #3e62ef, #301449, #000000); 
+    background: linear-gradient(to bottom, #9c3eef, #301449, #000000); 
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -1196,7 +1221,7 @@ header p {
     border-radius: 20px;
     padding: 20px;
     box-shadow: 0 6px 10px rgba(0, 0, 0, 0.1);
-    transition: transform 0.3s, box-shadow 0.3s;
+    transition: transform 0.3s, box-shadow 0.3s;cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
 }
 
 .item:hover {
@@ -1376,7 +1401,7 @@ header p {
       .clickable-khadija {
         cursor: pointer;
         transition: transform 0.3s;
-           
+        cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
           }
       
       
@@ -1541,4 +1566,75 @@ header p {
             max-width: 100%;
             max-height: 40vh; 
         }
-        
+       
+          
+          .stickerbait {
+            width: 100px;
+            height: 150px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 20px;
+            right: 10%;
+            top: 370vh;
+            z-index: 1000;
+            cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
+            
+    
+          }
+          .stickerbait:hover{
+            filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8)) ;
+          }
+          .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 1100;
+            justify-content: center;
+            align-items: center;
+          }
+          
+          .slideshow {
+            position: relative;
+            max-width: 80%;
+            max-height: 80%;
+          }
+          
+          .slideshow img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+          
+        right: 100px;
+              
+                bottom: 50px; /* المسافة بين الصورة وأسفل الشاشة */
+           
+                transform: translateX(-50%); /* توسيط الصورة أفقياً */
+                width: 80%; /* نسبة العرض */
+                height: auto; /* الحفاظ على النسبة بين العرض والطول */
+                max-height: 70%; /* التأكد من أن الصورة لا تغطي أكثر من 70% من الشاشة */
+                object-fit: contain; /* احتواء الصورة ضمن الإطار */
+                border-radius: 10px; /* زوايا دائرية للصورة */
+              }
+               
+      
+                
+              
+
+          
+          
+          .next-buttonbait {
+            position: absolute;
+            top: 10%;
+            right: 10px;
+            transform: translateY(-50%);
+            background: rgba(255, 255, 255, 0.8);
+            border: none;
+            border-radius: 50%;
+            padding: 10px;
+            cursor: pointer;
+            font-size: 20px;
+          }
