@@ -16,13 +16,70 @@
       
     </header>
     <main>
-      
+      <div class="flower flower-left"></div>
+<div class="flower flower-right"></div>
+
         <div class="lard1">
             <img src="https://i.postimg.cc/6qbt1j5x/giphy.gif" alt="anes" class="cat-stickera" >
             <img src="https://i.postimg.cc/KjfRcDG0/pixel-art-kitty.gif" alt="khadidja" class="cat-stickerk " >
 
             </div> 
+ <script>
+// إنشاء حاوية النجوم
+const starsContainer = document.createElement('div');
+starsContainer.className = 'starsliliy';
+document.body.appendChild(starsContainer);
 
+// تحديد عدد النجوم بشكل ديناميكي بناءً على حجم الشاشة
+function createStars() {
+  starsContainer.innerHTML = ''; // مسح النجوم القديمة
+
+  const pageWidth = window.innerWidth;
+  const pageHeight = window.innerHeight;
+
+  // حساب عدد النجوم بناءً على حجم الشاشة
+  const numberOfStars = Math.floor((pageWidth * pageHeight) / 8000); // تقليل العدد للشاشات الصغيرة
+  const middleGap = 100; // عرض المساحة الوسطى
+  const middleStart = (pageWidth - middleGap) / 2; // بداية المساحة الوسطى
+  const middleEnd = middleStart + middleGap; // نهاية المساحة الوسطى
+
+  // إنشاء النجوم داخل الحاوية
+  for (let i = 0; i < numberOfStars; i++) {
+    const star = document.createElement('div');
+    star.className = 'starliliy';
+
+    // تحديد موضع النجمة العمودي (من 40% إلى 100%)
+    star.style.top =` ${40 + Math.random() * 60}vh`; // يبدأ من 40vh إلى 100vh
+
+    // تحديد موضع النجمة الأفقي مع تجنب المساحة الوسطى
+    let starLeft = Math.random() * 100; // الموضع الأفقي بالنسبة المئوية
+    const pixelLeft = (starLeft / 100) * pageWidth;
+
+    // إذا كانت النجمة ضمن المساحة الوسطى، قم بتعديل الموضع
+    if (pixelLeft > middleStart && pixelLeft < middleEnd) {
+      // إذا كانت النجمة في الجزء الأيسر من المساحة الوسطى، قم بتحريكها إلى اليسار
+      if (pixelLeft - middleStart < middleGap / 2) {
+        starLeft = (middleStart - 10) / pageWidth * 100; // نقل النجمة إلى اليسار
+      } else {
+        // إذا كانت في الجزء الأيمن من المساحة الوسطى، قم بتحريكها إلى اليمين
+        starLeft = (middleEnd + 10) / pageWidth * 100; // نقل النجمة إلى اليمين
+      }
+    }
+
+    star.style.left =` ${starLeft}%`;
+
+    // إضافة النجمة إلى الحاوية
+    starsContainer.appendChild(star);
+  }
+}
+
+// استدعاء الوظيفة عند تحميل الصفحة
+createStars();
+
+// إعادة إنشاء النجوم عند تغيير حجم الشاشة
+window.addEventListener('resize', createStars);
+ 
+  </script>
   
       
       </div>

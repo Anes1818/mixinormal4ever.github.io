@@ -1,4 +1,3 @@
-
 body {
     margin: 0;
     font-family: Arial, sans-serif;
@@ -1016,16 +1015,144 @@ justify-content: center;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* إضافة ظل خفيف حول الفيديو */
             border-radius: 10px; /* حواف مستديرة */
         }
-.body3 {
+/* تأكد من أن الصفحة تغطي العرض الكامل بدون إضافة مساحة غير مرغوب فيها */
+/* تأكد من أن الصفحة تغطي العرض الكامل بدون إضافة مساحة غير مرغوب فيها */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box; /* تأكد من حساب الحواف والحشو ضمن الأبعاد */
+  }
+  
+  .body3 {
     margin: 0;
     font-family: "Arial", sans-serif;
-    background:  linear-gradient(to bottom, #3b4e9c,  #3c6a90, #2b0a5d, #000000); /* التدرج ينتهي بالأسود */
+    background:  linear-gradient(to bottom, #4b6fff,  #46164b, #2b0a5d, #000000); /* التدرج ينتهي بالأسود */
     
     height: 370vh;
     color: #333;
     flex-direction: column;
   }
+  .flower {
+    position: absolute;
+    width: 250px;
+    height: 250px;
+    background-size: contain;
+    background-repeat: no-repeat;
+    z-index: -1;
+  }
   
+  /* الزهرة اليسرى */
+  .flower-left {
+    top: 40vh;
+    left: 0px;
+    background-image: url('https://i.postimg.cc/Z58HHssq/Clipped-image-20241230-130901.png');
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+   
+  }
+  
+  /* الزهرة اليمنى */
+  .flower-right {
+    top: 40vh;
+    right: 0px;
+    background-image: url('https://i.postimg.cc/43CFdTDB/Clipped-image-20241230-121242.png');
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.8));
+  }
+  
+  /* التعديلات الخاصة بالهواتف */
+  @media (max-width: 768px) {
+    .flower {
+      width: 120px; /* تصغير حجم الزهور */
+      height: 120px;
+    }
+  
+    .flower-left {
+      left: 0px; /* تقليل المسافة من الحافة اليسرى */
+    }
+  
+    .flower-right {
+      right: 0px; /* تقليل المسافة من الحافة اليمنى */
+    }
+  }
+  
+  @media (max-width: 480px) {
+    .flower {
+      width: 80px; /* مزيد من التصغير للزهور */
+      height: 80px;
+    }
+  
+    .flower-left {
+      top: 50vh; /* ضبط موقع الزهور بشكل أفضل */
+      left: 0px;
+    }
+  
+    .flower-right {
+      top: 50vh;
+      right: 0px;
+    }
+  }
+  .starsliliy {
+    position: absolute;
+    width: 100%; /* تغطي العرض بالكامل */
+    height: 100%; /* تغطي الطول بالكامل */
+    background: transparent;
+    
+    animation: moveStars 50s linear infinite;
+    z-index: -5;
+  }
+  
+  .starliliy {
+    position: absolute;
+    width: 2px;
+    height: 2px;
+    background: white;
+    border-radius: 50%;
+    box-shadow: 0 0 5px #fff;
+    animation: twinkle 2s infinite alternate ease-in-out;
+  }
+  
+  /* حركة النجوم نحو الأسفل فقط */
+  @keyframes moveStars {
+    0% {
+      transform: translateY(0);
+    }
+    100% {
+      transform: translateY(200%); /* تتحرك نحو الأسفل */
+    }
+  }
+  
+  @keyframes twinkle {
+    0%, 100% {
+      opacity: 0.7;
+    }
+    50% {
+      opacity: 1;
+    }
+  }
+  
+  /* تعديل حجم النجوم بناءً على حجم الشاشة */
+  @media (max-width: 768px) { /* للأجهزة اللوحية والهواتف */
+    .starliliy {
+      width: 1.5px; /* تقليل الحجم */
+      height: 1.5px;
+      box-shadow: 0 0 3px #fff;
+    }
+  
+    .starsliliy {
+      animation: moveStars 30s linear infinite; /* تسريع الحركة */
+    }
+  }
+  
+  @media (max-width: 480px) { /* للهواتف الصغيرة */
+    .starliliy {
+      width: 1px; /* تقليل الحجم أكثر */
+      height: 1px;
+      box-shadow: 0 0 2px #fff;
+    }
+  
+    .starsliliy {
+      animation: moveStars 20s linear infinite; /* تسريع الحركة أكثر */
+    }
+  }
   .container4 {
     display: flex;
     width: 100%;
@@ -1162,7 +1289,7 @@ header p {
     left: 0;
     background-color: #050505; 
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3); 
-    top: 280px;
+    top: 230px;
     position: absolute;
     transition: top 0.3s ease; 
 }
@@ -1173,7 +1300,7 @@ header p {
         left: 70%;
     }
     .lard1 {
-        top: 250px; /* تقليل المسافة مع صغر الشاشة */
+        top: 50px; /* تقليل المسافة مع صغر الشاشة */
     }
 }
 
@@ -1186,7 +1313,7 @@ header p {
         left: 60%;
     }
     .lard1 {
-        top: 220px;
+        top: 20px;
     }
 }
 
@@ -1199,7 +1326,7 @@ header p {
         left: 70%;
     }
     .lard1 {
-        top: 200px;
+        top: 20px;
     }
 }
 
