@@ -1604,16 +1604,16 @@ header p {
           }
           
           .slideshow img {
-            width: 100%;
+            width: 70%;
             height: auto;
             border-radius: 10px;
           
-        right: 100px;
+     
               
                 bottom: 50px; /* المسافة بين الصورة وأسفل الشاشة */
            
                 transform: translateX(-50%); /* توسيط الصورة أفقياً */
-                width: 80%; /* نسبة العرض */
+              ; /* نسبة العرض */
                 height: auto; /* الحفاظ على النسبة بين العرض والطول */
                 max-height: 70%; /* التأكد من أن الصورة لا تغطي أكثر من 70% من الشاشة */
                 object-fit: contain; /* احتواء الصورة ضمن الإطار */
