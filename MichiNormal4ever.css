@@ -1030,19 +1030,19 @@ justify-content: center;
             z-index: 1010;
             left: 200px;
             background: #000; /* خلفية سوداء لتظهر الفيديو بوضوح */
+            
         }
         
         iframe {
             width: 80%; 
             height: 45vw; /* نسبة العرض إلى الارتفاع 16:9 */
             max-width: 1280px; /* أقصى عرض للفيديو */
-            max-height: 720px; /* أقصى ارتفاع للفيديو */
+            max-height: 520px; /* أقصى ارتفاع للفيديو */
             border: none; /* إزالة الحدود */
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* إضافة ظل خفيف حول الفيديو */
             border-radius: 10px; /* حواف مستديرة */
         }
-/* تأكد من أن الصفحة تغطي العرض الكامل بدون إضافة مساحة غير مرغوب فيها */
-/* تأكد من أن الصفحة تغطي العرض الكامل بدون إضافة مساحة غير مرغوب فيها */
+
 * {
     margin: 0;
     padding: 0;
@@ -1687,7 +1687,7 @@ header p {
                 cursor: pointer;
                 position: absolute;
                 bottom: 20px;
-                z-index: 9999;
+                z-index: 1000;
                 
                 cursor: url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png ), auto;          
 
