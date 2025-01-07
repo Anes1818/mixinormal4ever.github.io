@@ -1433,6 +1433,7 @@ header p {
       .clickable-khadija {
         cursor: pointer;
         transition: transform 0.3s;
+          z-index: 1100;
         cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
           }
       
