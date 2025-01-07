@@ -54,7 +54,7 @@
         <div class="menu-options">
             <a href="intro.html">Intro</a>
             <a href="memo-hub.html">Memories-hub</a>
-            <a href="https://youtu.be/sNufvO2NGPI?feature=shared">I love you(:</a>
+            <a href="https://www.youtube.com/embed/sNufvO2NGPI">">I love you(:</a>
         </div>
     </div>
     <div class="lard">
@@ -89,10 +89,29 @@
      
       </div>
     </div >
-        <div class="butterfly">
-        <img src="https://i.postimg.cc/s2hXD508/Clipped-image-20241225-171536.png" class="t3k" ></img>
+    <div class="butterfly">
+      <img src="https://i.postimg.cc/s2hXD508/Clipped-image-20241225-171536.png" class="t3k" alt="Butterfly">
         <img src="https://i.postimg.cc/3x6NTt9m/1000028310-removebg-preview.png" class="t3i" ></img>
-        </div>
+  </div>
+  
+  <!-- نافذة منبثقة -->
+  <div class="popup" id="popup">
+      <div class="popup-content">
+          <p>I WANNA TELL YOU THAT I LOVE YOU WITH ALL YOUR DETAILS RO7I</p>
+          <button class="close-btn" onclick="closePopup()">CLOSE</button>
+   
+          <img src="https://i.postimg.cc/26WMmhZ2/Clipped-image-20250107-161317.png" class="t3na" ></img>
+</div>
+       <script> document.querySelector('.t3k').addEventListener('click', function() {
+            document.getElementById('popup').style.display = 'block';
+        });
+        
+        // إغلاق النافذة المنبثقة
+        function closePopup() {
+            document.getElementById('popup').style.display = 'none';
+        }</script>
+      </div>
+
         
     </div> 
     <div id="overlay" class="overlay" onclick="hideOverlay()">
@@ -124,7 +143,7 @@
     }
     
     function nextImage(event) {
-      event.stopPropagation(); // لمنع إغلاق الـ overlay عند النقر على الزر
+      event.stopPropagation(); 
       currentIndex = (currentIndex + 1) % images.length;
       const slideshowImage = document.getElementById('slideshow-image');
       slideshowImage.src = images[currentIndex];

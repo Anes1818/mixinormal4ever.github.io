@@ -13,22 +13,13 @@ body {
       
     }
     
-    /* مؤشر على شكل دوائر */
-    .custom-cursor {
-        cursor: url('https://i.postimg.cc/3x6NTt9m/1000028310-removebg-preview.png') 16 16, auto;
-      }
+    
       
     
 
 
 /* مؤشر على شكل يد */
-.custom-cursor {
-    cursor: pointer;
-  }
-  
-  .custom-cursor {
-    cursor: url('https://i.postimg.cc/3x6NTt9m/1000028310-removebg-preview.png'), auto;
-  }
+
 
 .banner {
     width: 100%;
@@ -749,30 +740,58 @@ body {
 .butterfly {
     position: absolute;
     width: 100%;
-    height: 100vh; /* استخدام وحدات مرنة */
+    height: 100vh;
     overflow: hidden;
     border: 0px solid #ff9a9e, #fad0c4;
     border-radius: 15px;
-    top: 40vh; /* المسافة من الأعلى باستخدام وحدات مرنة */
-  
-  }
-  
-  /* khadijaaaaaa when 9a3ed seting position t3 buterfkys  sra afunyy problemmm ta3i 9a3da ttbe3 ta3kk cz of position settings >~<*/
-  .t3i {
+    top: 40vh;
+}
+
+.t3k {
     position: absolute;
-    top: 10%; 
-    left: 5%; 
-    width: 20%; /* حجم مرن للفراشة */
-    height: auto; /* الحفاظ على نسبة الطول إلى العرض */
-    filter: drop-shadow(0 0 5px rgba(199, 223, 170, 0.8));
+    top: 21%; 
+    left: 70%; 
+    width: 22%; /* حجم مرن للفراشة */
+    height: auto; 
+    filter: drop-shadow(0 0 5px rgba(255, 255, 255, 0.8));
     transition: transform 0.3s ease, filter 0.3s ease; /* إضافة حركة سلسة */
     z-index: 999;
     cursor: pointer;
     cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
-  }
+}
+
+/* نافذة منبثقة */
+.popup {
+    display: none; /* إخفاء النافذة من البداية */
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    z-index: 1000;
+    width: 80%;
+    max-width: 500px;
+}
+
+.popup-content {
+    text-align: center;
+}
+
+.close-btn {
+    background-color: #ff9a9e;
+    border: none;
+    padding: 10px 20px;
+    margin-top: 15px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+  /* khadijaaaaaa when 9a3ed seting position t3 buterfkys  sra afunyy problemmm ta3i 9a3da ttbe3 ta3kk cz of position settings >~<*/
   
   
-  
+ 
   
   
  
@@ -790,6 +809,18 @@ body {
   }
   
   
+  .t3i {
+    position: absolute;
+    top: 10%; 
+    left: 5%; 
+    width: 20%; /* حجم مرن للفراشة */
+    height: auto; /* الحفاظ على نسبة الطول إلى العرض */
+    filter: drop-shadow(0 0 5px rgba(199, 223, 170, 0.8));
+    transition: transform 0.3s ease, filter 0.3s ease; /* إضافة حركة سلسة */
+    z-index: 999;
+    cursor: pointer;
+    cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
+  }
   
   /* تأثير التمرير (Hover) */
   .t3i:hover, .t3k:hover {
@@ -1749,4 +1780,28 @@ header p {
                 padding: 10px;
                 cursor: pointer;
                 font-size: 20px;
+              }.message {
+                display: none;
+                background-color: #ff80ab;
+                color: white;
+                padding: 20px;
+                border-radius: 10px;
+                font-size: 20px;
+                text-align: center;
+                margin-top: 20px;
+              }.btn {
+                padding: 15px 30px;
+                font-size: 18px;
+                border: none;
+                border-radius: 10px;
+                background-color: #ff8a80;
+                color: white;
+                cursor: pointer;
+                transition: 0.3s;
               }
+          
+              .btn:hover {
+                background-color: #ff607d;
+              }
+              .t3na {width: 50px;
+            height: 50px;}

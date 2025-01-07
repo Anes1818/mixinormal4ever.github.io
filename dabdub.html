@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>لعبة دبدوب كيوت</title>
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background-color: #e69bec;
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+
+    .container {
+      position: relative;
+    }
+
+    .teddy {
+      width: 150px;
+      margin-bottom: 20px;
+    }
+
+    .question {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .buttons {
+      display: flex;
+      gap: 10px;
+    }
+
+    .btn {
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .btn-yes {
+      background-color: #ff8a80;
+      color: white;
+      cursor: url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png)  , auto; 
+
+    }
+    
+
+    .btn-no {
+      background-color: #eeeeee;
+      color: black;
+      position: relative;  cursor: url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png) , auto; }
+
+    
+    .menu-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+/* زر القائمة */
+.menu-button {
+    background: linear-gradient(to right, #003366, #000033);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    transition: background 0.3s ease, transform 0.3s ease;
+    cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
+}
+
+/* تأثير عند تمرير الفأرة على الزر */
+.menu-button:hover {
+    background: linear-gradient(to right, #0055cc, #001144);
+    transform: scale(1.05);
+}
+
+/* خيارات القائمة */
+.menu-options {
+    display: none; /* إخفاء القائمة افتراضيًا */
+    position: absolute;
+    top: 50px; /* أسفل الزر مباشرة */
+    right: 0;
+    background: #003366;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+
+.menu-options a {
+    display: block;
+    color: white;
+    text-decoration: none;
+    padding: 10px 15px;
+    font-size: 1rem;
+    transition:  1s ease, color 1s ease;
+}
+
+
+.menu-options a:hover {
+    background: #0055cc;
+    color: #ffffff;
+}
+
+
+.menu-container:hover .menu-options {
+    display: block;
+    transition: all 1s;
+}
+  </style>
+</head>
+<body>
+    <div class="menu-container">
+        <button class="menu-button">☰</button>
+        <div class="menu-options">
+            <a href="intro.html">Intro</a>
+            <a href="memo-hub.html">Memories-hub</a>
+            <a href="index.html">I love you(:</a>
+        </div>
+    </div>
+  <div class="container">
+    <img src="https://i.postimg.cc/5NK37jH0/Clipped-image-20250107-162455.png" alt="Teddy Bear" class="teddy">
+    <div class="question">tbghiniiii?</div>
+    <div class="buttons">
+      <button class="btn btn-yes" onclick="alert('nbghikeee kterrr:b ❤')">ofc</button>
+      <button class="btn btn-no" onmouseover="moveButton()">no</button>
+    </div>
+  </div>
+
+  <script>
+    function moveButton() {
+      const noButton = document.querySelector('.btn-no');
+      const container = document.querySelector('.container');
+
+      const containerRect = container.getBoundingClientRect();
+      const buttonRect = noButton.getBoundingClientRect();
+
+      const newLeft = Math.random() * (containerRect.width - buttonRect.width);
+      const newTop = Math.random() * (containerRect.height - buttonRect.height);
+
+      noButton.style.left = `${newLeft}px`;
+      noButton.style.top =` ${newTop}px`;
+    }
+  </script>
+</body>
+</html>
