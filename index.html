@@ -130,10 +130,51 @@
       slideshowImage.src = images[currentIndex];
     }</script>
   
+
+  <img src="https://i.postimg.cc/J0ZG8DT8/Clipped-image-20250107-130743.png" alt="Chess Sticker" class="chess-sticker" onclick="showChessOverlay()">
+  
+  <div id="chess-overlay" class="chess-overlay" onclick="hideChessOverlay()">
+    <div class="chess-slideshow">
+      <img id="chess-image" src="" alt="Chess Slide">
+      <button class="chess-next-button" onclick="nextChessImage(event)">&#10095;</button>
+    </div>
+  </div>
+  
+  <script>
+    const chessImages = [
+      "https://i.postimg.cc/7ZVJbzqY/HOW-TO-BE-A-GOOD-INTJ-20250107-121139-0000-min.png", // صورة 1
+      "https://i.postimg.cc/xjRwxTjN/let-s-start-with-basics-and-the-most-beautiful-devil-two-pieces-20250107-122859-0000-min.png", // صورة 2
+      "https://i.postimg.cc/bNVKPCtz/QUEEN-20250107-130210-0000-min.png", // صورة 3
+      "https://i.postimg.cc/rwv30Dj3/KING-20250107-125325-0000-min.png", // صورة 4
+      "https://i.postimg.cc/tgWfh9mT/congratulations-20250107-125733-0000-min.png" // صورة 5
+    ];
+
+    let currentChessIndex = 0;
+
+    function showChessOverlay() {
+      const chessOverlay = document.getElementById('chess-overlay');
+      const chessImage = document.getElementById('chess-image');
+      chessImage.src = chessImages[currentChessIndex];
+      chessOverlay.style.display = 'flex';
+    }
+
+    function hideChessOverlay() {
+      const chessOverlay = document.getElementById('chess-overlay');
+      chessOverlay.style.display = 'none';
+    }
+
+    function nextChessImage(event) {
+      event.stopPropagation(); // لمنع إغلاق الـ overlay عند النقر على الزر
+      currentChessIndex = (currentChessIndex + 1) % chessImages.length;
+      const chessImage = document.getElementById('chess-image');
+      chessImage.src = chessImages[currentChessIndex];
+    }
+  </script>
+
+</body>
 <footer><header class="waves"> <!-- ahh yalwehraniya-->
   <h1 class="batata2" >we fi 3ech9ek rani ghare9 netnefes corage</h1></footer>
   <p>all right reserved 2025© lmao</p>
   <a href="https://linktr.ee/anes.18" target="_blank">contact meeee</a>
 
-</body>
 </html>
