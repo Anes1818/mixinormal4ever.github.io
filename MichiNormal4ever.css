@@ -975,7 +975,7 @@ justify-content: center;
         color: #000000;
     }.star10 {
         top: calc(12% + 20px); 
-        left: 10%; 
+        left: 15%; 
         width: 50px; 
         height: 50px;
         pointer-events:auto;
@@ -1433,7 +1433,7 @@ header p {
       .clickable-khadija {
         cursor: pointer;
         transition: transform 0.3s;
-          z-index: 9999;
+          z-index: 1000;
         cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
           }
       
