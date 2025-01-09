@@ -3,7 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>لعبة دبدوب كيوت</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <title>psssst</title>
   <style>
     body {
       display: flex;
@@ -11,7 +12,7 @@
       align-items: center;
       height: 100vh;
       margin: 0;
-      background-color: #e69bec;
+      background-image: url(batatis.jpg);
       font-family: Arial, sans-serif;
       text-align: center;
     }
@@ -131,7 +132,7 @@
     </div>
   <div class="container">
     <img src="https://i.postimg.cc/5NK37jH0/Clipped-image-20250107-162455.png" alt="Teddy Bear" class="teddy">
-    <div class="question">tbghiniiii?</div>
+    <div class="question"></div>
     <div class="buttons">
       <button class="btn btn-yes" onclick="alert('nbghikeee kterrr:b ❤')">ofc</button>
       <button class="btn btn-no" onmouseover="moveButton()">no</button>
@@ -151,6 +152,85 @@
 
       noButton.style.left = `${newLeft}px`;
       noButton.style.top =` ${newTop}px`;
+    }
+  </script>
+  <div class="cat-container">
+    <img src="https://i.postimg.cc/q7QNCYVZ/dg8idr3-46121b2a-2beb-4f64-9caa-0d046f39eac0-1.gif" 
+         alt="Cat Sticker" 
+         class="cat-sticker" 
+         onclick="showDialogue()">
+  </div>
+  
+  <div class="dialogue-box" id="dialogue">
+    <img src="https://i.postimg.cc/gjLjQ2wf/Clipped-image-20250109-163425.png" alt="Dialogue" class="dialogue-img">
+    <button class="close-dialogue" onclick="hideDialogue()">×</button>
+  </div>
+  
+  <style>
+    /* تصميم الملصق */
+    .cat-container {
+      position: fixed;
+      bottom: 10px;
+      left: 10px;
+      z-index: 1000;
+      cursor: pointer;
+    }
+  
+    .cat-sticker {
+      width: 200px;
+      height: auto;
+    }
+  
+    /* تصميم نافذة الحوار */
+    .dialogue-box {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 10px;
+      transform: translateY(-50%);
+      z-index: 2000;
+      background: transparent;
+    }
+  
+    .dialogue-img {
+      width: 700px;
+      height: auto;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+  
+    .close-dialogue {
+      position: absolute;
+      top: 5px;
+      right: 5px;
+      background: #ff5c5c;
+      color: white;
+      border: none;
+      border-radius: 50%;
+      width: 30px;
+      height: 30px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: bold;
+      line-height: 1;
+    }
+  
+    .close-dialogue:hover {
+      background: #ff3333;
+    }
+  </style>
+  
+  <script>
+    // إظهار نافذة الحوار
+    function showDialogue() {
+      const dialogue = document.getElementById('dialogue');
+      dialogue.style.display = 'block';
+    }
+  
+    // إخفاء نافذة الحوار
+    function hideDialogue() {
+      const dialogue = document.getElementById('dialogue');
+      dialogue.style.display = 'none';
     }
   </script>
 </body>
