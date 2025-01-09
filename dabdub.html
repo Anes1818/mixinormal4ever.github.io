@@ -19,6 +19,8 @@
 
     .container {
       position: relative;
+      padding: 20px;
+      box-sizing: border-box;
     }
 
     .teddy {
@@ -34,6 +36,8 @@
     .buttons {
       display: flex;
       gap: 10px;
+      flex-wrap: wrap;
+      justify-content: center;
     }
 
     .btn {
@@ -48,126 +52,71 @@
     .btn-yes {
       background-color: #ff8a80;
       color: white;
-      cursor: url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png)  , auto; 
-
+      cursor: url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto; 
     }
-    
 
     .btn-no {
       background-color: #eeeeee;
       color: black;
-      position: relative;  cursor: url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png) , auto; }
-
-    
-    .menu-container {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    z-index: 1000;
-}
-
-/* زر القائمة */
-.menu-button {
-    background: linear-gradient(to right, #003366, #000033);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    font-size: 1.2rem;
-    cursor: pointer;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    transition: background 0.3s ease, transform 0.3s ease;
-    cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
-}
-
-/* تأثير عند تمرير الفأرة على الزر */
-.menu-button:hover {
-    background: linear-gradient(to right, #0055cc, #001144);
-    transform: scale(1.05);
-}
-
-/* خيارات القائمة */
-.menu-options {
-    display: none; /* إخفاء القائمة افتراضيًا */
-    position: absolute;
-    top: 50px; /* أسفل الزر مباشرة */
-    right: 0;
-    background: #003366;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
-    overflow: hidden;
-}
-
-
-.menu-options a {
-    display: block;
-    color: white;
-    text-decoration: none;
-    padding: 10px 15px;
-    font-size: 1rem;
-    transition:  1s ease, color 1s ease;
-}
-
-
-.menu-options a:hover {
-    background: #0055cc;
-    color: #ffffff;
-}
-
-
-.menu-container:hover .menu-options {
-    display: block;
-    transition: all 1s;
-}
-  </style>
-</head>
-<body>
-    <div class="menu-container">
-        <button class="menu-button">☰</button>
-        <div class="menu-options">
-            <a href="intro.html">Intro</a>
-            <a href="memo-hub.html">Memories-hub</a>
-            <a href="index.html">I love you(:</a>
-        </div>
-    </div>
-  <div class="container">
-    <img src="https://i.postimg.cc/5NK37jH0/Clipped-image-20250107-162455.png" alt="Teddy Bear" class="teddy">
-    <div class="question"></div>
-    <div class="buttons">
-      <button class="btn btn-yes" onclick="alert('nbghikeee kterrr:b ❤')">ofc</button>
-      <button class="btn btn-no" onmouseover="moveButton()">no</button>
-    </div>
-  </div>
-
-  <script>
-    function moveButton() {
-      const noButton = document.querySelector('.btn-no');
-      const container = document.querySelector('.container');
-
-      const containerRect = container.getBoundingClientRect();
-      const buttonRect = noButton.getBoundingClientRect();
-
-      const newLeft = Math.random() * (containerRect.width - buttonRect.width);
-      const newTop = Math.random() * (containerRect.height - buttonRect.height);
-
-      noButton.style.left = `${newLeft}px`;
-      noButton.style.top =` ${newTop}px`;
+      position: relative;
+      cursor: url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
     }
-  </script>
-  <div class="cat-container">
-    <img src="https://i.postimg.cc/q7QNCYVZ/dg8idr3-46121b2a-2beb-4f64-9caa-0d046f39eac0-1.gif" 
-         alt="Cat Sticker" 
-         class="cat-sticker" 
-         onclick="showDialogue()">
-  </div>
-  
-  <div class="dialogue-box" id="dialogue">
-    <img src="https://i.postimg.cc/gjLjQ2wf/Clipped-image-20250109-163425.png" alt="Dialogue" class="dialogue-img">
-    <button class="close-dialogue" onclick="hideDialogue()">×</button>
-  </div>
-  
-  <style>
-    /* تصميم الملصق */
+
+    .menu-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1000;
+    }
+
+    .menu-button {
+      background: linear-gradient(to right, #003366, #000033);
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 15px;
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      transition: background 0.3s ease, transform 0.3s ease;
+      cursor: url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
+    }
+
+    .menu-button:hover {
+      background: linear-gradient(to right, #0055cc, #001144);
+      transform: scale(1.05);
+    }
+
+    .menu-options {
+      display: none;
+      position: absolute;
+      top: 50px;
+      right: 0;
+      background: #003366;
+      border-radius: 5px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+      overflow: hidden;
+    }
+
+    .menu-options a {
+      display: block;
+      color: white;
+      text-decoration: none;
+      padding: 10px 15px;
+      font-size: 1rem;
+      transition: 1s ease, color 1s ease;
+    }
+
+    .menu-options a:hover {
+      background: #0055cc;
+      color: #ffffff;
+    }
+
+    .menu-container:hover .menu-options {
+      display: block;
+      transition: all 1s;
+    }
+
     .cat-container {
       position: fixed;
       bottom: 10px;
@@ -175,13 +124,12 @@
       z-index: 1000;
       cursor: pointer;
     }
-  
+
     .cat-sticker {
       width: 200px;
       height: auto;
     }
-  
-    /* تصميم نافذة الحوار */
+
     .dialogue-box {
       display: none;
       position: fixed;
@@ -191,14 +139,14 @@
       z-index: 2000;
       background: transparent;
     }
-  
+
     .dialogue-img {
       width: 700px;
       height: auto;
       border-radius: 10px;
       box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
     }
-  
+
     .close-dialogue {
       position: absolute;
       top: 5px;
@@ -214,24 +162,94 @@
       font-weight: bold;
       line-height: 1;
     }
-  
+
     .close-dialogue:hover {
       background: #ff3333;
     }
+
+    /* استعلام الوسائط للشاشات الصغيرة */
+    @media (max-width: 768px) {
+      .teddy {
+        width: 100px;
+      }
+
+      .question {
+        font-size: 20px;
+      }
+
+      .btn {
+        padding: 8px 16px;
+        font-size: 16px;
+      }
+
+      .dialogue-img {
+        width: 100%;
+        max-width: 90%;
+      }
+
+      .menu-button {
+        font-size: 1rem;
+        padding: 8px 12px;
+      }
+
+      .menu-options a {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+      }
+    }
   </style>
+</head>
+<body>
+  <div class="menu-container">
+    <button class="menu-button">☰</button>
+    <div class="menu-options">
+      <a href="intro.html">Intro</a>
+      <a href="memo-hub.html">Memories-hub</a>
+      <a href="index.html">I love you(:</a>
+    </div>
+  </div>
+  <div class="container">
+    <img src="https://i.postimg.cc/5NK37jH0/Clipped-image-20250107-162455.png" alt="Teddy Bear" class="teddy">
+    <div class="question">we're nixinormal?</div>
+    <div class="buttons">
+      <button class="btn btn-yes" onclick="alert('a7senti ro7ii chatura:b ❤')">ofc</button>
+      <button class="btn btn-no" onmouseover="moveButton()">no</button>
+    </div>
+  </div>
+<script>
+  function moveButton() {
+    const noButton = document.querySelector('.btn-no');
+    const container = document.querySelector('.container');
   
-  <script>
-    // إظهار نافذة الحوار
-    function showDialogue() {
-      const dialogue = document.getElementById('dialogue');
-      dialogue.style.display = 'block';
-    }
+    const containerRect = container.getBoundingClientRect();
+    const buttonRect = noButton.getBoundingClientRect();
   
-    // إخفاء نافذة الحوار
-    function hideDialogue() {
-      const dialogue = document.getElementById('dialogue');
-      dialogue.style.display = 'none';
-    }
-  </script>
+    const newLeft = Math.random() * (containerRect.width - buttonRect.width);
+    const newTop = Math.random() * (containerRect.height - buttonRect.height);
+  
+    noButton.style.left = `${newLeft}px`;
+    noButton.style.top = `${newTop}px`;
+  }
+  function showDialogue() {
+  const dialogue = document.getElementById('dialogue');
+  dialogue.style.display = 'block';  // تأكد من أن النافذة تظهر عند الضغط
+}
+
+function hideDialogue() {
+  const dialogue = document.getElementById('dialogue');
+  dialogue.style.display = 'none';  // إخفاء النافذة عند إغلاقها
+}
+</script>
+  <div class="cat-container">
+    <img src="https://i.postimg.cc/q7QNCYVZ/dg8idr3-46121b2a-2beb-4f64-9caa-0d046f39eac0-1.gif" 
+         alt="Cat Sticker" 
+         class="cat-sticker" 
+         onclick="showDialogue()">
+  </div>
+  
+  <div class="dialogue-box" id="dialogue">
+    <img src="https://i.postimg.cc/gjLjQ2wf/Clipped-image-20250109-163425.png" alt="Dialogue" class="dialogue-img">
+    <button class="close-dialogue" onclick="hideDialogue()">×</button>
+  </div>
 </body>
 </html>
