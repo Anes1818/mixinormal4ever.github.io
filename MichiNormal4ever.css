@@ -911,10 +911,10 @@ justify-content: center;
     color: #ffffff;
     font-family: cursive;
     font-size: xx-large;
-    text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 
+    text-shadow: 0 0 5px rgba(132, 20, 20, 0.8), 
                  0 0 10px rgba(255, 255, 255, 0.6), 
-                 0 0 15px rgba(255, 255, 0, 0.8), 
-                 0 0 20px rgba(255, 255, 0, 1);
+                 0 0 15px rgba(194, 72, 194, 0.8), 
+                 0 0 20px rgb(171, 73, 171);
     animation: text-glow 1.5s infinite alternate;
 }
 
@@ -923,14 +923,14 @@ justify-content: center;
     0% {
         text-shadow: 0 0 5px rgba(255, 255, 255, 0.8), 
                      0 0 10px rgba(255, 255, 255, 0.6), 
-                     0 0 15px rgba(255, 255, 0, 0.8), 
-                     0 0 20px rgba(255, 255, 0, 1);
+                     0 0 15px rgba(132, 65, 138, 0.8), 
+                     0 0 20px rgb(134, 72, 148);
     }
     100% {
         text-shadow: 0 0 10px rgba(255, 255, 255, 1), 
                      0 0 20px rgba(255, 255, 255, 1), 
-                     0 0 25px rgba(255, 255, 0, 1), 
-                     0 0 30px rgba(255, 255, 0, 1);
+                     0 0 25px rgb(150, 73, 153), 
+                     0 0 30px rgb(128, 65, 150);
     }
 }
 
@@ -975,7 +975,7 @@ justify-content: center;
         color: #000000;
     }.star10 {
         top: calc(12% + 20px); 
-        left: 15%; 
+        left: 10%; 
         width: 50px; 
         height: 50px;
         pointer-events:auto;
@@ -1432,16 +1432,13 @@ header p {
       .clickable-khadija { top: 70%; left: 90%; }
       .clickable-khadija {
         cursor: pointer;
+        z-index: 9999;
         transition: transform 0.3s;
-          z-index: 1000;
         cursor:url(https://i.postimg.cc/MTscgR2V/Clipped-image-20241230-212915.png), auto;
           }
-      
-      
-      .clickable-khadija:hover {
-        transform: scale(1.2); /* تكبير النجمة عند تمرير الماوس */
-      }
-     /* تصميم الصورة في وضع ملء الشاشة */
+      /* تنسيق خاص للشاشات الصغيرة */
+ 
+     
 .modal {
     display: none; /* مخفي بشكل افتراضي */
     position: fixed; /* ثابت على الشاشة */
