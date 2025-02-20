@@ -4,6 +4,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">   
     <title>MY Valentina</title>  
     <style>  
+        @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;700&display=swap');
+
         @import url('https://fonts.googleapis.com/css2?family=Great+Vibes&display=swap');  
         @import url('https://fonts.googleapis.com/css2?family=Raleway:wght@300;400&display=swap');  * {  
         margin: 0;  
@@ -35,7 +37,29 @@
   transition: opacity 10s ease-in-out; /* تأثير بطيء وسلس */
   pointer-events: none; /* لمنع التأثير على التفاعل مع الصفحة */
   z-index: -1;
-}
+}   footer {
+            position: absolute;
+            bottom: 20px;
+            font-family: 'Cairo', sans-serif;
+            font-size: 22px;
+            font-weight: 700;
+            background: linear-gradient(90deg, #ff8c00, #ff3e6b, #8b5cf6);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            text-shadow: 2px 2px 10px rgba(255, 255, 255, 0.3);
+            opacity: 0;
+            animation: fadeIn 2s ease-in-out forwards, float 4s infinite alternate;
+        }
+   @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes float {
+            from { transform: translateY(0); }
+            to { transform: translateY(5px); }
+        }
+
     /* تأثير النجوم المتلألئة في الخلفية */  
     .stars {  
         position: fixed;  
@@ -1110,5 +1134,8 @@ setInterval(updateValentineProgress, 1000);
 
 
    </script>
-   </body> 
+   </body>    <footer><p>ana 3omrek, enti 3omori</p>
+    
+</footer>
+
     </html>
