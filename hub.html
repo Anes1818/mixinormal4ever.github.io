@@ -696,6 +696,55 @@
 /* Responsive Adjustments */
 @media (max-width: 768px) {
    
+}@media (max-width: 768px) {
+    /* تحسين عناصر التحكم */
+    .playlist-controls {
+        flex-direction: column;
+    }
+    
+    #youtube-url {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    #add-video {
+        width: 100%;
+    }
+    
+    /* تحسين حجم الفيديوهات */
+    .video-iframe {
+        height: 180px !important;
+    }
+    
+    /* تحسين حجم العناصر في المجرة */
+    .galaxy-item {
+        width: 100%;
+        height: 300px;
+    }
+}@media (max-width: 768px) {
+    /* تحسين حجم الخط للعناوين */
+    .magic-header h1 {
+        font-size: 3rem !important;
+    }
+    
+    /* تحسين تباعد العناصر */
+    .cosmic-archive {
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+    
+    /* تحسين حجم الكواكب */
+    .memory-planet {
+        width: 250px !important;
+        height: 250px !important;
+    }
+    
+    /* إصلاح مشكلة القمر العائم */
+    #floating-moon {
+        bottom: 70px !important;
+        right: 20px !important;
+        font-size: 2.5rem !important;
+    }
 }
     </style>
 </head>
@@ -1078,7 +1127,17 @@ window.onload = function() {
         color: 'var(--text-color)',
         confirmButtonColor: 'var(--accent-pink)'
     });
-}
+}// تعديل الحدث لجعله أكثر تفاعلية على الهاتف
+document.getElementById('floating-moon').addEventListener('click', function(e) {
+    e.preventDefault();
+    window.location.href = 'index.html';
+    
+    // تأثير إضافي للتفاعل
+    this.style.transform = 'scale(1.5)';
+    setTimeout(() => {
+        this.style.transform = 'scale(1)';
+    }, 300);
+});
     </script>
 </body>
 </html>
