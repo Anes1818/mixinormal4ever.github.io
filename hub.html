@@ -1137,7 +1137,8 @@ document.getElementById('floating-moon').addEventListener('click', function(e) {
     setTimeout(() => {
         this.style.transform = 'scale(1)';
     }, 300);
-});
+});// هذا سيغير عنوان URL في شريط العنوان دون إعادة تحميل الصفحة
+history.pushState({}, '', 'hub');
     </script>
 </body>
 </html>
