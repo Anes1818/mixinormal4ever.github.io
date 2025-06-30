@@ -891,7 +891,8 @@
     </main>
 
    <!-- بهذا الكود الجديد -->
-<a href="../" id="floating-moon" style="position:fixed; bottom:30px; right:30px; font-size:3rem; cursor:pointer; z-index:100; animation:float 4s ease-in-out infinite; text-decoration:none; color:inherit;">
+<a href="../index.html" id="floating-moon" 
+   style="position:fixed; bottom:30px; right:30px; font-size:3rem; cursor:pointer; z-index:100; animation:float 4s ease-in-out infinite; text-decoration:none; color:inherit;">
     🌕
 </a>
 
@@ -945,17 +946,7 @@ function createCosmos() {
     }
 }
 
-// Floating Moon Effect
-document.getElementById('floating-moon').addEventListener('click', function() {
-    this.innerHTML = '🌕';
-    document.body.style.backgroundImage = 
-        'radial-gradient(circle at center, rgba(255,204,0,0.1) 0%, transparent 60%)';
-    
-    setTimeout(() => {
-        this.innerHTML = '🌙';
-        document.body.style.backgroundImage = '';
-    }, 2000);
-});
+
 
 // Playlist System
 document.addEventListener('DOMContentLoaded', function() {
