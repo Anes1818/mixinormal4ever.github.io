@@ -994,26 +994,43 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
     
-    function extractVideoId(url) {
-        // Remove any query parameters and hash
-        const cleanedUrl = url.split('?')[0].split('#')[0];
-        
-        // Handle youtu.be links
-        if (cleanedUrl.includes('youtu.be/')) {
-            return cleanedUrl.split('youtu.be/')[1];
-        }
-        // Handle full YouTube URLs
-        else if (cleanedUrl.includes('youtube.com')) {
-            const regExp = /^.(v\/|watch\?v=|embed\/|youtu.be\/|v=)([^#&?]).*/;
-            const match = cleanedUrl.match(regExp);
-            return (match && match[2].length === 11) ? match[2] : null;
-        }
-        // Handle direct video IDs (11 characters)
-        else if (/^[a-zA-Z0-9_-]{11}$/.test(cleanedUrl)) {
-            return cleanedUrl;
-        }
-        return null;
+   function extractVideoId(url) {
+    // If URL is already a video ID (11 characters)
+    if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
+        return url;
     }
+    
+    // Standard YouTube patterns
+    const patterns = [
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/, // Standard URL
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/, // Embed URL
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/v\/([a-zA-Z0-9_-]{11})/, // Legacy URL
+        /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/, // Short URL
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/, // Shorts URL
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/live\/([a-zA-Z0-9_-]{11})/, // Live URL
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/clip\/([a-zA-Z0-9_-]{11})/, // Clip URL
+        /[?&]v=([a-zA-Z0-9_-]{11})/, // v parameter in query string
+        /[?&]vi?=([a-zA-Z0-9_-]{11})/, // vi parameter in query string
+        /\/embed\/([a-zA-Z0-9_-]{11})/, // Embed path
+        /\/v\/([a-zA-Z0-9_-]{11})/, /\/e\/([a-zA-Z0-9_-]{11})/ // Alternate paths
+    ];
+    
+    // Try all patterns
+    for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1]) {
+            return match[1];
+        }
+    }
+    
+    // Try to extract from any URL with 11 char video ID
+    const last11Chars = url.split('/').pop().split('?')[0].split('&')[0];
+    if (/^[a-zA-Z0-9_-]{11}$/.test(last11Chars)) {
+        return last11Chars;
+    }
+    
+    return null; // No valid video ID found
+}
 
     function loadVideos() {
         database.ref('playlist').orderByChild('addedAt').on('value', (snapshot) => {
