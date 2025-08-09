@@ -968,31 +968,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    function addVideo(url) {
-        const videoId = extractVideoId(url);
-        
-        if (!videoId) {
-            alert("3omri, please enter a valid YouTube URL! ❤");
-            return;
-        }
-
-        // Ask for a custom title
-        const title = prompt("3omri, give this video a sweet name:", "Our Song 💖") || "Our Memory";
-
-        try {
-            const newVideoRef = database.ref('playlist').push();
-            newVideoRef.set({
-                videoId: videoId,
-                title: title,
-                date: new Date().toISOString(),
-                addedAt: firebase.database.ServerValue.TIMESTAMP
-            });
-            alert("Done, 3omri! Video added with love. 🌙✨");
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Oops, 3omri! Something went wrong: " + error.message);
-        }
+   function addVideo(url) {
+    const videoId = extractVideoId(url);
+    
+    if (!videoId) {
+        alert("3omri, please enter a valid YouTube URL! ❤");
+        return;
     }
+
+    const title = prompt("3omri, give this video a sweet name:", "Our Song 💖") || "Our Memory";
+
+    try {
+        const newVideoRef = database.ref('playlist').push();
+        newVideoRef.set({
+            videoId: videoId,
+            title: title,
+            date: new Date().toISOString(),
+            addedAt: firebase.database.ServerValue.TIMESTAMP
+        });
+        alert("Done, 3omri! Video added with love. 🌙✨");
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Oops, 3omri! Something went wrong: " + error.message);
+    }
+}
     
    function extractVideoId(url) {
     // If URL is already a video ID (11 characters)
@@ -1032,45 +1031,53 @@ document.addEventListener('DOMContentLoaded', function() {
     return null; // No valid video ID found
 }
 
-    function loadVideos() {
-        database.ref('playlist').orderByChild('addedAt').on('value', (snapshot) => {
-            const videosContainer = document.getElementById('videos-container');
-            videosContainer.innerHTML = '';
-            
-            const videos = [];
-            snapshot.forEach((childSnapshot) => {
-                videos.push({
-                    key: childSnapshot.key,
-                    ...childSnapshot.val()
-                });
-            });
-            
-            // Sort videos from newest to oldest
-            videos.sort((a, b) => b.addedAt - a.addedAt);
-            
-            videos.forEach(video => {
-                addVideoToDOM(video.videoId, video.key, video.title);
+   function loadVideos() {
+    database.ref('playlist').orderByChild('addedAt').on('value', (snapshot) => {
+        const videosContainer = document.getElementById('videos-container');
+        videosContainer.innerHTML = '';
+        
+        const videos = [];
+        snapshot.forEach((childSnapshot) => {
+            videos.push({
+                key: childSnapshot.key,
+                ...childSnapshot.val()
             });
         });
-    }
-
-    function addVideoToDOM(videoId, firebaseKey, title) {
-        const videosContainer = document.getElementById('videos-container');
         
-        const videoItem = document.createElement('div');
-        videoItem.className = 'video-item';
-        videoItem.innerHTML = `
-            <button class="delete-video" onclick="deleteVideo('${firebaseKey}', this)">×</button>
-            <iframe class="video-iframe" src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
-            <div class="video-info">
-                <div class="video-title">${title}</div>
-               // صحيح: يعرض التاريخ المخزن في Firebase
-            <small>Added on ${new Date(video.date).toLocaleDateString()}</small>
-            </div>
-        `;
+        // ترتيب الفيديوهات من الأحدث إلى الأقدم
+        videos.sort((a, b) => b.addedAt - a.addedAt);
         
-        videosContainer.appendChild(videoItem);
-    }
+        videos.forEach(video => {
+            addVideoToDOM(video.videoId, video.key, video);
+        });
+    });
+}
+function addVideoToDOM(videoId, firebaseKey, videoData) {
+    const videosContainer = document.getElementById('videos-container');
+    
+    // تحويل تاريخ الإضافة من Firebase إلى تاريخ مقروء
+    const addedDate = new Date(videoData.addedAt || videoData.date || Date.now());
+    const formattedDate = addedDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    const videoItem = document.createElement('div');
+    videoItem.className = 'video-item';
+    videoItem.innerHTML = `
+        <button class="delete-video" onclick="deleteVideo('${firebaseKey}', this)">×</button>
+        <iframe class="video-iframe" src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+        <div class="video-info">
+            <div class="video-title">${videoData.title}</div>
+            <small>Added on ${formattedDate}</small>
+        </div>
+    `;
+    
+    videosContainer.appendChild(videoItem);
+}
 });
 
 // Global delete function
