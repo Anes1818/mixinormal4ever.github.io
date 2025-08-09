@@ -1064,7 +1064,8 @@ document.addEventListener('DOMContentLoaded', function() {
             <iframe class="video-iframe" src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
             <div class="video-info">
                 <div class="video-title">${title}</div>
-                <small>Added on ${new Date().toLocaleDateString()}</small>
+               // صحيح: يعرض التاريخ المخزن في Firebase
+small>Added on ${new Date(video.date).toLocaleDateString()}</small>
             </div>
         `;
         
