@@ -94,7 +94,6 @@
 </div></div><div class="galaxy-collection"><div class="galaxy-item love-letters-menu"><i class="fas galaxy-icon fa-heart"></i> <img alt="Love Letters"class="galaxy-image"src="https://i.postimg.cc/NfF9RSkv/retouch-2025062922102263.jpg"><div class="sub-letters"><div class="sub-letter-item"onclick='window.open("https://drive.google.com/file/d/1bdzQZiARK--Od7ZjQ8BeWZwj47gXwiQp/view?usp=drivesdk","_blank")'>seraphic</div><div class="sub-letter-item"onclick='window.open("https://drive.google.com/file/d/1_bXpY2B_TC-aX9Dq8Fl3YSwVdUQYp1gy/view?usp=drivesdk","_blank")'>letter</div><div class="sub-letter-item"onclick='window.open("https://drive.google.com/file/d/16V-PSVpQNwBomUga4lwZ-cxWv73O6Ywx/view?usp=drivesdk","_blank")'>graduation</div><div class="sub-letter-item"onclick='window.open("https://drive.google.com/file/d/16oMlA4KphW6Dz4yAW5KtoAN22tKv31L0/view?usp=drivesdk","_blank")'>words I hold dear</div><div class="sub-letter-item"onclick='window.open("https://aes86.pixieset.com/lettreimalwayswithyou/","_blank")'>always with you</div></div></div><div class="galaxy-item"onclick='window.open("https://aes86.pixieset.com/ourdraws/","_blank")'><i class="fas galaxy-icon fa-paint-brush"></i> <img alt="Our Draws"class="galaxy-image"src="https://i.postimg.cc/7L5rV1Q6/Screenshot-20250629-223426-Gallery.jpg"><div class="galaxy-content"><h3 class="galaxy-title">Our Draws</h3><p class="galaxy-desc">Beautiful drawings expressing our love</div></div><div class="galaxy-item"onclick='window.open("https://aes86.pixieset.com/followers/","_blank")'><i class="fas galaxy-icon fa-music"></i> <img alt="Our Songs"class="galaxy-image"src="https://i.postimg.cc/cHT7LY0R/Screenshot-20250629-230518-Photos.jpg"><div class="galaxy-content"><h3 class="galaxy-title">our petals</h3><p class="galaxy-desc">followers we shared</div></div></div><div class="intro-section"><div class="playlist-header"><h2>Intro</h2><p>I think this vid should be archived</div><div class="video-container-wrapper"><div class="local-video-container"><video class="romantic-video"controls id="ourLoveVideo"poster="https://i.postimg.cc/5yqrR5yz/Blue-Gold-Stars-Elegant-Rehearsal-Dinner-Invitation-20250630-173242-0000.png"><source src="/3omri/khadija/assets/videos
 /output(compress-video-online.com) (1).mp4
 "type="video/mp4">Your browser does not support the video tag.</video><div class="video-overlay"><button onclick="playVideo()"class="heart-beat play-btn"><i class="fas fa-play"></i></button><div class="hearts-overlay"></div></div></div><div class="love-quote"><p>"Every moment with you feels like a beautiful dream I never want to wake up from khadija~"</div></div><div class="playlist-section"><div class="playlist-header"><h2>Our Playlist</h2><p>Add your favorite songs/vids here!</div><div class="playlist-controls"><input id="youtube-url"placeholder="Enter YouTube link (e.g.: https://youtu.be/xxx)"dir="ltr"> <button id="add-video">add</button></div><div class="videos-container"id="videos-container"></div></div></main><a href="/3omri"id="floating-moon"style="position:fixed;bottom:30px;right:30px;font-size:3rem;cursor:pointer;z-index:100;animation:float 4s ease-in-out infinite;text-decoration:none;color:inherit">🌕</a><script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script><script>// 🔥 Firebase Configuration
-// 🔥 Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyBvHEucC6KmogScRgzB00uB3RZUtuscMI0",
     authDomain: "aness-20955.firebaseapp.com",
@@ -109,13 +108,46 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// Playlist System - Load once + update UI manually
+// Create Cosmos
+function createCosmos() {
+    const cosmicBg = document.getElementById('cosmicBg');
+    
+    // Stars
+    for (let i = 0; i < 150; i++) {
+        const star = document.createElement('div');
+        star.classList.add('star');
+        star.style.left = Math.random() * 100 + 'vw';
+        star.style.top = Math.random() * 100 + 'vh';
+        star.style.width = (Math.random() * 3 + 1) + 'px';
+        star.style.height = star.style.width;
+        star.style.color = i % 3 === 0 ? 'var(--accent-pink)' : 
+                         i % 2 === 0 ? 'var(--accent-gold)' : 'white';
+        star.style.setProperty('--duration', (Math.random() * 5 + 3) + 's');
+        cosmicBg.appendChild(star);
+    }
+    
+    // Comets
+    for (let i = 0; i < 5; i++) {
+        const comet = document.createElement('div');
+        comet.classList.add('comet');
+        comet.style.left = Math.random() * 100 + 'vw';
+        comet.style.top = Math.random() * 100 + 'vh';
+        comet.style.setProperty('--duration', (Math.random() * 20 + 10) + 's');
+        comet.style.animationDelay = Math.random() * 10 + 's';
+        cosmicBg.appendChild(comet);
+    }
+}
+
+
+
+// Playlist System
 document.addEventListener('DOMContentLoaded', function() {
     const addButton = document.getElementById('add-video');
     const urlInput = document.getElementById('youtube-url');
+    const videosContainer = document.getElementById('videos-container');
     
-    // Load saved videos once when page opens
-    loadVideosOnce();
+    // Load saved videos when page opens
+    loadVideos();
     
     // Add new video
     addButton.addEventListener('click', function() {
@@ -126,128 +158,119 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    function loadVideosOnce() {
-        database.ref('playlist').orderByChild('addedAt').once('value')
-            .then((snapshot) => {
-                const videosContainer = document.getElementById('videos-container');
-                videosContainer.innerHTML = '';
-                
-                const videos = [];
-                snapshot.forEach((childSnapshot) => {
-                    videos.push({
-                        key: childSnapshot.key,
-                        ...childSnapshot.val()
-                    });
-                });
-                
-                // ترتيب الفيديوهات من الأحدث إلى الأقدم
-                videos.sort((a, b) => b.addedAt - a.addedAt);
-                
-                videos.forEach(video => {
-                    addVideoToDOM(video.videoId, video.key, video);
-                });
-            })
-            .catch(error => {
-                console.error("Error loading videos:", error);
-            });
+   function addVideo(url) {
+    const videoId = extractVideoId(url);
+    
+    if (!videoId) {
+        alert("3omri, please enter a valid YouTube URL! ❤");
+        return;
     }
 
-    function addVideo(url) {
-        const videoId = extractVideoId(url);
-        
-        if (!videoId) {
-            alert("3omri, please enter a valid YouTube URL! ❤");
-            return;
-        }
+    const title = prompt("3omri, give this video a sweet name:", "Our Song 💖") || "Our Memory";
 
-        const title = prompt("3omri, give this video a sweet name:", "Our Song 💖") || "Our Memory";
-
-        try {
-            const newVideoRef = database.ref('playlist').push();
-            const newVideoKey = newVideoRef.key;
-            
-            const videoData = {
-                videoId: videoId,
-                title: title,
-                date: new Date().toISOString(),
-                addedAt: firebase.database.ServerValue.TIMESTAMP
-            };
-            
-            newVideoRef.set(videoData).then(() => {
-                alert("Done, 3omri! Video added with love. 🌙✨");
-                // إضافة الفيديو مباشرة للواجهة بدون إعادة تحميل
-                addVideoToDOM(videoId, newVideoKey, videoData);
-            });
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Oops, 3omri! Something went wrong: " + error.message);
+    try {
+        const newVideoRef = database.ref('playlist').push();
+        newVideoRef.set({
+            videoId: videoId,
+            title: title,
+            date: new Date().toISOString(),
+            addedAt: firebase.database.ServerValue.TIMESTAMP
+        });
+        alert("Done, 3omri! Video added with love. 🌙✨");
+    } catch (error) {
+        console.error("Error:", error);
+        alert("Oops, 3omri! Something went wrong: " + error.message);
+    }
+}
+    
+   function extractVideoId(url) {
+    // If URL is already a video ID (11 characters)
+    if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
+        return url;
+    }
+    
+    // Standard YouTube patterns
+    const patterns = [
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/, // Standard URL
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/, // Embed URL
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/v\/([a-zA-Z0-9_-]{11})/, // Legacy URL
+        /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/, // Short URL
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/, // Shorts URL
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/live\/([a-zA-Z0-9_-]{11})/, // Live URL
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/clip\/([a-zA-Z0-9_-]{11})/, // Clip URL
+        /[?&]v=([a-zA-Z0-9_-]{11})/, // v parameter in query string
+        /[?&]vi?=([a-zA-Z0-9_-]{11})/, // vi parameter in query string
+        /\/embed\/([a-zA-Z0-9_-]{11})/, // Embed path
+        /\/v\/([a-zA-Z0-9_-]{11})/, /\/e\/([a-zA-Z0-9_-]{11})/ // Alternate paths
+    ];
+    
+    // Try all patterns
+    for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1]) {
+            return match[1];
         }
     }
     
-    // باقي الدوال تبقى كما هي
-    function extractVideoId(url) {
-        if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
-            return url;
-        }
-        
-        const patterns = [
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/v\/([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/live\/([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/clip\/([a-zA-Z0-9_-]{11})/,
-            /[?&]v=([a-zA-Z0-9_-]{11})/,
-            /[?&]vi?=([a-zA-Z0-9_-]{11})/,
-            /\/embed\/([a-zA-Z0-9_-]{11})/,
-            /\/v\/([a-zA-Z0-9_-]{11})/, /\/e\/([a-zA-Z0-9_-]{11})/
-        ];
-        
-        for (const pattern of patterns) {
-            const match = url.match(pattern);
-            if (match && match[1]) {
-                return match[1];
-            }
-        }
-        
-        const last11Chars = url.split('/').pop().split('?')[0].split('&')[0];
-        if (/^[a-zA-Z0-9_-]{11}$/.test(last11Chars)) {
-            return last11Chars;
-        }
-        
-        return null;
+    // Try to extract from any URL with 11 char video ID
+    const last11Chars = url.split('/').pop().split('?')[0].split('&')[0];
+    if (/^[a-zA-Z0-9_-]{11}$/.test(last11Chars)) {
+        return last11Chars;
     }
+    
+    return null; // No valid video ID found
+}
 
-    function addVideoToDOM(videoId, firebaseKey, videoData) {
+   function loadVideos() {
+    database.ref('playlist').orderByChild('addedAt').on('value', (snapshot) => {
         const videosContainer = document.getElementById('videos-container');
+        videosContainer.innerHTML = '';
         
-        const addedDate = new Date(videoData.addedAt || videoData.date || Date.now());
-        const formattedDate = addedDate.toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+        const videos = [];
+        snapshot.forEach((childSnapshot) => {
+            videos.push({
+                key: childSnapshot.key,
+                ...childSnapshot.val()
+            });
         });
         
-        const videoItem = document.createElement('div');
-        videoItem.className = 'video-item';
-        videoItem.innerHTML = `
-            <button class="delete-video" onclick="deleteVideo('${firebaseKey}', this)">×</button>
-            <iframe class="video-iframe" src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
-            <div class="video-info">
-                <div class="video-title">${videoData.title}</div>
-                <small>Added on ${formattedDate}</small>
-            </div>
-        `;
+        // ترتيب الفيديوهات من الأحدث إلى الأقدم
+        videos.sort((a, b) => b.addedAt - a.addedAt);
         
-        // إضافة الفيديو في البداية (الأحدث أولاً)
-        videosContainer.insertBefore(videoItem, videosContainer.firstChild);
-    }
+        videos.forEach(video => {
+            addVideoToDOM(video.videoId, video.key, video);
+        });
+    });
+}
+function addVideoToDOM(videoId, firebaseKey, videoData) {
+    const videosContainer = document.getElementById('videos-container');
+    
+    // تحويل تاريخ الإضافة من Firebase إلى تاريخ مقروء
+    const addedDate = new Date(videoData.addedAt || videoData.date || Date.now());
+    const formattedDate = addedDate.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+    
+    const videoItem = document.createElement('div');
+    videoItem.className = 'video-item';
+    videoItem.innerHTML = `
+        <button class="delete-video" onclick="deleteVideo('${firebaseKey}', this)">×</button>
+        <iframe class="video-iframe" src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
+        <div class="video-info">
+            <div class="video-title">${videoData.title}</div>
+            <small>Added on ${formattedDate}</small>
+        </div>
+    `;
+    
+    videosContainer.appendChild(videoItem);
+}
 });
 
-// تعديل دالة الحذف لتحديث الواجهة مباشرة
+// Global delete function
 function deleteVideo(firebaseKey, buttonElement) {
     if (confirm("3omri, are you sure you want to delete this vid? ")) {
         buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
@@ -255,22 +278,24 @@ function deleteVideo(firebaseKey, buttonElement) {
         
         database.ref('playlist').child(firebaseKey).remove()
             .then(() => {
-                // إزالة العنصر مباشرة من الواجهة
-                const videoItem = buttonElement.closest('.video-item');
-                videoItem.style.opacity = '0';
-                videoItem.style.transform = 'translateX(-100%)';
+                // العنصر سيتم إزالته تلقائياً بواسطة الـ listener في loadVideos
+                buttonElement.innerHTML = '✓';
                 setTimeout(() => {
-                    videoItem.remove();
-                }, 300);
+                    buttonElement.closest('.video-item').style.opacity = '0';
+                    setTimeout(() => {
+                        buttonElement.closest('.video-item').remove();
+                    }, 300);
+                }, 500);
             })
             .catch(error => {
                 console.error("Error deleting video:", error);
                 buttonElement.innerHTML = '×';
                 buttonElement.disabled = false;
-                alert("Sorry 3omri, couldn't delete it. Try again?");
+                alert("Sorry 3omri, couldn't delete it. Try again?bhahahah");
             });
     }
 }
+
 // Page Initialization
 window.onload = function() {
     createCosmos();
