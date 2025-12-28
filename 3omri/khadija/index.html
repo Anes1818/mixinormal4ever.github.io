@@ -414,7 +414,6 @@ body {
     height: 30px;
     cursor: pointer;
     transition: var(--transition);
-    z-index: 2;
 }
 
 .delete-video:hover {
@@ -798,95 +797,6 @@ body {
         font-size: 1.5rem !important;
     }
 }
-
-/* تحسينات للأداء */
-.video-thumbnail {
-    position: relative;
-    width: 100%;
-    height: 200px;
-    background-size: cover;
-    background-position: center;
-    cursor: pointer;
-    overflow: hidden;
-}
-
-.video-thumbnail::after {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background: rgba(0,0,0,0.3);
-    transition: var(--transition);
-}
-
-.video-thumbnail:hover::after {
-    background: rgba(0,0,0,0.1);
-}
-
-.play-thumbnail-icon {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: rgba(255,75,138,0.8);
-    border-radius: 50%;
-    width: 60px;
-    height: 60px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 2;
-    transition: var(--transition);
-}
-
-.video-thumbnail:hover .play-thumbnail-icon {
-    transform: translate(-50%, -50%) scale(1.1);
-    background: rgba(255,75,138,0.9);
-}
-
-/* إصلاح مشكلة التمرير على الهواتف */
-@media (max-width: 768px) {
-    body {
-        -webkit-overflow-scrolling: touch;
-    }
-    
-    .playlist-section {
-        margin: 2rem auto;
-        padding: 1rem;
-    }
-    
-    .videos-container {
-        gap: 1rem;
-    }
-    
-    .video-item {
-        transform: translateZ(0);
-        backface-visibility: hidden;
-        -webkit-backface-visibility: hidden;
-    }
-}
-
-/* تحسين الـ smooth scrolling */
-html {
-    scroll-behavior: smooth;
-}
-
-/* تقليل تأثيرات الـ hover على الهواتف */
-@media (hover: none) {
-    .memory-planet:hover {
-        transform: none !important;
-    }
-    
-    .galaxy-item:hover {
-        transform: none !important;
-    }
-    
-    .video-item:hover {
-        transform: none !important;
-    }
-}
 </style>
 </head>
 <body>
@@ -942,7 +852,7 @@ html {
     <div class="galaxy-collection">
         <div class="galaxy-item love-letters-menu">
             <i class="fas galaxy-icon fa-heart"></i>
-            <img alt="Love Letters" class="galaxy-image" src="https://i.postimg.cc/NfF9RSkv/retouch-2025062922102263.jpg" loading="lazy">
+            <img alt="Love Letters" class="galaxy-image" src="https://i.postimg.cc/NfF9RSkv/retouch-2025062922102263.jpg">
             <div class="sub-letters">
                 <div class="sub-letter-item" onclick='window.open("https://drive.google.com/file/d/1bdzQZiARK--Od7ZjQ8BeWZwj47gXwiQp/view?usp=drivesdk","_blank")'>seraphic</div>
                 <div class="sub-letter-item" onclick='window.open("https://drive.google.com/file/d/1_bXpY2B_TC-aX9Dq8Fl3YSwVdUQYp1gy/view?usp=drivesdk","_blank")'>letter</div>
@@ -954,7 +864,7 @@ html {
         
         <div class="galaxy-item" onclick='window.open("https://aes86.pixieset.com/ourdraws/","_blank")'>
             <i class="fas galaxy-icon fa-paint-brush"></i>
-            <img alt="Our Draws" class="galaxy-image" src="https://i.postimg.cc/7L5rV1Q6/Screenshot-20250629-223426-Gallery.jpg" loading="lazy">
+            <img alt="Our Draws" class="galaxy-image" src="https://i.postimg.cc/7L5rV1Q6/Screenshot-20250629-223426-Gallery.jpg">
             <div class="galaxy-content">
                 <h3 class="galaxy-title">Our Draws</h3>
                 <p class="galaxy-desc">Beautiful drawings expressing our love</p>
@@ -963,7 +873,7 @@ html {
         
         <div class="galaxy-item" onclick='window.open("https://aes86.pixieset.com/followers/","_blank")'>
             <i class="fas galaxy-icon fa-music"></i>
-            <img alt="Our Songs" class="galaxy-image" src="https://i.postimg.cc/cHT7LY0R/Screenshot-20250629-230518-Photos.jpg" loading="lazy">
+            <img alt="Our Songs" class="galaxy-image" src="https://i.postimg.cc/cHT7LY0R/Screenshot-20250629-230518-Photos.jpg">
             <div class="galaxy-content">
                 <h3 class="galaxy-title">our petals</h3>
                 <p class="galaxy-desc">followers we shared</p>
@@ -1033,17 +943,8 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// متغير لتخزين الاشتراك في Firebase
-let firebaseSubscription = null;
-
 // تحسين: تحميل الفيديوهات مرة واحدة فقط عند الحاجة
 function loadVideos() {
-    // إلغاء أي اشتراك سابق
-    if (firebaseSubscription) {
-        firebaseSubscription();
-        firebaseSubscription = null;
-    }
-    
     const videosContainer = document.getElementById('videos-container');
     videosContainer.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--accent-gold)"><i class="fas fa-spinner fa-spin"></i> Loading videos...</div>';
     
@@ -1110,8 +1011,8 @@ function addVideoToDOM(videoId, firebaseKey, videoData) {
             <i class="fas fa-times"></i>
         </button>
         <div class="video-thumbnail" onclick="loadVideoPlayer('${videoId}', this)" 
-             style="background-image:url(https://img.youtube.com/vi/${videoId}/mqdefault.jpg)">
-            <div class="play-thumbnail-icon">
+             style="width:100%;height:200px;background:url(https://img.youtube.com/vi/${videoId}/mqdefault.jpg) center/cover;cursor:pointer;position:relative">
+            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,75,138,0.8);border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center">
                 <i class="fas fa-play" style="color:white;font-size:20px;margin-left:3px"></i>
             </div>
         </div>
@@ -1348,21 +1249,6 @@ document.addEventListener('DOMContentLoaded', function() {
             addButton.click();
         }
     });
-    
-    // تأثير ظهور الكواكب بشكل متدرج بعد فتح الحماية
-    setTimeout(() => {
-        const planets = document.querySelectorAll('.memory-planet');
-        planets.forEach((planet, index) => {
-            planet.style.opacity = '0';
-            planet.style.transform = 'translateY(30px) scale(0.9)';
-            
-            setTimeout(() => {
-                planet.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                planet.style.opacity = '1';
-                planet.style.transform = 'translateY(0) scale(1)';
-            }, index * 200);
-        });
-    }, 100);
 });
 
 // تشغيل الفيديو المحلي
@@ -1453,27 +1339,6 @@ function showGiftVideo() {
         }
     });
 }
-
-// تحسين: إضافة lazy loading للصور
-document.addEventListener('DOMContentLoaded', function() {
-    const images = document.querySelectorAll('img[loading="lazy"]');
-    
-    if ('IntersectionObserver' in window) {
-        const imageObserver = new IntersectionObserver((entries, observer) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    const img = entry.target;
-                    img.src = img.dataset.src;
-                    imageObserver.unobserve(img);
-                }
-            });
-        });
-        
-        images.forEach(img => {
-            imageObserver.observe(img);
-        });
-    }
-});
 
 // تحسين: منع التحميل الزائد عند التمرير
 let isScrolling = false;
