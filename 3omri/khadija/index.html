@@ -1,12 +1,725 @@
-<html dir="ltr"lang="en"><meta charset="UTF-8"><meta content="width=device-width,initial-scale=1"name="viewport"><title>A+K Love Archive</title><link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"rel="stylesheet"><script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script><link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css"rel="stylesheet"><style>@import url(https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&family=Great+Vibes&family=Raleway:wght@300;400&display=swap);:root{--main-bg:#0a011f;--text-color:#f8e3ff;--accent-pink:#ff4b8a;--accent-gold:#ffcc00;--accent-purple:#9d4edd;--card-bg:rgba(29, 0, 61, 0.3);--transition:all 0.7s cubic-bezier(0.16, 1, 0.3, 1);--glass-effect:linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0))}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Amiri,serif;background:var(--main-bg);color:var(--text-color);overflow-x:hidden;min-height:100vh;position:relative;background-image:radial-gradient(circle at 20% 30%,rgba(157,78,221,.15) 0,transparent 30%),radial-gradient(circle at 80% 70%,rgba(255,75,138,.15) 0,transparent 30%)}.cosmic-bg{position:fixed;top:0;left:0;width:100%;height:100%;z-index:-1;overflow:hidden}.star{position:absolute;background:#fff;border-radius:50%;filter:drop-shadow(0 0 5px currentColor);animation:twinkle var(--duration,5s) infinite alternate}@keyframes twinkle{0%{opacity:.3;transform:scale(.8)}100%{opacity:1;transform:scale(1.2)}}.comet{position:absolute;width:6px;height:6px;background:linear-gradient(90deg,rgba(255,255,255,0),#fff,#fff);border-radius:50%;filter:blur(1px);animation:cometFly var(--duration,20s) linear infinite;opacity:0}@keyframes cometFly{0%{transform:translateX(0) translateY(0);opacity:0}10%{opacity:1}100%{transform:translateX(100vw) translateY(100vh);opacity:0}}.magic-header{text-align:center;padding:3rem 0;position:relative;perspective:1000px}.magic-header h1{font-family:'Great Vibes',cursive;font-size:5rem;margin-bottom:1rem;background:linear-gradient(135deg,var(--accent-pink),var(--accent-gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;text-shadow:0 0 20px rgba(255,75,138,.3);animation:float 6s ease-in-out infinite;position:relative;display:inline-block}.magic-header h1::after{content:'';position:absolute;bottom:-10px;left:0;width:100%;height:3px;background:linear-gradient(90deg,transparent,var(--accent-purple),transparent);transform:scaleX(0);transform-origin:center;animation:expandLine 4s ease-in-out infinite 1s}@keyframes float{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-15px) rotate(2deg)}}@keyframes expandLine{0%,100%{transform:scaleX(0)}50%{transform:scaleX(1)}}.cosmic-archive{display:flex;flex-direction:column;align-items:center;gap:3rem;padding:2rem;max-width:1200px;margin:0 auto}.memory-orbit{position:relative;width:100%;max-width:900px;height:500px;margin:2rem auto}.memory-planet{position:absolute;width:300px;height:300px;border-radius:50%;background:var(--glass-effect);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);box-shadow:0 0 30px rgba(157,78,221,.3),inset 0 0 20px rgba(255,255,255,.1);overflow:hidden;transition:var(--transition);transform-style:preserve-3d;cursor:pointer}.memory-planet:nth-child(1){top:0;left:50%;transform:translateX(-50%);z-index:3;background-image:url(https://i.postimg.cc/76FqQNdP/Screenshot-20250627-181208-Brave-1.jpg);background-size:cover}.memory-planet:nth-child(2){top:30%;left:10%;z-index:2;width:250px;height:250px;background-image:url(https://i.postimg.cc/jqXzQbKg/Screenshot-20241226-152721-Drive.jpg);background-size:cover}.memory-planet:nth-child(3){top:30%;right:10%;z-index:2;width:250px;height:250px;background-image:url(https://i.postimg.cc/4yWh9qn2/Screenshot-20250627-181732-Photos.jpg);background-size:cover}.memory-planet:hover{transform:translateY(-10px) scale(1.05) rotateY(10deg);box-shadow:0 0 50px rgba(255,75,138,.5),inset 0 0 30px rgba(255,255,255,.2);z-index:10}.planet-overlay{position:absolute;top:0;left:0;width:100%;height:100%;background:linear-gradient(to top,rgba(0,0,0,.7),transparent 70%);display:flex;flex-direction:column;justify-content:flex-end;padding:1.5rem;opacity:0;transition:var(--transition)}.memory-planet:hover .planet-overlay{opacity:1}.planet-title{font-family:'Great Vibes',cursive;font-size:2rem;margin-bottom:.5rem;color:#fff;transform:translateY(20px);transition:var(--transition)}.planet-date{font-size:.9rem;color:var(--accent-gold);transform:translateY(20px);transition:var(--transition);transition-delay:.1s;padding-left:50px}.memory-planet:hover .planet-date,.memory-planet:hover .planet-title{transform:translateY(0)}.galaxy-collection{width:100%;display:flex;flex-wrap:wrap;justify-content:center;gap:2rem;margin-top:4rem}.galaxy-item{position:relative;width:280px;height:380px;border-radius:20px;overflow:hidden;background:var(--card-bg);backdrop-filter:blur(10px);border:1px solid rgba(255,255,255,.1);box-shadow:0 10px 30px rgba(0,0,0,.2);transition:var(--transition);cursor:pointer}.galaxy-item:hover{transform:translateY(-10px) scale(1.03);box-shadow:0 15px 40px rgba(157,78,221,.4),0 0 0 2px rgba(255,204,0,.3)}.galaxy-icon{position:absolute;top:20px;right:20px;font-size:2rem;color:var(--accent-gold);z-index:2}.galaxy-image{width:100%;height:100%;object-fit:cover;transition:var(--transition)}.galaxy-item:hover .galaxy-image{transform:scale(1.1);filter:brightness(.7)}.galaxy-content{position:absolute;bottom:0;left:0;width:100%;padding:2rem;background:linear-gradient(to top,rgba(10,1,31,.9),transparent);transform:translateY(100%);transition:var(--transition)}.galaxy-item:hover .galaxy-content{transform:translateY(0)}.galaxy-title{font-family:'Great Vibes',cursive;font-size:2rem;margin-bottom:.5rem;color:#fff}.galaxy-desc{font-size:.9rem;line-height:1.6;color:rgba(255,255,255,.8)}.playlist-section{width:100%;max-width:900px;margin:4rem auto;padding:2rem;background:var(--card-bg);backdrop-filter:blur(10px);border-radius:20px;border:1px solid rgba(255,255,255,.1);box-shadow:0 0 30px rgba(157,78,221,.3)}.playlist-header{text-align:center;margin-bottom:2rem}.playlist-header h2{font-family:'Great Vibes',cursive;font-size:3rem;color:var(--accent-pink);margin-bottom:1rem}.playlist-controls{display:flex;gap:1rem;margin-bottom:1rem}#youtube-url{flex:1;padding:.8rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);border-radius:10px;color:#fff;font-family:Amiri,serif}#add-video{padding:.8rem 1.5rem;background:linear-gradient(135deg,var(--accent-pink),var(--accent-purple));border:none;border-radius:10px;color:#fff;font-family:Amiri,serif;cursor:pointer;transition:var(--transition)}#add-video:hover{transform:translateY(-3px);box-shadow:0 5px 15px rgba(255,75,138,.4)}.videos-container{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1.5rem;margin-top:2rem}.video-item{position:relative;border-radius:10px;overflow:hidden;background:rgba(0,0,0,.3);transition:var(--transition)}.video-item:hover{transform:translateY(-5px);box-shadow:0 10px 20px rgba(255,75,138,.3)}.video-iframe{width:100%;height:200px;border:none;border-radius:10px 10px 0 0;object-fit:cover}.video-info{padding:1rem;background:rgba(10,1,31,.7)}.video-title{font-weight:700;margin-bottom:.5rem;color:var(--accent-gold)}.delete-video{position:absolute;top:10px;left:10px;background:rgba(0,0,0,.7);color:#fff;border:none;border-radius:50%;width:30px;height:30px;cursor:pointer;transition:var(--transition)}.delete-video:hover{background:var(--accent-pink)}.intro-section{width:100%;max-width:900px;margin:2rem auto;padding:2rem;background:var(--card-bg);backdrop-filter:blur(10px);border-radius:20px;border:1px solid rgba(255,255,255,.1);box-shadow:0 0 30px rgba(157,78,221,.3)}.heart-beat{animation:heartBeat 1.5s ease-in-out infinite}@keyframes heartBeat{0%,100%{transform:scale(1)}50%{transform:scale(1.1)}}.rotate-3d{animation:rotate3d 20s linear infinite}@keyframes rotate3d{0%{transform:rotateY(0)}100%{transform:rotateY(360deg)}}@media (max-width:768px){.magic-header h1{font-size:3rem}.memory-orbit{height:auto;display:flex;flex-direction:column;align-items:center;gap:2rem}.memory-planet{position:relative;top:auto!important;left:auto!important;right:auto!important;transform:none!important;margin-bottom:2rem}.videos-container{grid-template-columns:1fr}}.love-letters-menu{position:relative;overflow:visible}.sub-letters{position:absolute;top:calc(100% - 20px);left:0;width:100%;background:rgba(29,0,61,.95);backdrop-filter:blur(15px);border-radius:0 0 20px 20px;overflow:hidden;max-height:0;transition:all .5s cubic-bezier(.16,1,.3,1);z-index:5;box-shadow:0 10px 30px rgba(0,0,0,.3);border:1px solid rgba(255,255,255,.1);border-top:none}.love-letters-menu:hover .sub-letters{max-height:500px;padding:10px 0}.sub-letter-item{padding:1rem 1.5rem;border-top:1px solid rgba(255,255,255,.05);transition:all .3s ease;cursor:pointer;display:flex;align-items:center;gap:10px;color:rgba(255,255,255,.8)}.sub-letter-item i{color:var(--accent-pink);transition:all .3s ease}.sub-letter-item:hover{background:rgba(255,75,138,.15);padding-left:2rem;color:#fff}.sub-letter-item:hover i{transform:scale(1.2);color:var(--accent-gold)}.love-letters-menu:hover{border-radius:20px 20px 0 0;z-index:10}.love-letters-menu:hover .galaxy-image{transform:scale(1.05);filter:brightness(.6) saturate(1.2)}.love-letters-menu:hover .galaxy-content{transform:translateY(0);background:linear-gradient(to top,rgba(29,0,61,.9),transparent)}.video-container-wrapper{position:relative;max-width:800px;margin:2rem auto;border-radius:20px;overflow:hidden;box-shadow:0 20px 50px rgba(107,4,158,.3);border:2px solid rgba(255,204,0,.3)}.local-video-container{position:relative;width:100%;padding-top:56.25%;background:#1d003d;overflow:hidden}
-.romantic-video{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:contain}.video-overlay{position:absolute;top:0;left:0;width:100%;height:100%;display:flex;justify-content:center;align-items:center;background:rgba(10,1,31,.4);transition:all .5s ease;z-index:2}.video-overlay:hover{background:rgba(10,1,31,.2)}.play-btn{width:80px;height:80px;border-radius:50%;background:linear-gradient(135deg,var(--accent-pink),var(--accent-purple));border:none;color:#fff;font-size:2rem;cursor:pointer;display:flex;justify-content:center;align-items:center;box-shadow:0 0 30px rgba(255,75,138,.5);transition:var(--transition);z-index:3}.play-btn:hover{transform:scale(1.1);box-shadow:0 0 40px rgba(255,75,138,.8)}.local-video-container:hover .hearts-overlay{opacity:1}.video-controls{display:flex;justify-content:center;align-items:center;gap:1.5rem;padding:1.5rem;background:rgba(29,0,61,.7);border-radius:0 0 20px 20px}.control-btn{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff;padding:.8rem 1.5rem;border-radius:50px;cursor:pointer;transition:var(--transition);display:flex;align-items:center;gap:.5rem;font-family:Amiri,serif}.control-btn:hover{background:linear-gradient(135deg,var(--accent-pink),var(--accent-purple));transform:translateY(-3px)}#volumeSlider{width:100px;cursor:pointer;accent-color:var(--accent-pink)}.love-quote{text-align:center;margin-top:2rem;font-style:italic;font-size:1.2rem;color:var(--accent-gold);opacity:.8;font-family:'Great Vibes',cursive}@media (max-width:768px){.playlist-controls{flex-direction:column}#youtube-url{width:100%;margin-bottom:10px}#add-video{width:100%}.video-iframe{height:180px!important}.galaxy-item{width:100%;height:300px}}@media (max-width:768px){.magic-header h1{font-size:3rem!important}.cosmic-archive{padding:1rem;gap:1.5rem}.memory-planet{width:250px!important;height:250px!important}#floating-moon{bottom:70px!important;right:20px!important;font-size:2.5rem!important}}
+<html dir="ltr" lang="en">
+<head>
+<meta charset="UTF-8">
+<meta content="width=device-width,initial-scale=1" name="viewport">
+<title>A+K Love Archive</title>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+<style>
+@import url(https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&family=Great+Vibes&family=Raleway:wght@300;400&display=swap);
+
+:root {
+    --main-bg: #0a011f;
+    --text-color: #f8e3ff;
+    --accent-pink: #ff4b8a;
+    --accent-gold: #ffcc00;
+    --accent-purple: #9d4edd;
+    --card-bg: rgba(29, 0, 61, 0.3);
+    --transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    --glass-effect: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(255,255,255,0));
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Amiri, serif;
+    background: var(--main-bg);
+    color: var(--text-color);
+    overflow-x: hidden;
+    min-height: 100vh;
+    position: relative;
+    background-image: radial-gradient(circle at 20% 30%, rgba(157,78,221,.15) 0, transparent 30%),
+                      radial-gradient(circle at 80% 70%, rgba(255,75,138,.15) 0, transparent 30%);
+}
+
+.cosmic-bg {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    overflow: hidden;
+}
+
+.star {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    filter: drop-shadow(0 0 5px currentColor);
+    animation: twinkle var(--duration,5s) infinite alternate;
+}
+
+@keyframes twinkle {
+    0% { opacity: .3; transform: scale(.8); }
+    100% { opacity: 1; transform: scale(1.2); }
+}
+
+.comet {
+    position: absolute;
+    width: 6px;
+    height: 6px;
+    background: linear-gradient(90deg, rgba(255,255,255,0), #fff, #fff);
+    border-radius: 50%;
+    filter: blur(1px);
+    animation: cometFly var(--duration,20s) linear infinite;
+    opacity: 0;
+}
+
+@keyframes cometFly {
+    0% { transform: translateX(0) translateY(0); opacity: 0; }
+    10% { opacity: 1; }
+    100% { transform: translateX(100vw) translateY(100vh); opacity: 0; }
+}
+
+.magic-header {
+    text-align: center;
+    padding: 3rem 0;
+    position: relative;
+    perspective: 1000px;
+}
+
+.magic-header h1 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 5rem;
+    margin-bottom: 1rem;
+    background: linear-gradient(135deg, var(--accent-pink), var(--accent-gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    text-shadow: 0 0 20px rgba(255,75,138,.3);
+    animation: float 6s ease-in-out infinite;
+    position: relative;
+    display: inline-block;
+}
+
+.magic-header h1::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: linear-gradient(90deg, transparent, var(--accent-purple), transparent);
+    transform: scaleX(0);
+    transform-origin: center;
+    animation: expandLine 4s ease-in-out infinite 1s;
+}
+
+@keyframes float {
+    0%, 100% { transform: translateY(0) rotate(-2deg); }
+    50% { transform: translateY(-15px) rotate(2deg); }
+}
+
+@keyframes expandLine {
+    0%, 100% { transform: scaleX(0); }
+    50% { transform: scaleX(1); }
+}
+
+.cosmic-archive {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3rem;
+    padding: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.memory-orbit {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    height: 500px;
+    margin: 2rem auto;
+}
+
+.memory-planet {
+    position: absolute;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: var(--glass-effect);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 0 30px rgba(157,78,221,.3), inset 0 0 20px rgba(255,255,255,.1);
+    overflow: hidden;
+    transition: var(--transition);
+    transform-style: preserve-3d;
+    cursor: pointer;
+}
+
+.memory-planet:nth-child(1) {
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 3;
+    background-image: url(https://i.postimg.cc/76FqQNdP/Screenshot-20250627-181208-Brave-1.jpg);
+    background-size: cover;
+}
+
+.memory-planet:nth-child(2) {
+    top: 30%;
+    left: 10%;
+    z-index: 2;
+    width: 250px;
+    height: 250px;
+    background-image: url(https://i.postimg.cc/jqXzQbKg/Screenshot-20241226-152721-Drive.jpg);
+    background-size: cover;
+}
+
+.memory-planet:nth-child(3) {
+    top: 30%;
+    right: 10%;
+    z-index: 2;
+    width: 250px;
+    height: 250px;
+    background-image: url(https://i.postimg.cc/4yWh9qn2/Screenshot-20250627-181732-Photos.jpg);
+    background-size: cover;
+}
+
+.memory-planet:hover {
+    transform: translateY(-10px) scale(1.05) rotateY(10deg);
+    box-shadow: 0 0 50px rgba(255,75,138,.5), inset 0 0 30px rgba(255,255,255,.2);
+    z-index: 10;
+}
+
+.planet-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(to top, rgba(0,0,0,.7), transparent 70%);
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.memory-planet:hover .planet-overlay {
+    opacity: 1;
+}
+
+.planet-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2rem;
+    margin-bottom: .5rem;
+    color: #fff;
+    transform: translateY(20px);
+    transition: var(--transition);
+}
+
+.planet-date {
+    font-size: .9rem;
+    color: var(--accent-gold);
+    transform: translateY(20px);
+    transition: var(--transition);
+    transition-delay: .1s;
+    padding-left: 50px;
+}
+
+.memory-planet:hover .planet-date,
+.memory-planet:hover .planet-title {
+    transform: translateY(0);
+}
+
+.galaxy-collection {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    margin-top: 4rem;
+}
+
+.galaxy-item {
+    position: relative;
+    width: 280px;
+    height: 380px;
+    border-radius: 20px;
+    overflow: hidden;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 10px 30px rgba(0,0,0,.2);
+    transition: var(--transition);
+    cursor: pointer;
+}
+
+.galaxy-item:hover {
+    transform: translateY(-10px) scale(1.03);
+    box-shadow: 0 15px 40px rgba(157,78,221,.4), 0 0 0 2px rgba(255,204,0,.3);
+}
+
+.galaxy-icon {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    font-size: 2rem;
+    color: var(--accent-gold);
+    z-index: 2;
+}
+
+.galaxy-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: var(--transition);
+}
+
+.galaxy-item:hover .galaxy-image {
+    transform: scale(1.1);
+    filter: brightness(.7);
+}
+
+.galaxy-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    padding: 2rem;
+    background: linear-gradient(to top, rgba(10,1,31,.9), transparent);
+    transform: translateY(100%);
+    transition: var(--transition);
+}
+
+.galaxy-item:hover .galaxy-content {
+    transform: translateY(0);
+}
+
+.galaxy-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2rem;
+    margin-bottom: .5rem;
+    color: #fff;
+}
+
+.galaxy-desc {
+    font-size: .9rem;
+    line-height: 1.6;
+    color: rgba(255,255,255,.8);
+}
+
+.playlist-section {
+    width: 100%;
+    max-width: 900px;
+    margin: 4rem auto;
+    padding: 2rem;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 0 30px rgba(157,78,221,.3);
+}
+
+.playlist-header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.playlist-header h2 {
+    font-family: 'Great Vibes', cursive;
+    font-size: 3rem;
+    color: var(--accent-pink);
+    margin-bottom: 1rem;
+}
+
+.playlist-controls {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+#youtube-url {
+    flex: 1;
+    padding: .8rem;
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    border-radius: 10px;
+    color: #fff;
+    font-family: Amiri, serif;
+}
+
+#add-video {
+    padding: .8rem 1.5rem;
+    background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+    border: none;
+    border-radius: 10px;
+    color: #fff;
+    font-family: Amiri, serif;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+#add-video:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(255,75,138,.4);
+}
+
+.videos-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+}
+
+.video-item {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(0,0,0,.3);
+    transition: var(--transition);
+}
+
+.video-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 10px 20px rgba(255,75,138,.3);
+}
+
+.video-iframe {
+    width: 100%;
+    height: 200px;
+    border: none;
+    border-radius: 10px 10px 0 0;
+    object-fit: cover;
+}
+
+.video-info {
+    padding: 1rem;
+    background: rgba(10,1,31,.7);
+}
+
+.video-title {
+    font-weight: 700;
+    margin-bottom: .5rem;
+    color: var(--accent-gold);
+}
+
+.delete-video {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    background: rgba(0,0,0,.7);
+    color: #fff;
+    border: none;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    cursor: pointer;
+    transition: var(--transition);
+    z-index: 2;
+}
+
+.delete-video:hover {
+    background: var(--accent-pink);
+}
+
+.intro-section {
+    width: 100%;
+    max-width: 900px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,.1);
+    box-shadow: 0 0 30px rgba(157,78,221,.3);
+}
+
+.heart-beat {
+    animation: heartBeat 1.5s ease-in-out infinite;
+}
+
+@keyframes heartBeat {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+.rotate-3d {
+    animation: rotate3d 20s linear infinite;
+}
+
+@keyframes rotate3d {
+    0% { transform: rotateY(0); }
+    100% { transform: rotateY(360deg); }
+}
+
+@media (max-width: 768px) {
+    .magic-header h1 {
+        font-size: 3rem;
+    }
+    
+    .memory-orbit {
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+    }
+    
+    .memory-planet {
+        position: relative;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        margin-bottom: 2rem;
+    }
+    
+    .videos-container {
+        grid-template-columns: 1fr;
+    }
+}
+
+.love-letters-menu {
+    position: relative;
+    overflow: visible;
+}
+
+.sub-letters {
+    position: absolute;
+    top: calc(100% - 20px);
+    left: 0;
+    width: 100%;
+    background: rgba(29,0,61,.95);
+    backdrop-filter: blur(15px);
+    border-radius: 0 0 20px 20px;
+    overflow: hidden;
+    max-height: 0;
+    transition: all .5s cubic-bezier(.16,1,.3,1);
+    z-index: 5;
+    box-shadow: 0 10px 30px rgba(0,0,0,.3);
+    border: 1px solid rgba(255,255,255,.1);
+    border-top: none;
+}
+
+.love-letters-menu:hover .sub-letters {
+    max-height: 500px;
+    padding: 10px 0;
+}
+
+.sub-letter-item {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(255,255,255,.05);
+    transition: all .3s ease;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: rgba(255,255,255,.8);
+}
+
+.sub-letter-item i {
+    color: var(--accent-pink);
+    transition: all .3s ease;
+}
+
+.sub-letter-item:hover {
+    background: rgba(255,75,138,.15);
+    padding-left: 2rem;
+    color: #fff;
+}
+
+.sub-letter-item:hover i {
+    transform: scale(1.2);
+    color: var(--accent-gold);
+}
+
+.love-letters-menu:hover {
+    border-radius: 20px 20px 0 0;
+    z-index: 10;
+}
+
+.love-letters-menu:hover .galaxy-image {
+    transform: scale(1.05);
+    filter: brightness(.6) saturate(1.2);
+}
+
+.love-letters-menu:hover .galaxy-content {
+    transform: translateY(0);
+    background: linear-gradient(to top, rgba(29,0,61,.9), transparent);
+}
+
+.video-container-wrapper {
+    position: relative;
+    max-width: 800px;
+    margin: 2rem auto;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 50px rgba(107,4,158,.3);
+    border: 2px solid rgba(255,204,0,.3);
+}
+
+.local-video-container {
+    position: relative;
+    width: 100%;
+    padding-top: 56.25%;
+    background: #1d003d;
+    overflow: hidden;
+}
+
+.romantic-video {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+}
+
+.video-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(10,1,31,.4);
+    transition: all .5s ease;
+    z-index: 2;
+}
+
+.video-overlay:hover {
+    background: rgba(10,1,31,.2);
+}
+
+.play-btn {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+    border: none;
+    color: #fff;
+    font-size: 2rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0 30px rgba(255,75,138,.5);
+    transition: var(--transition);
+    z-index: 3;
+}
+
+.play-btn:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 40px rgba(255,75,138,.8);
+}
+
+.local-video-container:hover .hearts-overlay {
+    opacity: 1;
+}
+
+.video-controls {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: rgba(29,0,61,.7);
+    border-radius: 0 0 20px 20px;
+}
+
+.control-btn {
+    background: rgba(255,255,255,.1);
+    border: 1px solid rgba(255,255,255,.2);
+    color: #fff;
+    padding: .8rem 1.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: var(--transition);
+    display: flex;
+    align-items: center;
+    gap: .5rem;
+    font-family: Amiri, serif;
+}
+
+.control-btn:hover {
+    background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+    transform: translateY(-3px);
+}
+
+#volumeSlider {
+    width: 100px;
+    cursor: pointer;
+    accent-color: var(--accent-pink);
+}
+
+.love-quote {
+    text-align: center;
+    margin-top: 2rem;
+    font-style: italic;
+    font-size: 1.2rem;
+    color: var(--accent-gold);
+    opacity: .8;
+    font-family: 'Great Vibes', cursive;
+}
+
+@media (max-width: 768px) {
+    .playlist-controls {
+        flex-direction: column;
+    }
+    
+    #youtube-url {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    
+    #add-video {
+        width: 100%;
+    }
+    
+    .video-iframe {
+        height: 180px !important;
+    }
+    
+    .galaxy-item {
+        width: 100%;
+        height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .magic-header h1 {
+        font-size: 3rem !important;
+    }
+    
+    .cosmic-archive {
+        padding: 1rem;
+        gap: 1.5rem;
+    }
+    
+    .memory-planet {
+        width: 250px !important;
+        height: 250px !important;
+    }
+    
+    #floating-moon {
+        bottom: 70px !important;
+        right: 20px !important;
+        font-size: 2.5rem !important;
+    }
+}
+
 .custom-video-popup {
     border: 1px solid var(--accent-purple) !important;
     border-radius: 20px !important;
     box-shadow: 0 0 40px rgba(157, 78, 221, 0.4) !important;
     overflow: hidden;
 }
-.memory-planet:nth-child(4) {background-size: cover;}
+
+.memory-planet:nth-child(4) {
+    background-size: cover;
+}
+
 /* تصميم متجاوب للنافذة المنبثقة */
 @media (max-width: 768px) {
     .custom-video-popup {
@@ -23,78 +736,288 @@
 .swal2-popup video::-webkit-media-controls-play-button {
     background-color: var(--accent-pink);
     border-radius: 50%;
-}/* أنماط خاصة للاستجابة على الهواتف - قسم الكواكب */
+}
+
+/* أنماط خاصة للاستجابة على الهواتف - قسم الكواكب */
 @media (max-width: 768px) {
-  .memory-orbit {
-    height: auto !important;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2rem;
-    padding: 1rem;
-  }
-  
-  .memory-planet {
-    position: relative !important;
-    top: auto !important;
-    left: auto !important;
-    right: auto !important;
-    transform: none !important;
-    margin-bottom: 2rem;
-    width: 280px !important;
-    height: 280px !important;
-  }
-  
-  .memory-planet:nth-child(2),
-  .memory-planet:nth-child(3),
-  .memory-planet:nth-child(4) {
-    width: 240px !important;
-    height: 240px !important;
-  }
-  
-  .planet-overlay {
-    padding: 1rem;
-  }
-  
-  .planet-title {
-    font-size: 1.7rem !important;
-  }
-  
-  .planet-date {
-    font-size: 0.8rem !important;
-    padding-left: 20px !important;
-  }
+    .memory-orbit {
+        height: auto !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+        padding: 1rem;
+    }
+    
+    .memory-planet {
+        position: relative !important;
+        top: auto !important;
+        left: auto !important;
+        right: auto !important;
+        transform: none !important;
+        margin-bottom: 2rem;
+        width: 280px !important;
+        height: 280px !important;
+    }
+    
+    .memory-planet:nth-child(2),
+    .memory-planet:nth-child(3),
+    .memory-planet:nth-child(4) {
+        width: 240px !important;
+        height: 240px !important;
+    }
+    
+    .planet-overlay {
+        padding: 1rem;
+    }
+    
+    .planet-title {
+        font-size: 1.7rem !important;
+    }
+    
+    .planet-date {
+        font-size: 0.8rem !important;
+        padding-left: 20px !important;
+    }
 }
 
 @media (max-width: 480px) {
-  .memory-planet {
-    width: 250px !important;
-    height: 250px !important;
-  }
-  
-  .memory-planet:nth-child(2),
-  .memory-planet:nth-child(3),
-  .memory-planet:nth-child(4) {
-    width: 220px !important;
-    height: 220px !important;
-  }
-  
-  .planet-title {
-    font-size: 1.5rem !important;
-  }
+    .memory-planet {
+        width: 250px !important;
+        height: 250px !important;
+    }
+    
+    .memory-planet:nth-child(2),
+    .memory-planet:nth-child(3),
+    .memory-planet:nth-child(4) {
+        width: 220px !important;
+        height: 220px !important;
+    }
+    
+    .planet-title {
+        font-size: 1.5rem !important;
+    }
+}
+
+/* تحسينات للأداء */
+.video-thumbnail {
+    position: relative;
+    width: 100%;
+    height: 200px;
+    background-size: cover;
+    background-position: center;
+    cursor: pointer;
+    overflow: hidden;
+}
+
+.video-thumbnail::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0,0,0,0.3);
+    transition: var(--transition);
+}
+
+.video-thumbnail:hover::after {
+    background: rgba(0,0,0,0.1);
+}
+
+.play-thumbnail-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(255,75,138,0.8);
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 2;
+    transition: var(--transition);
+}
+
+.video-thumbnail:hover .play-thumbnail-icon {
+    transform: translate(-50%, -50%) scale(1.1);
+    background: rgba(255,75,138,0.9);
+}
+
+/* إصلاح مشكلة التمرير على الهواتف */
+@media (max-width: 768px) {
+    body {
+        -webkit-overflow-scrolling: touch;
+    }
+    
+    .playlist-section {
+        margin: 2rem auto;
+        padding: 1rem;
+    }
+    
+    .videos-container {
+        gap: 1rem;
+    }
+    
+    .video-item {
+        transform: translateZ(0);
+        backface-visibility: hidden;
+        -webkit-backface-visibility: hidden;
+    }
+}
+
+/* تحسين الـ smooth scrolling */
+html {
+    scroll-behavior: smooth;
+}
+
+/* تقليل تأثيرات الـ hover على الهواتف */
+@media (hover: none) {
+    .memory-planet:hover {
+        transform: none !important;
+    }
+    
+    .galaxy-item:hover {
+        transform: none !important;
+    }
+    
+    .video-item:hover {
+        transform: none !important;
+    }
 }
 </style>
+</head>
+<body>
 
-<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0a011f;z-index:9999;display:flex;justify-content:center;align-items:center;flex-direction:column"id="password-protection"><div style="text-align:center;padding:2rem;background:rgba(29,0,61,.7);border-radius:20px;border:1px solid #9d4edd;max-width:400px;width:90%"><h1 style="font-family:'Great Vibes',cursive;font-size:2.5rem;color:#fc0;margin-bottom:1rem">Cosmic Love Archive</h1><p style="margin-bottom:2rem;color:#f8e3ff">Enter the secret code to unlock our memories</p><input id="password-input"placeholder="Enter code"style="padding:.8rem;width:100%;background:rgba(255,255,255,.1);border:1px solid #9d4edd;border-radius:10px;color:#fff;font-size:1.2rem;text-align:center;margin-bottom:1rem"type="password"> <button onclick="checkPassword()"style="padding:.8rem 2rem;background:linear-gradient(135deg,#ff4b8a,#9d4edd);border:none;border-radius:10px;color:#fff;font-size:1rem;cursor:pointer">Unlock</button><p style="color:#ff4b8a;margin-top:1rem;height:1.5rem"id="error-msg"></div></div><div class="cosmic-bg"id="cosmicBg"></div><header class="magic-header"><h1>Our Cosmic Love Archive</h1><p>Every memory is a planet in our heart's galaxy</header><main class="cosmic-archive">
-    <div class="memory-orbit"><div class="memory-planet heart-beat"onclick='window.open("https://draw.y99.in/boards/Mariana_anes","_blank")'style="background-image:url(https://i.postimg.cc/76FqQNdP/Screenshot-20250627-181208-Brave-1.jpg)"><div class="planet-overlay"><h3 class="planet-title">our room</h3><p class="planet-date">our draws and poems</div></div><div class="memory-planet"onclick='window.open("https://drive.google.com/file/d/16BtoctuVCOcFFSEPAiVD2caPuIoQQbOs/view","_blank")'style="background-image:url(https://i.postimg.cc/jqXzQbKg/Screenshot-20241226-152721-Drive.jpg)"><div class="planet-overlay"><h3 class="planet-title">journey to the moon</h3><p class="planet-date">our poems</div></div><div class="memory-planet"onclick="showComingSoon()"style="background-image:url(https://i.postimg.cc/4yWh9qn2/Screenshot-20250627-181732-Photos.jpg)"><div class="planet-overlay"><h3 class="planet-title">khadija heart:3</h3><p class="planet-date">coming soon</div></div><div class="memory-planet" onclick="showGiftVideo()" style="background-image:url('https://i.postimg.cc/FHSMCndr/Dofoto-20250918-15460954445cc25b9c2d39d94826119aa93e75413.jpg') ">
-    <div class="planet-overlay">
-        <h3 class="planet-title">Words of ro7i</h3>
-        <p class="planet-date">my my precious gift:3</p>
+<div style="position:fixed;top:0;left:0;width:100%;height:100%;background:#0a011f;z-index:9999;display:flex;justify-content:center;align-items:center;flex-direction:column" id="password-protection">
+    <div style="text-align:center;padding:2rem;background:rgba(29,0,61,.7);border-radius:20px;border:1px solid #9d4edd;max-width:400px;width:90%">
+        <h1 style="font-family:'Great Vibes',cursive;font-size:2.5rem;color:#fc0;margin-bottom:1rem">Cosmic Love Archive</h1>
+        <p style="margin-bottom:2rem;color:#f8e3ff">Enter the secret code to unlock our memories</p>
+        <input id="password-input" placeholder="Enter code" style="padding:.8rem;width:100%;background:rgba(255,255,255,.1);border:1px solid #9d4edd;border-radius:10px;color:#fff;font-size:1.2rem;text-align:center;margin-bottom:1rem" type="password">
+        <button onclick="checkPassword()" style="padding:.8rem 2rem;background:linear-gradient(135deg,#ff4b8a,#9d4edd);border:none;border-radius:10px;color:#fff;font-size:1rem;cursor:pointer">Unlock</button>
+        <p style="color:#ff4b8a;margin-top:1rem;height:1.5rem" id="error-msg"></p>
     </div>
-</div></div><div class="galaxy-collection"><div class="galaxy-item love-letters-menu"><i class="fas galaxy-icon fa-heart"></i> <img alt="Love Letters"class="galaxy-image"src="https://i.postimg.cc/NfF9RSkv/retouch-2025062922102263.jpg"><div class="sub-letters"><div class="sub-letter-item"onclick='window.open("https://drive.google.com/file/d/1bdzQZiARK--Od7ZjQ8BeWZwj47gXwiQp/view?usp=drivesdk","_blank")'>seraphic</div><div class="sub-letter-item"onclick='window.open("https://drive.google.com/file/d/1_bXpY2B_TC-aX9Dq8Fl3YSwVdUQYp1gy/view?usp=drivesdk","_blank")'>letter</div><div class="sub-letter-item"onclick='window.open("https://drive.google.com/file/d/16V-PSVpQNwBomUga4lwZ-cxWv73O6Ywx/view?usp=drivesdk","_blank")'>graduation</div><div class="sub-letter-item"onclick='window.open("https://drive.google.com/file/d/16oMlA4KphW6Dz4yAW5KtoAN22tKv31L0/view?usp=drivesdk","_blank")'>words I hold dear</div><div class="sub-letter-item"onclick='window.open("https://aes86.pixieset.com/lettreimalwayswithyou/","_blank")'>always with you</div></div></div><div class="galaxy-item"onclick='window.open("https://aes86.pixieset.com/ourdraws/","_blank")'><i class="fas galaxy-icon fa-paint-brush"></i> <img alt="Our Draws"class="galaxy-image"src="https://i.postimg.cc/7L5rV1Q6/Screenshot-20250629-223426-Gallery.jpg"><div class="galaxy-content"><h3 class="galaxy-title">Our Draws</h3><p class="galaxy-desc">Beautiful drawings expressing our love</div></div><div class="galaxy-item"onclick='window.open("https://aes86.pixieset.com/followers/","_blank")'><i class="fas galaxy-icon fa-music"></i> <img alt="Our Songs"class="galaxy-image"src="https://i.postimg.cc/cHT7LY0R/Screenshot-20250629-230518-Photos.jpg"><div class="galaxy-content"><h3 class="galaxy-title">our petals</h3><p class="galaxy-desc">followers we shared</div></div></div><div class="intro-section"><div class="playlist-header"><h2>Intro</h2><p>I think this vid should be archived</div><div class="video-container-wrapper"><div class="local-video-container"><video class="romantic-video"controls id="ourLoveVideo"poster="https://i.postimg.cc/5yqrR5yz/Blue-Gold-Stars-Elegant-Rehearsal-Dinner-Invitation-20250630-173242-0000.png"><source src="/3omri/khadija/assets/videos
-/output(compress-video-online.com) (1).mp4
-"type="video/mp4">Your browser does not support the video tag.</video><div class="video-overlay"><button onclick="playVideo()"class="heart-beat play-btn"><i class="fas fa-play"></i></button><div class="hearts-overlay"></div></div></div><div class="love-quote"><p>"Every moment with you feels like a beautiful dream I never want to wake up from khadija~"</div></div><div class="playlist-section"><div class="playlist-header"><h2>Our Playlist</h2><p>Add your favorite songs/vids here!</div><div class="playlist-controls"><input id="youtube-url"placeholder="Enter YouTube link (e.g.: https://youtu.be/xxx)"dir="ltr"> <button id="add-video">add</button></div><div class="videos-container"id="videos-container"></div></div></main><a href="/3omri"id="floating-moon"style="position:fixed;bottom:30px;right:30px;font-size:3rem;cursor:pointer;z-index:100;animation:float 4s ease-in-out infinite;text-decoration:none;color:inherit">🌕</a><script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script><script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script><script>// 🔥 Firebase Configuration
+</div>
 
+<div class="cosmic-bg" id="cosmicBg"></div>
+
+<header class="magic-header">
+    <h1>Our Cosmic Love Archive</h1>
+    <p>Every memory is a planet in our heart's galaxy</p>
+</header>
+
+<main class="cosmic-archive">
+    <div class="memory-orbit">
+        <div class="memory-planet heart-beat" onclick='window.open("https://draw.y99.in/boards/Mariana_anes","_blank")' style="background-image:url(https://i.postimg.cc/76FqQNdP/Screenshot-20250627-181208-Brave-1.jpg)">
+            <div class="planet-overlay">
+                <h3 class="planet-title">our room</h3>
+                <p class="planet-date">our draws and poems</p>
+            </div>
+        </div>
+        
+        <div class="memory-planet" onclick='window.open("https://drive.google.com/file/d/16BtoctuVCOcFFSEPAiVD2caPuIoQQbOs/view","_blank")' style="background-image:url(https://i.postimg.cc/jqXzQbKg/Screenshot-20241226-152721-Drive.jpg)">
+            <div class="planet-overlay">
+                <h3 class="planet-title">journey to the moon</h3>
+                <p class="planet-date">our poems</p>
+            </div>
+        </div>
+        
+        <div class="memory-planet" onclick="showComingSoon()" style="background-image:url(https://i.postimg.cc/4yWh9qn2/Screenshot-20250627-181732-Photos.jpg)">
+            <div class="planet-overlay">
+                <h3 class="planet-title">khadija heart:3</h3>
+                <p class="planet-date">coming soon</p>
+            </div>
+        </div>
+        
+        <div class="memory-planet" onclick="showGiftVideo()" style="background-image:url('https://i.postimg.cc/FHSMCndr/Dofoto-20250918-15460954445cc25b9c2d39d94826119aa93e75413.jpg')">
+            <div class="planet-overlay">
+                <h3 class="planet-title">Words of ro7i</h3>
+                <p class="planet-date">my my precious gift:3</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="galaxy-collection">
+        <div class="galaxy-item love-letters-menu">
+            <i class="fas galaxy-icon fa-heart"></i>
+            <img alt="Love Letters" class="galaxy-image" src="https://i.postimg.cc/NfF9RSkv/retouch-2025062922102263.jpg" loading="lazy">
+            <div class="sub-letters">
+                <div class="sub-letter-item" onclick='window.open("https://drive.google.com/file/d/1bdzQZiARK--Od7ZjQ8BeWZwj47gXwiQp/view?usp=drivesdk","_blank")'>seraphic</div>
+                <div class="sub-letter-item" onclick='window.open("https://drive.google.com/file/d/1_bXpY2B_TC-aX9Dq8Fl3YSwVdUQYp1gy/view?usp=drivesdk","_blank")'>letter</div>
+                <div class="sub-letter-item" onclick='window.open("https://drive.google.com/file/d/16V-PSVpQNwBomUga4lwZ-cxWv73O6Ywx/view?usp=drivesdk","_blank")'>graduation</div>
+                <div class="sub-letter-item" onclick='window.open("https://drive.google.com/file/d/16oMlA4KphW6Dz4yAW5KtoAN22tKv31L0/view?usp=drivesdk","_blank")'>words I hold dear</div>
+                <div class="sub-letter-item" onclick='window.open("https://aes86.pixieset.com/lettreimalwayswithyou/","_blank")'>always with you</div>
+            </div>
+        </div>
+        
+        <div class="galaxy-item" onclick='window.open("https://aes86.pixieset.com/ourdraws/","_blank")'>
+            <i class="fas galaxy-icon fa-paint-brush"></i>
+            <img alt="Our Draws" class="galaxy-image" src="https://i.postimg.cc/7L5rV1Q6/Screenshot-20250629-223426-Gallery.jpg" loading="lazy">
+            <div class="galaxy-content">
+                <h3 class="galaxy-title">Our Draws</h3>
+                <p class="galaxy-desc">Beautiful drawings expressing our love</p>
+            </div>
+        </div>
+        
+        <div class="galaxy-item" onclick='window.open("https://aes86.pixieset.com/followers/","_blank")'>
+            <i class="fas galaxy-icon fa-music"></i>
+            <img alt="Our Songs" class="galaxy-image" src="https://i.postimg.cc/cHT7LY0R/Screenshot-20250629-230518-Photos.jpg" loading="lazy">
+            <div class="galaxy-content">
+                <h3 class="galaxy-title">our petals</h3>
+                <p class="galaxy-desc">followers we shared</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="intro-section">
+        <div class="playlist-header">
+            <h2>Intro</h2>
+            <p>I think this vid should be archived</p>
+        </div>
+        
+        <div class="video-container-wrapper">
+            <div class="local-video-container">
+                <video class="romantic-video" controls id="ourLoveVideo" poster="https://i.postimg.cc/5yqrR5yz/Blue-Gold-Stars-Elegant-Rehearsal-Dinner-Invitation-20250630-173242-0000.png" preload="metadata">
+                    <source src="/3omri/khadija/assets/videos/output(compress-video-online.com) (1).mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <div class="video-overlay">
+                    <button onclick="playVideo()" class="heart-beat play-btn">
+                        <i class="fas fa-play"></i>
+                    </button>
+                    <div class="hearts-overlay"></div>
+                </div>
+            </div>
+            
+            <div class="love-quote">
+                <p>"Every moment with you feels like a beautiful dream I never want to wake up from khadija~"</p>
+            </div>
+        </div>
+    </div>
+    
+    <div class="playlist-section">
+        <div class="playlist-header">
+            <h2>Our Playlist</h2>
+            <p>Add your favorite songs/vids here!</p>
+        </div>
+        
+        <div class="playlist-controls">
+            <input id="youtube-url" placeholder="Enter YouTube link (e.g.: https://youtu.be/xxx)" dir="ltr">
+            <button id="add-video">add</button>
+        </div>
+        
+        <div class="videos-container" id="videos-container"></div>
+    </div>
+</main>
+
+<a href="/3omri" id="floating-moon" style="position:fixed;bottom:30px;right:30px;font-size:3rem;cursor:pointer;z-index:100;animation:float 4s ease-in-out infinite;text-decoration:none;color:inherit">🌕</a>
+
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
+
+<script>
 // 🔥 Firebase Configuration
 const firebaseConfig = {
     apiKey: "AIzaSyBvHEucC6KmogScRgzB00uB3RZUtuscMI0",
@@ -110,66 +1033,91 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
-// تحسين الأداء: تحميل الفيديوهات بشكل متدرج
+// متغير لتخزين الاشتراك في Firebase
+let firebaseSubscription = null;
+
+// تحسين: تحميل الفيديوهات مرة واحدة فقط عند الحاجة
 function loadVideos() {
-    database.ref('playlist').orderByChild('addedAt').on('value', (snapshot) => {
-        const videosContainer = document.getElementById('videos-container');
-        videosContainer.innerHTML = '';
-        
-        const videos = [];
-        snapshot.forEach((childSnapshot) => {
-            videos.push({
-                key: childSnapshot.key,
-                ...childSnapshot.val()
-            });
-        });
-        
-        // ترتيب الفيديوهات من الأحدث إلى الأقدم
-        videos.sort((a, b) => b.addedAt - a.addedAt);
-        
-        // تحميل الفيديوهات بشكل متدرج لتجنب تجميد الصفحة
-        loadVideosGradually(videos, 0);
-    });
-}
-
-// تحسين: تحميل الفيديوهات بشكل تدريجي
-function loadVideosGradually(videos, index) {
-    if (index >= videos.length) return;
+    // إلغاء أي اشتراك سابق
+    if (firebaseSubscription) {
+        firebaseSubscription();
+        firebaseSubscription = null;
+    }
     
-    setTimeout(() => {
-        addVideoToDOM(videos[index].videoId, videos[index].key, videos[index]);
-        loadVideosGradually(videos, index + 1);
-    }, 100); // تأخير 100ms بين كل فيديو
+    const videosContainer = document.getElementById('videos-container');
+    videosContainer.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--accent-gold)"><i class="fas fa-spinner fa-spin"></i> Loading videos...</div>';
+    
+    // استخدام once بدلاً من on للاستماع المستمر
+    database.ref('playlist').orderByChild('addedAt').once('value')
+        .then((snapshot) => {
+            videosContainer.innerHTML = '';
+            
+            if (!snapshot.exists()) {
+                videosContainer.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--accent-gold)">No videos yet. Add the first one! ❤</div>';
+                return;
+            }
+            
+            const videos = [];
+            snapshot.forEach((childSnapshot) => {
+                videos.push({
+                    key: childSnapshot.key,
+                    ...childSnapshot.val()
+                });
+            });
+            
+            // ترتيب الفيديوهات من الأحدث إلى الأقدم
+            videos.sort((a, b) => (b.addedAt || 0) - (a.addedAt || 0));
+            
+            // تحميل الفيديوهات بشكل متدرج
+            let index = 0;
+            function loadNextVideo() {
+                if (index >= videos.length) return;
+                
+                const video = videos[index];
+                addVideoToDOM(video.videoId, video.key, video);
+                index++;
+                
+                // تأخير 100ms بين كل فيديو
+                if (index < videos.length) {
+                    setTimeout(loadNextVideo, 100);
+                }
+            }
+            
+            loadNextVideo();
+        })
+        .catch(error => {
+            console.error("Error loading videos:", error);
+            videosContainer.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--accent-pink)">Error loading videos. Please check connection.</div>';
+        });
 }
 
-// تحسين: استخدام صورة مصغرة بدلاً من iframe مباشر
+// تحسين: استخدام صورة مصغرة لتقليل الحمل
 function addVideoToDOM(videoId, firebaseKey, videoData) {
     const videosContainer = document.getElementById('videos-container');
     
     const addedDate = new Date(videoData.addedAt || videoData.date || Date.now());
     const formattedDate = addedDate.toLocaleDateString('en-US', {
         year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
+        month: 'short',
+        day: 'numeric'
     });
     
     const videoItem = document.createElement('div');
     videoItem.className = 'video-item';
     
-    // استخدام صورة مصغرة لتقليل الحمل
     videoItem.innerHTML = `
-        <button class="delete-video" onclick="deleteVideo('${firebaseKey}', this)">×</button>
+        <button class="delete-video" onclick="deleteVideo('${firebaseKey}')" title="Delete video">
+            <i class="fas fa-times"></i>
+        </button>
         <div class="video-thumbnail" onclick="loadVideoPlayer('${videoId}', this)" 
-             style="width:100%;height:200px;background:url(https://img.youtube.com/vi/${videoId}/hqdefault.jpg) center/cover;cursor:pointer;position:relative">
-            <div style="position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:rgba(255,75,138,0.8);border-radius:50%;width:60px;height:60px;display:flex;align-items:center;justify-content:center">
+             style="background-image:url(https://img.youtube.com/vi/${videoId}/mqdefault.jpg)">
+            <div class="play-thumbnail-icon">
                 <i class="fas fa-play" style="color:white;font-size:20px;margin-left:3px"></i>
             </div>
         </div>
         <div class="video-info">
-            <div class="video-title">${videoData.title}</div>
-            <small>Added on ${formattedDate}</small>
+            <div class="video-title">${videoData.title || 'Our Video'}</div>
+            <small>Added: ${formattedDate}</small>
         </div>
     `;
     
@@ -181,65 +1129,200 @@ function loadVideoPlayer(videoId, thumbnailElement) {
     // استبدال الصورة المصغرة بـ iframe
     const iframe = document.createElement('iframe');
     iframe.className = 'video-iframe';
-    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1`;
+    iframe.src = `https://www.youtube.com/embed/${videoId}?autoplay=1&rel=0`;
+    iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture';
     iframe.allowFullscreen = true;
     
-    thumbnailElement.parentNode.replaceChild(iframe, thumbnailElement);
+    const videoItem = thumbnailElement.closest('.video-item');
+    const thumbnailContainer = videoItem.querySelector('.video-thumbnail');
+    thumbnailContainer.parentNode.replaceChild(iframe, thumbnailContainer);
 }
-
-// تحسين: إضافة تحميل تدريجي للصفحة
-window.addEventListener('load', function() {
-    // تأخير تحميل بعض العناصر غير الأساسية
-    setTimeout(() => {
-        createCosmos();
-        loadVideos();
-        
-        // تأثير ظهور الكواكب بشكل متدرج
-        const planets = document.querySelectorAll('.memory-planet');
-        planets.forEach((planet, index) => {
-            setTimeout(() => {
-                planet.style.opacity = '1';
-                planet.style.transform = 'translateY(0) scale(1)';
-            }, index * 300);
-        });
-    }, 500);
-});
 
 // تحسين: تقليل عدد النجوم للأجهزة الضعيفة
 function createCosmos() {
     const cosmicBg = document.getElementById('cosmicBg');
+    cosmicBg.innerHTML = '';
     
     // تقليل عدد النجوم للأجهزة الضعيفة
-    const starCount = window.innerWidth < 768 ? 80 : 150;
+    const isMobile = window.innerWidth < 768;
+    const starCount = isMobile ? 50 : 100;
+    const cometCount = isMobile ? 1 : 3;
     
     for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
         star.classList.add('star');
         star.style.left = Math.random() * 100 + 'vw';
         star.style.top = Math.random() * 100 + 'vh';
-        star.style.width = (Math.random() * 2 + 1) + 'px'; // نجوم أصغر
+        star.style.width = (Math.random() * 2 + 1) + 'px';
         star.style.height = star.style.width;
         star.style.color = i % 3 === 0 ? 'var(--accent-pink)' : 
                          i % 2 === 0 ? 'var(--accent-gold)' : 'white';
         star.style.setProperty('--duration', (Math.random() * 5 + 3) + 's');
+        star.style.opacity = 0.7;
         cosmicBg.appendChild(star);
     }
     
-    // تقليل عدد المذنبات للأجهزة الضعيفة
-    const cometCount = window.innerWidth < 768 ? 2 : 5;
     for (let i = 0; i < cometCount; i++) {
         const comet = document.createElement('div');
         comet.classList.add('comet');
         comet.style.left = Math.random() * 100 + 'vw';
         comet.style.top = Math.random() * 100 + 'vh';
-        comet.style.setProperty('--duration', (Math.random() * 20 + 10) + 's');
-        comet.style.animationDelay = Math.random() * 10 + 's';
+        comet.style.setProperty('--duration', (Math.random() * 20 + 15) + 's');
+        comet.style.animationDelay = Math.random() * 5 + 's';
         cosmicBg.appendChild(comet);
     }
 }
 
-// باقي الدوال تبقى كما هي...
+// تحسين: إضافة فيديو مع تحديث واحد فقط
+function addVideo(url) {
+    const videoId = extractVideoId(url);
+    
+    if (!videoId) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid URL',
+            text: '3omri, please enter a valid YouTube URL! ❤',
+            confirmButtonColor: 'var(--accent-pink)',
+            background: 'var(--main-bg)',
+            color: 'var(--text-color)'
+        });
+        return;
+    }
+
+    Swal.fire({
+        title: 'Add Video Title',
+        input: 'text',
+        inputLabel: 'Give this video a sweet name:',
+        inputPlaceholder: 'Our Song 💖',
+        showCancelButton: true,
+        confirmButtonText: 'Add',
+        cancelButtonText: 'Cancel',
+        background: 'var(--main-bg)',
+        color: 'var(--text-color)',
+        inputAttributes: {
+            autocapitalize: 'off'
+        },
+        preConfirm: (title) => {
+            if (!title) title = "Our Memory";
+            
+            return database.ref('playlist').push().set({
+                videoId: videoId,
+                title: title,
+                date: new Date().toISOString(),
+                addedAt: firebase.database.ServerValue.TIMESTAMP
+            })
+            .then(() => {
+                loadVideos(); // إعادة تحميل الفيديوهات بعد الإضافة
+                return { success: true };
+            })
+            .catch(error => {
+                throw new Error(error.message);
+            });
+        }
+    }).then((result) => {
+        if (result.isConfirmed && result.value.success) {
+            Swal.fire({
+                icon: 'success',
+                title: 'Added!',
+                text: 'Video added with love. 🌙✨',
+                confirmButtonColor: 'var(--accent-pink)',
+                background: 'var(--main-bg)',
+                color: 'var(--text-color)'
+            });
+            document.getElementById('youtube-url').value = '';
+        }
+    });
+}
+
+// استخراج معرف الفيديو من الرابط
+function extractVideoId(url) {
+    if (!url) return null;
+    
+    // إذا كان معرف فيديو فقط (11 حرف)
+    if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
+        return url;
+    }
+    
+    const patterns = [
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
+        /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+        /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+        /[?&]v=([a-zA-Z0-9_-]{11})/
+    ];
+    
+    for (const pattern of patterns) {
+        const match = url.match(pattern);
+        if (match && match[1]) {
+            return match[1];
+        }
+    }
+    
+    return null;
+}
+
+// تحسين: حذف الفيديو مع رسالة تأكيد
+function deleteVideo(firebaseKey) {
+    Swal.fire({
+        title: 'Are you sure?',
+        text: "3omri, this video will be removed from our playlist!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: 'var(--accent-pink)',
+        cancelButtonColor: 'var(--accent-purple)',
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'Cancel',
+        background: 'var(--main-bg)',
+        color: 'var(--text-color)'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            const deleteBtn = event.target.closest('.delete-video');
+            if (deleteBtn) {
+                deleteBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+                deleteBtn.disabled = true;
+            }
+            
+            database.ref('playlist').child(firebaseKey).remove()
+                .then(() => {
+                    // إخفاء الفيديو بسلاسة
+                    const videoItem = deleteBtn ? deleteBtn.closest('.video-item') : null;
+                    if (videoItem) {
+                        videoItem.style.opacity = '0';
+                        videoItem.style.transform = 'translateY(-20px)';
+                        setTimeout(() => {
+                            videoItem.remove();
+                            // إذا لم يتبق فيديوهات، عرض رسالة
+                            const container = document.getElementById('videos-container');
+                            if (container.children.length === 0) {
+                                container.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--accent-gold)">No videos yet. Add the first one! ❤</div>';
+                            }
+                        }, 300);
+                    } else {
+                        loadVideos(); // إعادة تحميل إذا لم نجد العنصر
+                    }
+                })
+                .catch(error => {
+                    console.error("Error deleting video:", error);
+                    if (deleteBtn) {
+                        deleteBtn.innerHTML = '<i class="fas fa-times"></i>';
+                        deleteBtn.disabled = false;
+                    }
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Sorry 3omri, couldn\'t delete it. Try again?',
+                        confirmButtonColor: 'var(--accent-pink)',
+                        background: 'var(--main-bg)',
+                        color: 'var(--text-color)'
+                    });
+                });
+        }
+    });
+}
+
+// تحسين: تهيئة الصفحة
 document.addEventListener('DOMContentLoaded', function() {
+    // إعداد زر الإضافة
     const addButton = document.getElementById('add-video');
     const urlInput = document.getElementById('youtube-url');
     
@@ -247,159 +1330,43 @@ document.addEventListener('DOMContentLoaded', function() {
         const url = urlInput.value.trim();
         if (url) {
             addVideo(url);
-            urlInput.value = '';
+        } else {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Empty URL',
+                text: 'Please enter a YouTube URL first!',
+                confirmButtonColor: 'var(--accent-pink)',
+                background: 'var(--main-bg)',
+                color: 'var(--text-color)'
+            });
         }
     });
-
-    function addVideo(url) {
-        const videoId = extractVideoId(url);
-        
-        if (!videoId) {
-            alert("3omri, please enter a valid YouTube URL! ❤");
-            return;
-        }
-
-        const title = prompt("3omri, give this video a sweet name:", "Our Song 💖") || "Our Memory";
-
-        try {
-            const newVideoRef = database.ref('playlist').push();
-            newVideoRef.set({
-                videoId: videoId,
-                title: title,
-                date: new Date().toISOString(),
-                addedAt: firebase.database.ServerValue.TIMESTAMP
-            });
-            alert("Done, 3omri! Video added with love. 🌙✨");
-        } catch (error) {
-            console.error("Error:", error);
-            alert("Oops, 3omri! Something went wrong: " + error.message);
-        }
-    }
     
-    function extractVideoId(url) {
-        if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
-            return url;
+    // السماح بالإدخال باستخدام Enter
+    urlInput.addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            addButton.click();
         }
-        
-        const patterns = [
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/v\/([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/live\/([a-zA-Z0-9_-]{11})/,
-            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/clip\/([a-zA-Z0-9_-]{11})/,
-            /[?&]v=([a-zA-Z0-9_-]{11})/,
-            /[?&]vi?=([a-zA-Z0-9_-]{11})/,
-            /\/embed\/([a-zA-Z0-9_-]{11})/,
-            /\/v\/([a-zA-Z0-9_-]{11})/, /\/e\/([a-zA-Z0-9_-]{11})/
-        ];
-        
-        for (const pattern of patterns) {
-            const match = url.match(pattern);
-            if (match && match[1]) {
-                return match[1];
-            }
-        }
-        
-        const last11Chars = url.split('/').pop().split('?')[0].split('&')[0];
-        if (/^[a-zA-Z0-9_-]{11}$/.test(last11Chars)) {
-            return last11Chars;
-        }
-        
-        return null;
-    }
+    });
+    
+    // تأثير ظهور الكواكب بشكل متدرج بعد فتح الحماية
+    setTimeout(() => {
+        const planets = document.querySelectorAll('.memory-planet');
+        planets.forEach((planet, index) => {
+            planet.style.opacity = '0';
+            planet.style.transform = 'translateY(30px) scale(0.9)';
+            
+            setTimeout(() => {
+                planet.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                planet.style.opacity = '1';
+                planet.style.transform = 'translateY(0) scale(1)';
+            }, index * 200);
+        });
+    }, 100);
 });
 
-
-   function loadVideos() {
-    database.ref('playlist').orderByChild('addedAt').on('value', (snapshot) => {
-        const videosContainer = document.getElementById('videos-container');
-        videosContainer.innerHTML = '';
-        
-        const videos = [];
-        snapshot.forEach((childSnapshot) => {
-            videos.push({
-                key: childSnapshot.key,
-                ...childSnapshot.val()
-            });
-        });
-        
-        // ترتيب الفيديوهات من الأحدث إلى الأقدم
-        videos.sort((a, b) => b.addedAt - a.addedAt);
-        
-        videos.forEach(video => {
-            addVideoToDOM(video.videoId, video.key, video);
-        });
-    });
-}
-function addVideoToDOM(videoId, firebaseKey, videoData) {
-    const videosContainer = document.getElementById('videos-container');
-    
-    // تحويل تاريخ الإضافة من Firebase إلى تاريخ مقروء
-    const addedDate = new Date(videoData.addedAt || videoData.date || Date.now());
-    const formattedDate = addedDate.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: '2-digit',
-        minute: '2-digit'
-    });
-    
-    const videoItem = document.createElement('div');
-    videoItem.className = 'video-item';
-    videoItem.innerHTML = `
-        <button class="delete-video" onclick="deleteVideo('${firebaseKey}', this)">×</button>
-        <iframe class="video-iframe" src="https://www.youtube.com/embed/${videoId}" allowfullscreen></iframe>
-        <div class="video-info">
-            <div class="video-title">${videoData.title}</div>
-            <small>Added on ${formattedDate}</small>
-        </div>
-    `;
-    
-    videosContainer.appendChild(videoItem);
-}
-
-
-// Global delete function
-function deleteVideo(firebaseKey, buttonElement) {
-    if (confirm("3omri, are you sure you want to delete this vid? ")) {
-        buttonElement.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
-        buttonElement.disabled = true;
-        
-        database.ref('playlist').child(firebaseKey).remove()
-            .then(() => {
-                // العنصر سيتم إزالته تلقائياً بواسطة الـ listener في loadVideos
-                buttonElement.innerHTML = '✓';
-                setTimeout(() => {
-                    buttonElement.closest('.video-item').style.opacity = '0';
-                    setTimeout(() => {
-                        buttonElement.closest('.video-item').remove();
-                    }, 300);
-                }, 500);
-            })
-            .catch(error => {
-                console.error("Error deleting video:", error);
-                buttonElement.innerHTML = '×';
-                buttonElement.disabled = false;
-                alert("Sorry 3omri, couldn't delete it. Try again?bhahahah");
-            });
-    }
-}
-
-// Page Initialization
-window.onload = function() {
-    createCosmos();
-    
-    // Gradual planet appearance effect
-    const planets = document.querySelectorAll('.memory-planet');
-    planets.forEach((planet, index) => {
-        setTimeout(() => {
-            planet.style.opacity = '1';
-            planet.style.transform = 'translateY(0) scale(1)';
-        }, index * 300);
-    });
-};function playVideo() {
+// تشغيل الفيديو المحلي
+function playVideo() {
     const video = document.getElementById('ourLoveVideo');
     const overlay = document.querySelector('.video-overlay');
     
@@ -412,9 +1379,12 @@ window.onload = function() {
         })
         .catch(error => {
             console.error("Error playing video:", error);
-            alert("3omri, couldn't play the video. Check console for details.");
+            // إذا فشل التشغيل التلقائي، عرض زر التشغيل
+            overlay.style.display = 'flex';
         });
-}function showComingSoon() {
+}
+
+function showComingSoon() {
     Swal.fire({
         title: 'Coming Soon! ✨',
         html: "me is preparing something special for 3omrii's section<br>Stay tuned!",
@@ -426,26 +1396,25 @@ window.onload = function() {
         color: 'var(--text-color)',
         confirmButtonColor: 'var(--accent-pink)'
     });
-}// تعديل الحدث لجعله أكثر تفاعلية على الهاتف
+}
 
-// Password Protection
+// حماية كلمة المرور
 function checkPassword() {
     const password = document.getElementById('password-input').value;
     const errorMsg = document.getElementById('error-msg');
     
-   if (password === atob("Mjg=")) { 
-        document.getElementById('password-protection').style.display = 'none';
-        // Load the cosmic background and other elements after unlocking
+    if (password === atob("Mjg=")) { 
+        document.getElementById('password-protection').style.opacity = '0';
+        document.getElementById('password-protection').style.pointerEvents = 'none';
+        
+        // إنشاء الكون
         createCosmos();
         
-        // Gradual planet appearance effect
-        const planets = document.querySelectorAll('.memory-planet');
-        planets.forEach((planet, index) => {
-            setTimeout(() => {
-                planet.style.opacity = '1';
-                planet.style.transform = 'translateY(0) scale(1)';
-            }, index * 300);
-        });
+        // تحميل الفيديوهات بعد فتح الحماية
+        setTimeout(() => {
+            loadVideos();
+            document.getElementById('password-protection').style.display = 'none';
+        }, 500);
     } else {
         errorMsg.textContent = "Incorrect code, try again";
         document.getElementById('password-input').value = '';
@@ -453,27 +1422,28 @@ function checkPassword() {
     }
 }
 
-// Prevent right-click
+// منع النقر بزر الماوس الأيمن
 document.addEventListener('contextmenu', function(e) {
     e.preventDefault();
 });
 
-// Prevent keyboard shortcuts
+// تحسين: منع بعض اختصارات لوحة المفاتيح
 document.addEventListener('keydown', function(e) {
-    if (e.ctrlKey && (e.keyCode === 85 || e.keyCode === 83 || e.keyCode === 67)) {
+    if (e.ctrlKey && (e.key === 'u' || e.key === 's' || e.key === 'c')) {
         e.preventDefault();
     }
 });
+
 function showGiftVideo() {
     Swal.fire({
         title: '💝',
         html: `<div style="position:relative; padding-top:56.25%">
-                  <video controls style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:10px;box-shadow:0 5px 25px rgba(255,75,138,0.3)">
+                  <video controls autoplay style="position:absolute;top:0;left:0;width:100%;height:100%;border-radius:10px;box-shadow:0 5px 25px rgba(255,75,138,0.3)">
                       <source src="/3omri/khadija/assets/videos/mybday.mp4" type="video/mp4">
                   </video>
                </div>
                <p style="margin-top:10px;font-style:italic;color:var(--accent-gold)">ro7o bday gift for me~</p>`,
-        width: '70%',
+        width: '80%',
         background: 'var(--main-bg)',
         color: 'var(--text-color)',
         showCloseButton: true,
@@ -482,13 +1452,49 @@ function showGiftVideo() {
             popup: 'custom-video-popup'
         }
     });
-    
-    // تشغيل الفيديو تلقائياً عند فتح النافذة
-    setTimeout(() => {
-        const video = document.querySelector('.swal2-popup video');
-        if (video) {
-            video.play().catch(e => console.log("التشغيل التلقائي غير مسموح:", e));
-        }
-    }, 500);
 }
+
+// تحسين: إضافة lazy loading للصور
+document.addEventListener('DOMContentLoaded', function() {
+    const images = document.querySelectorAll('img[loading="lazy"]');
+    
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+        
+        images.forEach(img => {
+            imageObserver.observe(img);
+        });
+    }
+});
+
+// تحسين: منع التحميل الزائد عند التمرير
+let isScrolling = false;
+window.addEventListener('scroll', function() {
+    if (!isScrolling) {
+        window.requestAnimationFrame(function() {
+            // إيقاف الرسوم المتحركة الثقيلة أثناء التمرير
+            document.querySelectorAll('.star, .comet').forEach(el => {
+                el.style.animationPlayState = 'paused';
+            });
+            
+            setTimeout(() => {
+                document.querySelectorAll('.star, .comet').forEach(el => {
+                    el.style.animationPlayState = 'running';
+                });
+                isScrolling = false;
+            }, 100);
+        });
+    }
+    isScrolling = true;
+});
 </script>
+</body>
+</html>
