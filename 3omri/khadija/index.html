@@ -37,6 +37,166 @@ body {
                       radial-gradient(circle at 80% 70%, rgba(255,75,138,.15) 0, transparent 30%);
 }
 
+/* === New Countdown Timer Styles === */
+.countdown-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, rgba(157, 78, 221, 0.9), rgba(255, 75, 138, 0.9));
+    backdrop-filter: blur(10px);
+    border-bottom: 2px solid var(--accent-gold);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+    transform: translateY(0);
+    transition: transform 0.5s ease;
+}
+
+.countdown-container.hidden {
+    transform: translateY(-100%);
+}
+
+.countdown-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.countdown-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 1.8rem;
+    color: white;
+    text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.countdown-title i {
+    color: var(--accent-gold);
+    animation: pulse 2s infinite;
+}
+
+.countdown-timer {
+    display: flex;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.time-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 70px;
+}
+
+.time-value {
+    font-size: 2.2rem;
+    font-weight: bold;
+    font-family: 'Cairo', sans-serif;
+    background: rgba(10, 1, 31, 0.7);
+    padding: 5px 15px;
+    border-radius: 10px;
+    min-width: 70px;
+    text-align: center;
+    color: var(--accent-gold);
+    text-shadow: 0 0 10px rgba(255, 204, 0, 0.5);
+    border: 1px solid rgba(255, 204, 0, 0.3);
+    box-shadow: 0 0 15px rgba(255, 204, 0, 0.2);
+    transition: var(--transition);
+}
+
+.time-unit:hover .time-value {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(255, 204, 0, 0.4);
+    background: rgba(10, 1, 31, 0.9);
+}
+
+.time-label {
+    font-size: 0.9rem;
+    margin-top: 5px;
+    color: white;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    opacity: 0.9;
+}
+
+.countdown-message {
+    font-style: italic;
+    color: white;
+    text-align: center;
+    font-size: 0.9rem;
+    opacity: 0.8;
+    margin-top: 5px;
+    flex-basis: 100%;
+    font-family: 'Raleway', sans-serif;
+}
+
+@keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+}
+
+@media (max-width: 768px) {
+    .countdown-content {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+    
+    .countdown-title {
+        font-size: 1.5rem;
+    }
+    
+    .countdown-timer {
+        gap: 10px;
+        justify-content: center;
+    }
+    
+    .time-unit {
+        min-width: 60px;
+    }
+    
+    .time-value {
+        font-size: 1.8rem;
+        padding: 5px 10px;
+        min-width: 60px;
+    }
+    
+    .time-label {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .countdown-container {
+        padding: 10px 15px;
+    }
+    
+    .countdown-title {
+        font-size: 1.3rem;
+    }
+    
+    .countdown-timer {
+        gap: 8px;
+    }
+    
+    .time-unit {
+        min-width: 55px;
+    }
+    
+    .time-value {
+        font-size: 1.5rem;
+        min-width: 55px;
+    }
+}
+/* === End Countdown Timer Styles === */
+
 .cosmic-bg {
     position: fixed;
     top: 0;
@@ -811,6 +971,38 @@ body {
     </div>
 </div>
 
+<!-- Countdown Timer -->
+<div id="countdown-timer" class="countdown-container hidden">
+    <div class="countdown-content">
+        <div class="countdown-title">
+            <i class="fas fa-heart"></i>
+            Countdown to New Year 2026
+            <i class="fas fa-heart"></i>
+        </div>
+        <div class="countdown-timer">
+            <div class="time-unit">
+                <div id="days" class="time-value">00</div>
+                <div class="time-label">Days</div>
+            </div>
+            <div class="time-unit">
+                <div id="hours" class="time-value">00</div>
+                <div class="time-label">Hours</div>
+            </div>
+            <div class="time-unit">
+                <div id="minutes" class="time-value">00</div>
+                <div class="time-label">Minutes</div>
+            </div>
+            <div class="time-unit">
+                <div id="seconds" class="time-value">00</div>
+                <div class="time-label">Seconds</div>
+            </div>
+        </div>
+        <div class="countdown-message">
+            A small surprise awaits you. I love you.
+        </div>
+    </div>
+</div>
+
 <div class="cosmic-bg" id="cosmicBg"></div>
 
 <header class="magic-header">
@@ -942,6 +1134,73 @@ const firebaseConfig = {
 // Initialize Firebase
 const app = firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
+
+// ===== NEW YEAR COUNTDOWN TIMER =====
+function updateCountdown() {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    
+    // Set target to January 1, 2026, 00:00:00
+    let targetYear = 2026;
+    
+    // If current year is already 2026 or later, set to next year
+    if (currentYear >= 2026) {
+        targetYear = currentYear + 1;
+    }
+    
+    const targetDate = new Date(targetYear, 0, 1, 0, 0, 0, 0); // January 1, 2026
+    
+    const timeDifference = targetDate - now;
+    
+    if (timeDifference > 0) {
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+        
+        // Update display with leading zeros
+        document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        
+        // Add pulsing animation when seconds change
+        const secondsElement = document.getElementById('seconds');
+        secondsElement.classList.add('pulse');
+        setTimeout(() => secondsElement.classList.remove('pulse'), 300);
+    } else {
+        // Countdown finished - show celebration
+        document.getElementById('days').textContent = '00';
+        document.getElementById('hours').textContent = '00';
+        document.getElementById('minutes').textContent = '00';
+        document.getElementById('seconds').textContent = '00';
+        
+        // Update message
+        document.querySelector('.countdown-message').innerHTML = 
+            '🎉 Happy New Year 2026! 🎉 The surprise is ready! I love you.';
+        
+        // Change background color
+        document.getElementById('countdown-timer').style.background = 
+            'linear-gradient(135deg, rgba(255, 204, 0, 0.9), rgba(255, 75, 138, 0.9))';
+            
+        // Add celebration effect
+        document.getElementById('countdown-timer').classList.add('heart-beat');
+    }
+}
+
+// Initialize and start countdown
+function initCountdown() {
+    // Show countdown timer
+    const countdownTimer = document.getElementById('countdown-timer');
+    countdownTimer.classList.remove('hidden');
+    
+    // Update immediately
+    updateCountdown();
+    
+    // Update every second
+    setInterval(updateCountdown, 1000);
+}
+// ===== END COUNTDOWN TIMER =====
 
 // تحسين: تحميل الفيديوهات مرة واحدة فقط عند الحاجة
 function loadVideos() {
@@ -1302,6 +1561,9 @@ function checkPassword() {
         setTimeout(() => {
             loadVideos();
             document.getElementById('password-protection').style.display = 'none';
+            
+            // Initialize countdown timer after password is entered
+            initCountdown();
         }, 500);
     } else {
         errorMsg.textContent = "Incorrect code, try again";
