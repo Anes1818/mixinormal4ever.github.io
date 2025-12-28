@@ -998,10 +998,12 @@ function addVideoToDOM(videoId, firebaseKey, videoData) {
     
     const addedDate = new Date(videoData.addedAt || videoData.date || Date.now());
     const formattedDate = addedDate.toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'short',
-        day: 'numeric'
-    });
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit'
+});
     
     const videoItem = document.createElement('div');
     videoItem.className = 'video-item';
@@ -1046,8 +1048,8 @@ function createCosmos() {
     
     // تقليل عدد النجوم للأجهزة الضعيفة
     const isMobile = window.innerWidth < 768;
-    const starCount = isMobile ? 50 : 100;
-    const cometCount = isMobile ? 1 : 3;
+    const starCount = isMobile ? 80 : 150;
+    const cometCount = isMobile ? 2 : 5;
     
     for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
