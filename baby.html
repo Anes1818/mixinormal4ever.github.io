@@ -3,73 +3,70 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PartyHub | مشاهدة جماعية</title>
+    <title>Cosmic Watch | لنا</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://www.youtube.com/iframe_api"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <style>
         :root {
-            --primary: #8a2be2;
-            --primary-light: #9d4edd;
-            --secondary: #ff00ff;
-            --accent: #00ccff;
-            --accent-light: #5ce1e6;
-            --dark: #0a0a14;
-            --darker: #070710;
-            --dark-card: #12121f;
-            --light: #ffffff;
-            --light-gray: #a0a0b0;
-            --glass: rgba(255, 255, 255, 0.05);
-            --glass-heavy: rgba(0, 0, 0, 0.3);
+            --cosmic-black: #0a0a14;
+            --cosmic-darker: #070710;
+            --neon-purple: #9d4edd;
+            --neon-pink: #ff4b8a;
+            --neon-cyan: #00ccff;
+            --accent-gold: #ffcc00;
+            --text-light: #f8e3ff;
+            --text-gray: #a0a0b0;
+            --glass-bg: rgba(29, 0, 61, 0.25);
             --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-border-heavy: rgba(255, 255, 255, 0.05);
-            --neon-glow: 0 0 15px var(--primary), 0 0 25px rgba(138, 43, 226, 0.5);
-            --neon-glow-accent: 0 0 15px var(--accent), 0 0 25px rgba(0, 204, 255, 0.3);
-            --neon-glow-secondary: 0 0 15px var(--secondary), 0 0 25px rgba(255, 0, 255, 0.3);
-            --shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            --radius: 16px;
-            --radius-sm: 12px;
-            --radius-lg: 24px;
+            --cinema-radius: 16px;
+            --header-font: 'Segoe UI', -apple-system, system-ui, sans-serif;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
         }
 
         body {
-            background-color: var(--darker);
-            color: var(--light);
+            font-family: var(--header-font);
+            background-color: var(--cosmic-darker);
+            color: var(--text-light);
             min-height: 100vh;
             overflow-x: hidden;
-            background-image: 
-                radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.1) 0%, transparent 30%),
-                radial-gradient(circle at 80% 70%, rgba(0, 204, 255, 0.1) 0%, transparent 30%),
-                radial-gradient(circle at 40% 80%, rgba(255, 0, 255, 0.1) 0%, transparent 30%);
+            background-image:
+                radial-gradient(circle at 20% 30%, rgba(157, 78, 221, 0.15) 0%, transparent 30%),
+                radial-gradient(circle at 80% 70%, rgba(255, 75, 138, 0.15) 0%, transparent 30%);
         }
 
-        /* Scrollbar Customization */
-        ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
+        /* Cosmic Stars */
+        #cosmicStars {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: -1;
         }
 
-        ::-webkit-scrollbar-track {
-            background: rgba(255, 255, 255, 0.05);
-            border-radius: 10px;
+        .star {
+            position: absolute;
+            background-color: #fff;
+            border-radius: 50%;
+            animation: twinkle var(--duration) infinite alternate;
         }
 
-        ::-webkit-scrollbar-thumb {
-            background: linear-gradient(45deg, var(--primary), var(--secondary));
-            border-radius: 10px;
+        @keyframes twinkle {
+            0% { opacity: 0.3; transform: scale(0.8); }
+            100% { opacity: 1; transform: scale(1.2); }
         }
 
-        ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(45deg, var(--primary-light), var(--secondary));
-        }
-
-        /* Container */
-        .container {
+        /* Main Layout */
+        .app-container {
             display: flex;
             flex-direction: column;
             max-width: 1800px;
@@ -80,15 +77,14 @@
         }
 
         /* Header */
-        .header {
+        .party-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 20px 0;
-            position: relative;
         }
 
-        .logo {
+        .logo-area {
             display: flex;
             align-items: center;
             gap: 15px;
@@ -98,201 +94,125 @@
         .logo-icon {
             width: 50px;
             height: 50px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
-            box-shadow: var(--neon-glow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .logo-icon::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
-            transform: rotate(45deg);
-            animation: shine 3s infinite;
-        }
-
-        @keyframes shine {
-            0% { transform: translateX(-100%) translateY(-100%) rotate(45deg); }
-            100% { transform: translateX(100%) translateY(100%) rotate(45deg); }
-        }
-
-        .logo-text {
-            display: flex;
-            flex-direction: column;
+            font-size: 22px;
+            box-shadow: 0 0 20px var(--neon-purple);
         }
 
         .logo-text h1 {
             font-size: 28px;
             font-weight: 800;
-            background: linear-gradient(to right, var(--primary), var(--accent));
+            background: linear-gradient(to right, var(--neon-purple), var(--neon-cyan));
             -webkit-background-clip: text;
             background-clip: text;
             color: transparent;
-            letter-spacing: -0.5px;
         }
 
         .logo-text span {
-            font-size: 14px;
-            color: var(--light-gray);
-            font-weight: 300;
+            font-size: 13px;
+            color: var(--text-gray);
         }
 
-        /* Room Info */
-        .room-info {
+        .party-stats {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 25px;
         }
 
-        .user-count {
+        .online-badge {
             display: flex;
             align-items: center;
             gap: 8px;
             padding: 10px 20px;
-            background: var(--glass);
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
             border-radius: 50px;
             border: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
         }
 
-        .user-count i {
-            color: var(--accent);
-        }
-
-        .user-count span {
-            font-weight: 600;
-            font-size: 18px;
-            color: var(--accent-light);
-        }
-
-        .room-actions {
-            display: flex;
-            gap: 10px;
-        }
-
-        .icon-btn {
-            width: 45px;
-            height: 45px;
+        .online-dot {
+            width: 10px;
+            height: 10px;
+            background: #4CAF50;
             border-radius: 50%;
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            color: var(--light);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            animation: pulse 2s infinite;
         }
 
-        .icon-btn:hover {
-            background: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: var(--neon-glow);
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.15); opacity: 0.8; }
         }
 
-        /* Video Input Section */
-        .video-input-section {
+        /* Video Input */
+        .video-control-top {
             position: relative;
-            margin-bottom: 20px;
         }
 
-        .video-input-container {
+        .video-input-group {
             display: flex;
             gap: 15px;
-            position: relative;
-            z-index: 2;
         }
 
-        .video-input-wrapper {
+        .url-input-wrapper {
             flex: 1;
             position: relative;
         }
 
-        .video-input {
+        #videoUrlInput {
             width: 100%;
             padding: 18px 20px;
             padding-right: 50px;
-            background: var(--glass-heavy);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
-            border-radius: var(--radius);
-            color: var(--light);
+            border-radius: var(--cinema-radius);
+            color: var(--text-light);
             font-size: 16px;
             backdrop-filter: blur(15px);
             transition: all 0.3s ease;
         }
 
-        .video-input:focus {
+        #videoUrlInput:focus {
             outline: none;
-            border-color: var(--primary);
-            box-shadow: var(--neon-glow);
-            background: rgba(0, 0, 0, 0.4);
+            border-color: var(--neon-purple);
+            box-shadow: 0 0 15px var(--neon-purple);
+            background: rgba(0, 0, 0, 0.3);
         }
 
-        .video-input-icon {
+        .url-icon {
             position: absolute;
             right: 15px;
             top: 50%;
             transform: translateY(-50%);
-            color: var(--light-gray);
+            color: var(--text-gray);
         }
 
-        .btn {
-            padding: 0 30px;
-            height: 55px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        #loadVideoBtn {
+            padding: 0 35px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
             border: none;
-            border-radius: var(--radius);
+            border-radius: var(--cinema-radius);
             color: white;
             font-weight: 600;
             font-size: 16px;
             cursor: pointer;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
             display: flex;
             align-items: center;
-            justify-content: center;
             gap: 10px;
-            position: relative;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
         }
 
-        .btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
-            transition: 0.5s;
-        }
-
-        .btn:hover::before {
-            left: 100%;
-        }
-
-        .btn:hover {
+        #loadVideoBtn:hover {
             transform: translateY(-3px);
-            box-shadow: var(--neon-glow-secondary);
+            box-shadow: 0 10px 25px rgba(157, 78, 221, 0.4);
         }
 
-        .btn:active {
-            transform: translateY(-1px);
-        }
-
-        /* Main Content */
-        .main-content {
+        /* Main Content Area */
+        .content-area {
             display: flex;
             flex: 1;
             gap: 25px;
@@ -300,8 +220,8 @@
             position: relative;
         }
 
-        /* Video Section */
-        .video-section {
+        /* Cinema Player */
+        .cinema-section {
             flex: 3;
             display: flex;
             flex-direction: column;
@@ -309,23 +229,22 @@
             min-width: 0;
         }
 
-        .video-container {
+        .cinema-container {
             position: relative;
             background: #000;
-            border-radius: var(--radius-lg);
+            border-radius: var(--cinema-radius);
             overflow: hidden;
-            box-shadow: var(--shadow);
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
             flex: 1;
-            min-height: 400px;
-            border: 1px solid var(--glass-border-heavy);
+            border: 1px solid rgba(255, 255, 255, 0.05);
         }
 
-        #player {
+        #youtubePlayer {
             width: 100%;
             height: 100%;
         }
 
-        .video-placeholder {
+        .player-placeholder {
             position: absolute;
             top: 0;
             left: 0;
@@ -335,46 +254,42 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--dark), var(--darker));
-            color: var(--light-gray);
+            background: linear-gradient(135deg, var(--cosmic-black), var(--cosmic-darker));
+            color: var(--text-gray);
             gap: 20px;
         }
 
-        .video-placeholder i {
-            font-size: 64px;
+        .player-placeholder i {
+            font-size: 70px;
             color: var(--glass-border);
         }
 
-        .video-placeholder p {
-            font-size: 18px;
-        }
-
-        /* Video Controls */
-        .video-controls {
+        /* Player Controls */
+        .player-controls-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: var(--glass-heavy);
-            padding: 15px 25px;
-            border-radius: var(--radius);
-            backdrop-filter: blur(15px);
+            padding: 18px 25px;
+            background: var(--glass-bg);
+            border-radius: var(--cinema-radius);
+            backdrop-filter: blur(20px);
             border: 1px solid var(--glass-border);
             gap: 15px;
         }
 
-        .control-left {
+        .playback-controls {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
         }
 
-        .control-btn {
-            width: 50px;
-            height: 50px;
+        .player-btn {
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
-            background: var(--dark-card);
+            background: rgba(20, 20, 40, 0.8);
             border: 1px solid var(--glass-border);
-            color: var(--light);
+            color: var(--text-light);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -383,56 +298,72 @@
             font-size: 18px;
         }
 
-        .control-btn:hover {
-            background: var(--primary);
+        .player-btn:hover {
+            background: var(--neon-purple);
             transform: scale(1.1);
-            box-shadow: var(--neon-glow);
+            box-shadow: 0 0 15px var(--neon-purple);
         }
 
-        .control-btn.active {
-            background: var(--primary);
-            box-shadow: var(--neon-glow);
+        .player-btn.active {
+            background: var(--neon-purple);
+            box-shadow: 0 0 15px var(--neon-purple);
         }
 
         .time-display {
+            font-family: 'Courier New', monospace;
+            font-size: 15px;
+            color: var(--neon-cyan);
+            background: rgba(0, 0, 0, 0.4);
+            padding: 8px 18px;
+            border-radius: 20px;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-family: 'Courier New', monospace;
-            font-size: 14px;
-            color: var(--accent-light);
-            background: rgba(0, 0, 0, 0.3);
-            padding: 8px 15px;
+            gap: 8px;
+        }
+
+        /* Floating Chat Widget */
+        .chat-widget-container {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 360px;
+            max-height: 500px;
+            background: rgba(10, 1, 31, 0.85);
+            backdrop-filter: blur(25px);
+            border: 1px solid var(--glass-border);
             border-radius: 20px;
-        }
-
-        .time-separator {
-            color: var(--light-gray);
-        }
-
-        /* Chat Section */
-        .chat-section {
-            flex: 1;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            z-index: 1000;
             display: flex;
             flex-direction: column;
-            background: var(--glass-heavy);
-            border-radius: var(--radius-lg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
             overflow: hidden;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            min-width: 350px;
-            max-width: 450px;
-            box-shadow: var(--shadow);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            resize: both;
+            min-width: 300px;
+            min-height: 400px;
         }
 
-        .chat-header {
+        .chat-widget-container.fullscreen-overlay {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            bottom: 20px;
+            width: 380px;
+            max-height: none;
+            background: rgba(10, 1, 31, 0.75);
+            backdrop-filter: blur(30px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+        }
+
+        .chat-header-bar {
+            padding: 20px;
+            background: rgba(29, 0, 61, 0.6);
+            border-bottom: 1px solid var(--glass-border);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 25px;
-            background: rgba(0, 0, 0, 0.4);
-            border-bottom: 1px solid var(--glass-border);
+            cursor: move;
+            user-select: none;
         }
 
         .chat-title {
@@ -444,147 +375,143 @@
         }
 
         .chat-title i {
-            color: var(--accent);
-            font-size: 20px;
-        }
-
-        .chat-stats {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            font-size: 14px;
-            color: var(--light-gray);
+            color: var(--neon-cyan);
         }
 
         .chat-actions {
             display: flex;
             gap: 10px;
+            align-items: center;
         }
 
-        .chat-toggle {
+        .chat-action-btn {
             background: none;
             border: none;
-            color: var(--light);
-            font-size: 18px;
-            cursor: pointer;
-            width: 40px;
-            height: 40px;
+            color: var(--text-light);
+            width: 36px;
+            height: 36px;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
+            cursor: pointer;
             transition: all 0.3s ease;
         }
 
-        .chat-toggle:hover {
-            background: var(--glass);
-            color: var(--accent);
+        .chat-action-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: var(--neon-cyan);
         }
 
-        .chat-messages {
+        .unread-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: var(--neon-pink);
+            color: white;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            padding: 0 5px;
+            box-shadow: 0 4px 10px rgba(255, 75, 138, 0.5);
+            animation: pulse 2s infinite;
+        }
+
+        .messages-viewport {
             flex: 1;
             padding: 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 16px;
         }
 
-        .message {
+        .message-bubble {
             max-width: 85%;
-            padding: 12px 16px;
-            border-radius: 18px;
+            padding: 14px 18px;
+            border-radius: 20px;
             position: relative;
-            animation: messageIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: messagePop 0.35s cubic-bezier(0.4, 0, 0.2, 1);
             word-wrap: break-word;
             line-height: 1.4;
+            backdrop-filter: blur(10px);
         }
 
-        @keyframes messageIn {
-            from { opacity: 0; transform: translateY(10px) scale(0.95); }
+        @keyframes messagePop {
+            from { opacity: 0; transform: translateY(15px) scale(0.95); }
             to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
-        .message.sent {
+        .message-bubble.my-message {
             align-self: flex-end;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border-bottom-right-radius: 5px;
-            box-shadow: 0 4px 15px rgba(138, 43, 226, 0.3);
+            background: linear-gradient(135deg, rgba(157, 78, 221, 0.25), rgba(255, 75, 138, 0.25));
+            border-bottom-right-radius: 8px;
+            border: 1px solid rgba(157, 78, 221, 0.4);
         }
 
-        .message.received {
+        .message-bubble.their-message {
             align-self: flex-start;
-            background: var(--dark-card);
-            border-bottom-left-radius: 5px;
+            background: rgba(255, 255, 255, 0.08);
+            border-bottom-left-radius: 8px;
             border: 1px solid var(--glass-border);
-        }
-
-        .message-system {
-            align-self: center;
-            background: var(--glass);
-            color: var(--light-gray);
-            font-size: 13px;
-            padding: 8px 16px;
-            border-radius: 20px;
-            max-width: 80%;
-            text-align: center;
-        }
-
-        .message-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 4px;
         }
 
         .message-sender {
             font-size: 13px;
-            font-weight: 600;
-            color: var(--accent-light);
-        }
-
-        .message-time {
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.5);
+            font-weight: 700;
+            margin-bottom: 5px;
+            color: var(--accent-gold);
         }
 
         .message-text {
             font-size: 14.5px;
         }
 
-        .chat-input-container {
-            padding: 20px;
-            border-top: 1px solid var(--glass-border);
-            background: rgba(0, 0, 0, 0.3);
+        .message-time {
+            font-size: 11px;
+            opacity: 0.7;
+            text-align: right;
+            margin-top: 5px;
         }
 
-        .chat-input-wrapper {
+        .chat-input-area {
+            padding: 20px;
+            background: rgba(29, 0, 61, 0.5);
+            border-top: 1px solid var(--glass-border);
+        }
+
+        .chat-input-group {
             display: flex;
             gap: 12px;
         }
 
-        .chat-input {
+        #chatMessageInput {
             flex: 1;
-            padding: 14px 18px;
-            background: var(--dark-card);
+            padding: 15px 20px;
+            background: rgba(255, 255, 255, 0.07);
             border: 1px solid var(--glass-border);
             border-radius: 50px;
-            color: var(--light);
+            color: var(--text-light);
             font-size: 15px;
             transition: all 0.3s ease;
         }
 
-        .chat-input:focus {
+        #chatMessageInput:focus {
             outline: none;
-            border-color: var(--accent);
-            box-shadow: var(--neon-glow-accent);
+            border-color: var(--neon-cyan);
+            box-shadow: 0 0 0 2px rgba(0, 204, 255, 0.2);
         }
 
-        .send-btn {
-            width: 50px;
-            height: 50px;
+        #sendMessageBtn {
+            width: 52px;
+            height: 52px;
             border-radius: 50%;
-            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            background: linear-gradient(135deg, var(--neon-cyan), #5ce1e6);
             border: none;
             color: white;
             cursor: pointer;
@@ -595,95 +522,67 @@
             font-size: 18px;
         }
 
-        .send-btn:hover {
+        #sendMessageBtn:hover {
             transform: scale(1.1);
-            box-shadow: var(--neon-glow-accent);
+            box-shadow: 0 0 20px var(--neon-cyan);
         }
 
-        .send-btn:active {
-            transform: scale(1.05);
-        }
-
-        /* Chat Minimized State */
-        .chat-section.minimized {
-            width: 70px;
-            min-width: 70px;
-            max-width: 70px;
-            overflow: hidden;
-            border-radius: 35px;
-        }
-
-        .chat-section.minimized .chat-header,
-        .chat-section.minimized .chat-messages,
-        .chat-section.minimized .chat-input-container {
-            display: none;
-        }
-
-        .chat-section.minimized .chat-toggle {
-            position: absolute;
-            top: 15px;
-            left: 15px;
-            z-index: 100;
-        }
-
-        .chat-minimized-icon {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        /* Mini Chat Icon */
+        .mini-chat-icon {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 64px;
+            height: 64px;
+            background: linear-gradient(135deg, var(--neon-purple), var(--neon-pink));
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 24px;
             cursor: pointer;
-            position: relative;
-            margin: auto;
-            box-shadow: var(--neon-glow);
-            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(157, 78, 221, 0.5);
+            z-index: 999;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            animation: floatIcon 4s ease-in-out infinite;
         }
 
-        .chat-minimized-icon:hover {
-            transform: scale(1.1);
+        @keyframes floatIcon {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
         }
 
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ff4757;
+        .mini-chat-icon:hover {
+            transform: scale(1.15);
+            box-shadow: 0 15px 40px rgba(157, 78, 221, 0.7);
+        }
+
+        .mini-chat-icon i {
+            font-size: 24px;
             color: white;
-            min-width: 22px;
-            height: 22px;
-            border-radius: 11px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 12px;
-            font-weight: bold;
-            padding: 0 6px;
-            box-shadow: 0 4px 10px rgba(255, 71, 87, 0.4);
-            animation: pulse 2s infinite;
         }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.15); }
-            100% { transform: scale(1); }
+        .mini-chat-icon.has-notification {
+            animation: glowPulse 1.5s infinite;
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { box-shadow: 0 0 20px var(--neon-purple); }
+            50% { box-shadow: 0 0 35px var(--neon-pink); }
         }
 
         /* Party History */
-        .party-history-section {
+        .party-history {
             margin-top: 10px;
         }
 
-        .section-header {
+        .section-title-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
         }
 
-        .section-title {
+        .section-title-bar h3 {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -691,25 +590,8 @@
             font-weight: 600;
         }
 
-        .section-title i {
-            color: var(--secondary);
-        }
-
-        .clear-history {
-            background: none;
-            border: 1px solid var(--glass-border);
-            color: var(--light-gray);
-            padding: 8px 16px;
-            border-radius: 20px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.3s ease;
-        }
-
-        .clear-history:hover {
-            background: rgba(255, 0, 255, 0.1);
-            color: var(--secondary);
-            border-color: var(--secondary);
+        .section-title-bar i {
+            color: var(--neon-pink);
         }
 
         .history-grid {
@@ -719,22 +601,22 @@
         }
 
         .history-card {
-            background: var(--dark-card);
-            border-radius: var(--radius);
+            background: rgba(29, 0, 61, 0.3);
+            border-radius: 16px;
             overflow: hidden;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
             border: 1px solid var(--glass-border);
             position: relative;
         }
 
         .history-card:hover {
-            transform: translateY(-8px);
-            border-color: var(--primary);
-            box-shadow: var(--neon-glow);
+            transform: translateY(-10px);
+            border-color: var(--neon-purple);
+            box-shadow: 0 15px 35px rgba(157, 78, 221, 0.3);
         }
 
-        .history-thumbnail {
+        .history-thumb {
             width: 100%;
             height: 140px;
             object-fit: cover;
@@ -759,10 +641,10 @@
             opacity: 1;
         }
 
-        .play-overlay {
+        .play-overlay-btn {
             width: 50px;
             height: 50px;
-            background: rgba(138, 43, 226, 0.8);
+            background: rgba(157, 78, 221, 0.85);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -774,7 +656,7 @@
             padding: 15px;
         }
 
-        .history-title {
+        .history-video-title {
             font-size: 15px;
             font-weight: 600;
             margin-bottom: 8px;
@@ -782,933 +664,388 @@
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
-            line-height: 1.4;
         }
 
         .history-meta {
             display: flex;
             justify-content: space-between;
             font-size: 12px;
-            color: var(--light-gray);
+            color: var(--text-gray);
         }
 
-        .empty-history {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px;
-            color: var(--light-gray);
-        }
-
-        .empty-history i {
-            font-size: 48px;
-            margin-bottom: 15px;
-            opacity: 0.5;
-        }
-
-        /* Theater Mode & Fullscreen */
-        body.theater-mode .video-section {
-            flex: 1;
-        }
-
-        body.theater-mode .chat-section {
-            max-width: 400px;
-        }
-
-        body.fullscreen-video {
+        /* Fullscreen Mode */
+        body.fullscreen-active {
             overflow: hidden;
             padding: 0;
         }
 
-        body.fullscreen-video .container {
+        body.fullscreen-active .app-container {
             padding: 0;
             height: 100vh;
             max-width: 100%;
         }
 
-        body.fullscreen-video .header,
-        body.fullscreen-video .video-input-section,
-        body.fullscreen-video .party-history-section {
+        body.fullscreen-active .party-header,
+        body.fullscreen-active .video-control-top,
+        body.fullscreen-active .party-history {
             display: none;
         }
 
-        body.fullscreen-video .main-content {
+        body.fullscreen-active .content-area {
             height: 100vh;
             gap: 0;
         }
 
-        body.fullscreen-video .video-section {
+        body.fullscreen-active .cinema-section {
             flex: 1;
             border-radius: 0;
         }
 
-        body.fullscreen-video .video-container {
+        body.fullscreen-active .cinema-container {
             border-radius: 0;
             border: none;
         }
 
-        body.fullscreen-video .chat-section {
-            height: 100vh;
-            border-radius: 0;
-            border-left: 1px solid var(--glass-border);
-        }
-
-        /* Loading States */
-        .loading {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100%;
-            gap: 20px;
-            color: var(--accent);
-        }
-
-        .loading-spinner {
-            width: 50px;
-            height: 50px;
-            border: 3px solid var(--glass-border);
-            border-top-color: var(--accent);
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
-        /* Toast Notifications */
-        .toast-container {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            z-index: 10000;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            max-width: 350px;
-        }
-
-        .toast {
-            background: var(--dark-card);
-            border-left: 4px solid var(--primary);
-            border-radius: var(--radius-sm);
-            padding: 16px 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-            animation: toastIn 0.3s ease, toastOut 0.3s ease 2.7s forwards;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .toast i {
-            color: var(--primary);
-            font-size: 18px;
-        }
-
-        .toast-content {
+        /* Theater Mode */
+        body.theater-mode-active .cinema-section {
             flex: 1;
         }
 
-        .toast-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .toast-message {
-            font-size: 14px;
-            color: var(--light-gray);
-        }
-
-        @keyframes toastIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        @keyframes toastOut {
-            to { transform: translateX(100%); opacity: 0; }
+        body.theater-mode-active .cinema-container {
+            max-height: 75vh;
         }
 
         /* Responsive Design */
         @media (max-width: 1200px) {
-            .container {
+            .app-container {
                 padding: 15px;
             }
-            
-            .chat-section {
-                min-width: 320px;
-                max-width: 380px;
+            .chat-widget-container {
+                width: 320px;
             }
         }
 
         @media (max-width: 992px) {
-            .main-content {
+            .content-area {
                 flex-direction: column;
             }
-            
-            .chat-section {
+            .chat-widget-container {
+                position: relative;
+                bottom: auto;
+                right: auto;
+                width: 100%;
                 max-width: 100%;
-                height: 350px;
+                height: 400px;
+                margin-top: 20px;
             }
-            
-            .chat-section.minimized {
-                width: 60px;
-                height: 60px;
-                position: fixed;
-                bottom: 20px;
-                left: 20px;
-                z-index: 1000;
-            }
-            
-            .history-grid {
-                grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+            .mini-chat-icon {
+                display: none;
             }
         }
 
         @media (max-width: 768px) {
-            .header {
+            .party-header {
                 flex-direction: column;
                 gap: 20px;
                 text-align: center;
             }
-            
-            .room-info {
+            .party-stats {
                 width: 100%;
                 justify-content: center;
             }
-            
-            .video-input-container {
+            .video-input-group {
                 flex-direction: column;
             }
-            
-            .btn {
+            #loadVideoBtn {
                 width: 100%;
                 justify-content: center;
             }
-            
-            .video-controls {
+            .player-controls-bar {
                 flex-direction: column;
                 gap: 15px;
                 padding: 20px;
             }
-            
-            .control-left {
+            .playback-controls {
                 width: 100%;
                 justify-content: center;
             }
-            
             .history-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-                gap: 15px;
+                grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
             }
         }
 
-        @media (max-width: 576px) {
-            .logo {
-                flex-direction: column;
-                text-align: center;
-                gap: 10px;
-            }
-            
-            .logo-text h1 {
-                font-size: 24px;
-            }
-            
-            .chat-messages {
-                padding: 15px;
-            }
-            
-            .message {
-                max-width: 90%;
-            }
-            
-            .toast-container {
-                bottom: 20px;
-                right: 20px;
-                left: 20px;
-                max-width: none;
-            }
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
         }
-
-        /* Connection Status */
-        .connection-status {
-            position: fixed;
-            top: 20px;
-            left: 20px;
-            z-index: 1001;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: var(--dark-card);
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            font-size: 14px;
-            backdrop-filter: blur(10px);
-            transition: all 0.3s ease;
+        ::-webkit-scrollbar-track {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
         }
-
-        .connection-dot {
-            width: 10px;
-            height: 10px;
-            border-radius: 50%;
-            background: #00ff00;
-            animation: pulse 2s infinite;
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-pink));
+            border-radius: 10px;
         }
-
-        .connection-dot.disconnected {
-            background: #ff4757;
-        }
-
-        /* Welcome Modal */
-        .welcome-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(10, 10, 20, 0.95);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            backdrop-filter: blur(20px);
-        }
-
-        .welcome-content {
-            background: var(--dark-card);
-            border-radius: var(--radius-lg);
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow);
-            text-align: center;
-        }
-
-        .welcome-icon {
-            font-size: 64px;
-            color: var(--primary);
-            margin-bottom: 20px;
-        }
-
-        .welcome-title {
-            font-size: 28px;
-            margin-bottom: 15px;
-            background: linear-gradient(to right, var(--primary), var(--accent));
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .welcome-text {
-            color: var(--light-gray);
-            line-height: 1.6;
-            margin-bottom: 30px;
-        }
-
-        .welcome-features {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 15px;
-            margin-bottom: 30px;
-        }
-
-        .feature {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-            background: var(--glass);
-            border-radius: var(--radius-sm);
-            font-size: 14px;
-        }
-
-        .feature i {
-            color: var(--accent);
-        }
-
-        .start-btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
-            color: white;
-            padding: 16px 40px;
-            border-radius: var(--radius);
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            width: 100%;
-        }
-
-        .start-btn:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--neon-glow);
-        }
-
-        /* Sync Indicator */
-        .sync-indicator {
-            position: fixed;
-            bottom: 20px;
-            left: 20px;
-            background: var(--dark-card);
-            padding: 8px 16px;
-            border-radius: 20px;
-            border: 1px solid var(--glass-border);
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            backdrop-filter: blur(10px);
-            z-index: 999;
-            animation: slideInLeft 0.3s ease;
-        }
-
-        @keyframes slideInLeft {
-            from { transform: translateX(-100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-
-        .sync-indicator i {
-            color: var(--accent);
-        }
-
-        /* Typing Indicator */
-        .typing-indicator {
-            padding: 10px 15px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: var(--light-gray);
-            font-size: 13px;
-        }
-
-        .typing-dots {
-            display: flex;
-            gap: 4px;
-        }
-
-        .typing-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--accent);
-            animation: typing 1.4s infinite ease-in-out;
-        }
-
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-
-        @keyframes typing {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(45deg, var(--neon-purple), var(--neon-cyan));
         }
     </style>
 </head>
 <body>
-    <!-- Connection Status -->
-    <div class="connection-status" id="connectionStatus">
-        <div class="connection-dot" id="connectionDot"></div>
-        <span>متصل</span>
-    </div>
+    <!-- Cosmic Background -->
+    <div id="cosmicStars"></div>
 
-    <!-- Welcome Modal -->
-    <div class="welcome-modal" id="welcomeModal">
-        <div class="welcome-content">
-            <div class="welcome-icon">
-                <i class="fas fa-film"></i>
-            </div>
-            <h2 class="welcome-title">مرحباً في PartyHub</h2>
-            <p class="welcome-text">
-                استمتع بمشاهدة فيديوهات YouTube مع أصدقائك في وقت واحد مع دردشة مباشرة ومزامنة تامة.
-            </p>
-            <div class="welcome-features">
-                <div class="feature">
-                    <i class="fas fa-sync-alt"></i>
-                    <span>مزامنة تامة</span>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-comments"></i>
-                    <span>دردشة مباشرة</span>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-history"></i>
-                    <span>سجل المشاهدات</span>
-                </div>
-                <div class="feature">
-                    <i class="fas fa-users"></i>
-                    <span>مشاهدة جماعية</span>
-                </div>
-            </div>
-            <button class="start-btn" id="startBtn">
-                <i class="fas fa-play"></i>
-                ابدأ المشاهدة
-            </button>
-        </div>
-    </div>
-
-    <!-- Toast Container -->
-    <div class="toast-container" id="toastContainer"></div>
-
-    <!-- Sync Indicator -->
-    <div class="sync-indicator" id="syncIndicator" style="display: none;">
-        <i class="fas fa-sync-alt fa-spin"></i>
-        <span>جاري المزامنة...</span>
-    </div>
-
-    <!-- Main Container -->
-    <div class="container">
+    <!-- Main App Container -->
+    <div class="app-container">
         <!-- Header -->
-        <div class="header">
-            <a href="#" class="logo">
+        <div class="party-header">
+            <div class="logo-area">
                 <div class="logo-icon">
                     <i class="fas fa-film"></i>
                 </div>
                 <div class="logo-text">
-                    <h1>PartyHub</h1>
-                    <span>مشاهدة فيديو جماعية متزامنة</span>
+                    <h1>Cosmic Watch</h1>
+                    <span>سينما لنا ♥</span>
                 </div>
-            </a>
-            <div class="room-info">
-                <div class="user-count">
-                    <i class="fas fa-users"></i>
-                    <span id="userCount">1</span>
-                    <span>متصل</span>
+            </div>
+            <div class="party-stats">
+                <div class="online-badge">
+                    <div class="online-dot"></div>
+                    <span>متصلون:</span>
+                    <span id="onlineCount">1</span>
                 </div>
-                <div class="room-actions">
-                    <button class="icon-btn" id="inviteBtn" title="دعوة أصدقاء">
-                        <i class="fas fa-user-plus"></i>
-                    </button>
-                    <button class="icon-btn" id="settingsBtn" title="الإعدادات">
-                        <i class="fas fa-cog"></i>
-                    </button>
-                </div>
+                <button class="player-btn" id="theaterModeBtn" title="وضع المسرح">
+                    <i class="fas fa-theater-masks"></i>
+                </button>
+                <button class="player-btn" id="fullscreenBtn" title="ملء الشاشة">
+                    <i class="fas fa-expand"></i>
+                </button>
             </div>
         </div>
 
-        <!-- Video Input Section -->
-        <div class="video-input-section">
-            <div class="video-input-container">
-                <div class="video-input-wrapper">
-                    <input type="text" class="video-input" id="videoUrl" 
-                           placeholder="أدخل رابط فيديو YouTube أو رابط مشاركة...">
-                    <div class="video-input-icon">
+        <!-- Video Input -->
+        <div class="video-control-top">
+            <div class="video-input-group">
+                <div class="url-input-wrapper">
+                    <input type="text" id="videoUrlInput" placeholder="ضع رابط YouTube هنا...">
+                    <div class="url-icon">
                         <i class="fab fa-youtube"></i>
                     </div>
                 </div>
-                <button class="btn" id="loadVideoBtn">
+                <button id="loadVideoBtn">
                     <i class="fas fa-play-circle"></i>
-                    تشغيل الفيديو
+                    شغل الفيديو
                 </button>
             </div>
         </div>
 
         <!-- Main Content -->
-        <div class="main-content">
-            <!-- Video Section -->
-            <div class="video-section">
-                <div class="video-container">
-                    <div id="player"></div>
-                    <div class="video-placeholder" id="videoPlaceholder">
+        <div class="content-area">
+            <!-- Cinema Player -->
+            <div class="cinema-section">
+                <div class="cinema-container">
+                    <div id="youtubePlayer"></div>
+                    <div class="player-placeholder" id="playerPlaceholder">
                         <i class="fas fa-video-slash"></i>
-                        <p>أدخل رابط فيديو YouTube لبدء المشاهدة</p>
+                        <p>ضع رابط فيديو لتبدأ الحفلة</p>
                     </div>
                 </div>
-                <div class="video-controls">
-                    <div class="control-left">
-                        <button class="control-btn" id="playPauseBtn" title="تشغيل / إيقاف">
+                <div class="player-controls-bar">
+                    <div class="playback-controls">
+                        <button class="player-btn" id="playPauseBtn" title="تشغيل / إيقاف">
                             <i class="fas fa-play"></i>
                         </button>
-                        <button class="control-btn" id="fullscreenBtn" title="ملء الشاشة">
-                            <i class="fas fa-expand"></i>
+                        <button class="player-btn" id="speedDownBtn" title="إبطاء">
+                            <i class="fas fa-backward"></i>
                         </button>
-                        <button class="control-btn" id="theaterBtn" title="وضع المسرح">
-                            <i class="fas fa-theater-masks"></i>
+                        <button class="player-btn" id="speedUpBtn" title="تسريع">
+                            <i class="fas fa-forward"></i>
                         </button>
                     </div>
                     <div class="time-display">
                         <span id="currentTime">00:00</span>
-                        <span class="time-separator">/</span>
+                        <span>/</span>
                         <span id="duration">00:00</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Chat Section -->
-            <div class="chat-section" id="chatSection">
-                <div class="chat-header">
-                    <div class="chat-title">
-                        <i class="fas fa-comments"></i>
-                        <span>الدردشة المباشرة</span>
-                        <div class="chat-stats">
-                            (<span id="messageCount">0</span> رسالة)
-                        </div>
-                    </div>
-                    <div class="chat-actions">
-                        <button class="chat-toggle" id="clearChatBtn" title="مسح الدردشة">
-                            <i class="fas fa-trash-alt"></i>
-                        </button>
-                        <button class="chat-toggle" id="chatToggle" title="تصغير الدردشة">
-                            <i class="fas fa-chevron-right"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="chat-messages" id="chatMessages">
-                    <div class="message-system">
-                        <i class="fas fa-info-circle"></i>
-                        مرحباً! يمكنك البدء في الدردشة مع المشاهدين الآخرين.
-                    </div>
-                </div>
-                <div class="chat-input-container">
-                    <div class="chat-input-wrapper">
-                        <input type="text" class="chat-input" id="chatInput" 
-                               placeholder="اكتب رسالتك هنا...">
-                        <button class="send-btn" id="sendBtn" title="إرسال">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
+                        <span id="playbackSpeed">1x</span>
                     </div>
                 </div>
             </div>
         </div>
 
-        <!-- Party History Section -->
-        <div class="party-history-section">
-            <div class="section-header">
-                <h3 class="section-title">
+        <!-- Party History -->
+        <div class="party-history">
+            <div class="section-title-bar">
+                <h3>
                     <i class="fas fa-history"></i>
-                    <span>فيديوهات الحفلة السابقة</span>
+                    <span>فيديوهات حفلاتنا</span>
                 </h3>
-                <button class="clear-history" id="clearHistoryBtn">
+                <button class="chat-action-btn" id="clearHistoryBtn" title="مسح السجل">
                     <i class="fas fa-trash"></i>
-                    مسح السجل
                 </button>
             </div>
             <div class="history-grid" id="historyGrid">
-                <!-- سيتم تعبئتها ديناميكيًا -->
+                <!-- History will load here -->
             </div>
         </div>
     </div>
 
-    <!-- YouTube IFrame API -->
-    <script src="https://www.youtube.com/iframe_api"></script>
-    
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
+    <!-- Floating Chat Widget -->
+    <div class="chat-widget-container" id="chatWidget" style="display: none;">
+        <div class="chat-header-bar" id="chatHeader">
+            <div class="chat-title">
+                <i class="fas fa-comments"></i>
+                <span>دردشتنا</span>
+            </div>
+            <div class="chat-actions">
+                <button class="chat-action-btn" id="minimizeChatBtn" title="تصغير">
+                    <i class="fas fa-minus"></i>
+                </button>
+                <button class="chat-action-btn" id="closeChatBtn" title="إغلاق">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+        </div>
+        <div class="messages-viewport" id="messagesViewport">
+            <!-- Messages appear here -->
+        </div>
+        <div class="chat-input-area">
+            <div class="chat-input-group">
+                <input type="text" id="chatMessageInput" placeholder="اكتب رسالتك هنا...">
+                <button id="sendMessageBtn">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
 
-    <!-- Application Script -->
+    <!-- Mini Chat Icon -->
+    <div class="mini-chat-icon" id="miniChatIcon">
+        <i class="fas fa-comment-dots"></i>
+    </div>
+
     <script>
-        // ============================================
-        // Firebase Configuration - استخدم معلوماتك
-        // ============================================
+        // ====================================================
+        // 1. FIREBASE CONFIGURATION
+        // ====================================================
         const firebaseConfig = {
             apiKey: "AIzaSyAJvohW3m1-sZAlrTjkv7UZqTLC6WigePo",
             authDomain: "party-dfe30.firebaseapp.com",
             projectId: "party-dfe30",
             storageBucket: "party-dfe30.firebasestorage.app",
             messagingSenderId: "783983668260",
-            appId: "1:783983668260:web:e353a1220e7621bbf53cb1",
-            measurementId: "G-60ESCD9YF1"
+            appId: "1:783983668260:web:e353a1220e7621bbf53cb1"
         };
 
-        // ============================================
-        // تهيئة التطبيق
-        // ============================================
-        // تهيئة Firebase
+        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
 
-        // متغيرات التطبيق
+        // ====================================================
+        // 2. APPLICATION STATE
+        // ====================================================
         let player = null;
         let currentUser = null;
-        let currentRoom = null;
+        const ROOM_ID = "cosmic_watch_room";
+        let isSyncing = false;
+        let lastSyncTime = 0;
+        let currentVideoId = null;
+        let isChatMinimized = false;
+        let chatUnreadCount = 0;
+        let isDraggingChat = false;
+        let dragOffsetX = 0, dragOffsetY = 0;
+
+        // Firebase References
+        let roomRef = null;
         let videoStateRef = null;
         let chatRef = null;
-        let historyRef = null;
         let usersRef = null;
-        let userListener = null;
-        let chatListener = null;
-        let videoListener = null;
-        let isChatMinimized = false;
-        let isFullscreen = false;
-        let isTheaterMode = false;
-        let currentVideoId = null;
-        let chatUnreadCount = 0;
-        let lastSyncTime = Date.now();
-        let isSyncing = false;
-        let userTypingTimeout = null;
+        let historyRef = null;
 
-        // متغيرات المزامنة
-        const SYNC_THRESHOLD = 2000; // 2 ثانية
-        const SYNC_INTERVAL = 1000; // تحديث كل ثانية
-        const TYPING_TIMEOUT = 3000; // 3 ثواني لإخفاء مؤشر الكتابة
-
-        // ============================================
-        // DOM Elements
-        // ============================================
-        const domElements = {
-            // العناصر الأساسية
-            welcomeModal: document.getElementById('welcomeModal'),
-            startBtn: document.getElementById('startBtn'),
-            connectionStatus: document.getElementById('connectionStatus'),
-            connectionDot: document.getElementById('connectionDot'),
-            toastContainer: document.getElementById('toastContainer'),
-            syncIndicator: document.getElementById('syncIndicator'),
+        // ====================================================
+        // 3. COSMIC STARS BACKGROUND
+        // ====================================================
+        function createCosmicStars() {
+            const container = document.getElementById('cosmicStars');
+            const starCount = window.innerWidth < 768 ? 80 : 150;
             
-            // عناصر الفيديو
-            videoUrl: document.getElementById('videoUrl'),
-            loadVideoBtn: document.getElementById('loadVideoBtn'),
-            videoPlaceholder: document.getElementById('videoPlaceholder'),
-            player: document.getElementById('player'),
-            playPauseBtn: document.getElementById('playPauseBtn'),
-            fullscreenBtn: document.getElementById('fullscreenBtn'),
-            theaterBtn: document.getElementById('theaterBtn'),
-            currentTime: document.getElementById('currentTime'),
-            duration: document.getElementById('duration'),
-            
-            // عناصر الدردشة
-            chatSection: document.getElementById('chatSection'),
-            chatMessages: document.getElementById('chatMessages'),
-            chatInput: document.getElementById('chatInput'),
-            sendBtn: document.getElementById('sendBtn'),
-            chatToggle: document.getElementById('chatToggle'),
-            clearChatBtn: document.getElementById('clearChatBtn'),
-            messageCount: document.getElementById('messageCount'),
-            
-            // المستخدمون والتاريخ
-            userCount: document.getElementById('userCount'),
-            historyGrid: document.getElementById('historyGrid'),
-            clearHistoryBtn: document.getElementById('clearHistoryBtn'),
-            
-            // الأزرار الإضافية
-            inviteBtn: document.getElementById('inviteBtn'),
-            settingsBtn: document.getElementById('settingsBtn')
-        };
-
-        // ============================================
-        // Event Listeners
-        // ============================================
-        function setupEventListeners() {
-            // زر البدء
-            domElements.startBtn.addEventListener('click', hideWelcomeModal);
-            
-            // تحميل الفيديو
-            domElements.loadVideoBtn.addEventListener('click', loadVideoFromInput);
-            domElements.videoUrl.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') loadVideoFromInput();
-            });
-            
-            // عناصر التحكم بالفيديو
-            domElements.playPauseBtn.addEventListener('click', togglePlayPause);
-            domElements.fullscreenBtn.addEventListener('click', toggleFullscreen);
-            domElements.theaterBtn.addEventListener('click', toggleTheaterMode);
-            
-            // الدردشة
-            domElements.sendBtn.addEventListener('click', sendMessage);
-            domElements.chatInput.addEventListener('keypress', (e) => {
-                if (e.key === 'Enter') sendMessage();
-            });
-            domElements.chatInput.addEventListener('input', handleTyping);
-            domElements.chatToggle.addEventListener('click', toggleChat);
-            domElements.clearChatBtn.addEventListener('click', clearChat);
-            
-            // التاريخ
-            domElements.clearHistoryBtn.addEventListener('click', clearHistory);
-            
-            // الأزرار الإضافية
-            domElements.inviteBtn.addEventListener('click', inviteFriends);
-            domElements.settingsBtn.addEventListener('click', showSettings);
-            
-            // أحداث المتصفح
-            document.addEventListener('fullscreenchange', handleFullscreenChange);
-            document.addEventListener('keydown', handleKeyPress);
-            window.addEventListener('beforeunload', handleBeforeUnload);
-            
-            // الاستماع لتغيرات الاتصال
-            firebase.firestore().enableNetwork()
-                .then(() => {
-                    updateConnectionStatus(true);
-                })
-                .catch(() => {
-                    updateConnectionStatus(false);
-                });
-        }
-
-        // ============================================
-        // إدارة الاتصال
-        // ============================================
-        function updateConnectionStatus(isConnected) {
-            const status = domElements.connectionStatus;
-            const dot = domElements.connectionDot;
-            
-            if (isConnected) {
-                status.style.opacity = '0.7';
-                dot.classList.remove('disconnected');
-                dot.style.background = '#00ff00';
-            } else {
-                status.style.opacity = '1';
-                dot.classList.add('disconnected');
-                dot.style.background = '#ff4757';
-                showToast('فقدت الاتصال بالخادم', 'error');
+            for (let i = 0; i < starCount; i++) {
+                const star = document.createElement('div');
+                star.className = 'star';
+                star.style.left = Math.random() * 100 + 'vw';
+                star.style.top = Math.random() * 100 + 'vh';
+                star.style.width = (Math.random() * 2 + 1) + 'px';
+                star.style.height = star.style.width;
+                star.style.color = i % 3 === 0 ? 'var(--neon-pink)' : 
+                                 i % 2 === 0 ? 'var(--accent-gold)' : 'white';
+                star.style.setProperty('--duration', (Math.random() * 5 + 3) + 's');
+                star.style.opacity = 0.7;
+                container.appendChild(star);
             }
         }
 
-        // ============================================
-        // واجهة المستخدم - Modal
-        // ============================================
-        function hideWelcomeModal() {
-            domElements.welcomeModal.style.opacity = '0';
-            domElements.welcomeModal.style.pointerEvents = 'none';
-            domElements.welcomeModal.style.transition = 'opacity 0.5s ease';
+        // ====================================================
+        // 4. INITIALIZE APPLICATION
+        // ====================================================
+        async function initializeApp() {
+            createCosmicStars();
             
-            setTimeout(() => {
-                domElements.welcomeModal.style.display = 'none';
-                initializeApp();
-            }, 500);
-        }
-
-        // ============================================
-        // إشعارات Toast
-        // ============================================
-        function showToast(message, type = 'info', duration = 3000) {
-            const toastContainer = domElements.toastContainer;
-            
-            const toast = document.createElement('div');
-            toast.className = 'toast';
-            
-            let icon = 'info-circle';
-            let title = 'معلومة';
-            
-            switch(type) {
-                case 'success':
-                    icon = 'check-circle';
-                    title = 'تم بنجاح';
-                    toast.style.borderLeftColor = '#00ff00';
-                    break;
-                case 'error':
-                    icon = 'exclamation-circle';
-                    title = 'خطأ';
-                    toast.style.borderLeftColor = '#ff4757';
-                    break;
-                case 'warning':
-                    icon = 'exclamation-triangle';
-                    title = 'تحذير';
-                    toast.style.borderLeftColor = '#ffaa00';
-                    break;
-            }
-            
-            toast.innerHTML = `
-                <i class="fas fa-${icon}"></i>
-                <div class="toast-content">
-                    <div class="toast-title">${title}</div>
-                    <div class="toast-message">${message}</div>
-                </div>
-            `;
-            
-            toastContainer.appendChild(toast);
-            
-            // إزالة Toast بعد المدة المحددة
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.style.animation = 'toastOut 0.3s ease forwards';
-                    setTimeout(() => {
-                        if (toast.parentNode) {
-                            toast.parentNode.removeChild(toast);
-                        }
-                    }, 300);
-                }
-            }, duration);
-        }
-
-        // ============================================
-        // تهيئة التطبيق الرئيسية
-        // ============================================
-        function initializeApp() {
-            // تسجيل الدخول كضيف
-            auth.signInAnonymously()
-                .then(() => {
-                    currentUser = auth.currentUser;
-                    currentRoom = 'main_party_room';
-                    
-                    showToast(`مرحباً! تم تسجيل دخولك كـ ${currentUser.uid.substring(0, 8)}`, 'success');
-                    
-                    // إنشاء مراجع Firestore
-                    initializeFirestoreReferences();
-                    
-                    // تحميل مشغل YouTube
-                    loadYouTubePlayer();
-                    
-                    // تعقب المستخدمين المتصلين
-                    trackOnlineUsers();
-                    
-                    // الاستماع لتغييرات الفيديو
-                    listenToVideoState();
-                    
-                    // الاستماع للدردشة
-                    listenToChat();
-                    
-                    // تحميل سجل الفيديوهات
-                    loadPartyHistory();
-                })
-                .catch((error) => {
-                    console.error('خطأ في تسجيل الدخول:', error);
-                    showToast('فشل الاتصال بالخادم. جاري إعادة المحاولة...', 'error');
-                    setTimeout(initializeApp, 3000);
-                });
-        }
-
-        // ============================================
-        // تهيئة مراجع Firestore
-        // ============================================
-        function initializeFirestoreReferences() {
-            videoStateRef = db.collection('rooms').doc(currentRoom).collection('state').doc('video');
-            chatRef = db.collection('rooms').doc(currentRoom).collection('chat')
-                .orderBy('timestamp', 'desc')
-                .limit(100);
-            historyRef = db.collection('rooms').doc(currentRoom).collection('history')
-                .orderBy('addedAt', 'desc')
-                .limit(20);
-            usersRef = db.collection('rooms').doc(currentRoom).collection('users').doc(currentUser.uid);
-            
-            // تحديث حالة المستخدم
-            updateUserStatus();
-            
-            // تحديث حالة المستخدم كل 30 ثانية
-            setInterval(updateUserStatus, 30000);
-        }
-
-        function updateUserStatus() {
-            if (usersRef) {
-                usersRef.set({
+            // Sign in anonymously
+            try {
+                await auth.signInAnonymously();
+                currentUser = auth.currentUser;
+                
+                // Initialize Firebase references
+                roomRef = db.collection('rooms').doc(ROOM_ID);
+                videoStateRef = roomRef.collection('state').doc('video');
+                chatRef = roomRef.collection('messages')
+                    .orderBy('timestamp', 'asc')
+                    .limit(100);
+                usersRef = roomRef.collection('users').doc(currentUser.uid);
+                historyRef = roomRef.collection('history')
+                    .orderBy('addedAt', 'desc')
+                    .limit(12);
+                
+                // Setup user presence
+                await usersRef.set({
                     uid: currentUser.uid,
-                    name: `مستخدم_${currentUser.uid.substring(0, 6)}`,
-                    lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+                    name: `شخص_${currentUser.uid.substring(0, 6)}`,
                     online: true,
-                    typing: false
+                    lastSeen: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
+                
+                // Start listeners
+                startVideoSyncListener();
+                startChatListener();
+                startUsersListener();
+                loadPartyHistory();
+                
+                // Setup YouTube Player
+                loadYouTubePlayer();
+                
+                // Setup UI event listeners
+                setupEventListeners();
+                
+                console.log('Cosmic Watch Party initialized successfully!');
+                
+            } catch (error) {
+                console.error('Failed to initialize app:', error);
             }
         }
 
-        // ============================================
-        // YouTube Player
-        // ============================================
+        // ====================================================
+        // 5. YOUTUBE PLAYER
+        // ====================================================
         function loadYouTubePlayer() {
             if (window.YT && window.YT.Player) {
-                createYouTubePlayer();
+                createPlayer();
             } else {
-                window.onYouTubeIframeAPIReady = createYouTubePlayer;
-                
-                const script = document.createElement('script');
-                script.src = 'https://www.youtube.com/iframe_api';
-                document.head.appendChild(script);
+                window.onYouTubeIframeAPIReady = createPlayer;
             }
         }
 
-        function createYouTubePlayer() {
-            player = new YT.Player('player', {
+        function createPlayer() {
+            player = new YT.Player('youtubePlayer', {
                 height: '100%',
                 width: '100%',
                 playerVars: {
@@ -1728,113 +1065,104 @@
         }
 
         function onPlayerReady(event) {
-            console.log('YouTube Player جاهز');
-            domElements.videoPlaceholder.style.display = 'none';
+            console.log('YouTube Player ready');
+            document.getElementById('playerPlaceholder').style.display = 'none';
             
-            // تحديث الوقت كل ثانية
+            // Start time display update
             setInterval(updateTimeDisplay, 1000);
             
-            // تحميل آخر فيديو تم مشاهدته
+            // Load last video from Firestore
             loadLastVideo();
         }
 
         function onPlayerStateChange(event) {
-            if (!player || !videoStateRef || isSyncing) return;
+            if (!player || isSyncing) return;
             
             const state = event.data;
             const currentTime = player.getCurrentTime();
+            const playbackRate = player.getPlaybackRate();
             
-            // تجاهل بعض الحالات
-            if (state === -1 || state === 5) return;
-            
-            // تحديث زر التشغيل/الإيقاف
+            // Update UI button
             updatePlayPauseButton(state);
             
-            // تحديث الحالة في Firestore (إذا تجاوزت الحد الزمني)
+            // Sync with Firestore (with debounce)
             const now = Date.now();
-            if (now - lastSyncTime > SYNC_THRESHOLD) {
+            if (now - lastSyncTime > 1000) { // 1 second debounce
                 updateVideoState({
-                    state: state === 1 ? 'playing' : 'paused',
+                    state: state,
                     currentTime: currentTime,
+                    playbackRate: playbackRate,
                     timestamp: now,
-                    videoId: currentVideoId
+                    videoId: currentVideoId,
+                    updatedBy: currentUser.uid
                 });
                 lastSyncTime = now;
             }
         }
 
         function onPlayerError(event) {
-            console.error('خطأ في مشغل YouTube:', event.data);
-            showToast('حدث خطأ في تحميل الفيديو', 'error');
+            console.error('YouTube player error:', event.data);
         }
 
         function updatePlayPauseButton(state) {
-            const btn = domElements.playPauseBtn;
+            const btn = document.getElementById('playPauseBtn');
             const icon = btn.querySelector('i');
             
-            if (state === 1) { // تشغيل
+            if (state === YT.PlayerState.PLAYING) {
                 icon.className = 'fas fa-pause';
-                btn.title = 'إيقاف مؤقت';
-            } else { // إيقاف
+            } else {
                 icon.className = 'fas fa-play';
-                btn.title = 'تشغيل';
             }
         }
 
-        // ============================================
-        // مزامنة الفيديو
-        // ============================================
-        function listenToVideoState() {
-            videoListener = videoStateRef.onSnapshot((doc) => {
-                if (!doc.exists || !player || !player.getCurrentTime) return;
+        // ====================================================
+        // 6. VIDEO SYNC SYSTEM (CRITICAL)
+        // ====================================================
+        function startVideoSyncListener() {
+            videoStateRef.onSnapshot((doc) => {
+                if (!doc.exists || !player || isSyncing) return;
                 
                 const data = doc.data();
                 if (!data || data.updatedBy === currentUser.uid) return;
                 
-                // تجاهل التحديثات القديمة جداً
-                const now = Date.now();
-                if (data.timestamp && now - data.timestamp > 5000) return;
+                // Prevent old updates
+                if (data.timestamp && Date.now() - data.timestamp > 5000) return;
                 
-                // تطبيق حالة المزامنة
-                applyVideoState(data);
-            }, (error) => {
-                console.error('خطأ في الاستماع لتحديثات الفيديو:', error);
+                // Apply sync
+                applyVideoSync(data);
             });
         }
 
-        function applyVideoState(state) {
-            if (!player || !player.seekTo || isSyncing) return;
-            
+        function applyVideoSync(state) {
             isSyncing = true;
-            domElements.syncIndicator.style.display = 'flex';
             
-            // إذا كان الفيديو مختلفاً، قم بتغييره
+            // Change video if needed
             if (state.videoId && state.videoId !== currentVideoId) {
                 currentVideoId = state.videoId;
                 player.loadVideoById(state.videoId);
-                domElements.videoUrl.value = `https://www.youtube.com/watch?v=${state.videoId}`;
+                document.getElementById('videoUrlInput').value = `https://youtu.be/${state.videoId}`;
             }
             
-            // مزامنة الوقت إذا كان الفرق كبيراً
+            // Sync time (if difference > 2 seconds)
             const currentTime = player.getCurrentTime();
-            const timeDifference = Math.abs(currentTime - (state.currentTime || 0));
-            
-            if (timeDifference > 2) {
+            if (Math.abs(currentTime - (state.currentTime || 0)) > 2) {
                 player.seekTo(state.currentTime, true);
             }
             
-            // مزامنة حالة التشغيل
-            if (state.state === 'playing' && player.getPlayerState() !== 1) {
+            // Sync playback rate
+            if (state.playbackRate && player.getPlaybackRate() !== state.playbackRate) {
+                player.setPlaybackRate(state.playbackRate);
+                document.getElementById('playbackSpeed').textContent = state.playbackRate + 'x';
+            }
+            
+            // Sync play/pause state
+            if (state.state === YT.PlayerState.PLAYING && player.getPlayerState() !== YT.PlayerState.PLAYING) {
                 player.playVideo();
-            } else if (state.state === 'paused' && player.getPlayerState() !== 2) {
+            } else if (state.state === YT.PlayerState.PAUSED && player.getPlayerState() !== YT.PlayerState.PAUSED) {
                 player.pauseVideo();
             }
             
-            // إخفاء مؤشر المزامنة بعد تأخير بسيط
-            setTimeout(() => {
-                isSyncing = false;
-                domElements.syncIndicator.style.display = 'none';
-            }, 1000);
+            setTimeout(() => { isSyncing = false; }, 500);
         }
 
         function updateVideoState(updates) {
@@ -1842,347 +1170,127 @@
             
             videoStateRef.set({
                 ...updates,
-                updatedBy: currentUser.uid,
                 lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge: true }).catch((error) => {
-                console.error('خطأ في تحديث حالة الفيديو:', error);
-            });
+            }, { merge: true });
         }
 
-        // ============================================
-        // إدارة الفيديو
-        // ============================================
-        function loadVideoFromInput() {
-            const url = domElements.videoUrl.value.trim();
-            if (!url) {
-                showToast('الرجاء إدخال رابط فيديو YouTube', 'warning');
-                return;
-            }
-            
-            const videoId = extractYouTubeId(url);
-            if (!videoId) {
-                showToast('رابط YouTube غير صالح', 'error');
-                return;
-            }
-            
-            loadVideo(videoId);
-        }
-
-        function extractYouTubeId(url) {
-            const patterns = [
-                /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
-                /youtube\.com\/.*[?&]v=([^&#]+)/,
-                /youtu\.be\/([^?#]+)/
-            ];
-            
-            for (const pattern of patterns) {
-                const match = url.match(pattern);
-                if (match && match[1]) {
-                    return match[1];
-                }
-            }
-            
-            return null;
-        }
-
-        function loadVideo(videoId, startTime = 0) {
-            if (!player || !player.loadVideoById) return;
-            
-            currentVideoId = videoId;
-            
-            player.loadVideoById({
-                videoId: videoId,
-                startSeconds: startTime
-            });
-            
-            // تحديث حالة الفيديو
-            updateVideoState({
-                videoId: videoId,
-                currentTime: startTime,
-                state: 'paused',
-                timestamp: Date.now()
-            });
-            
-            // تحديث رابط الفيديو
-            domElements.videoUrl.value = `https://www.youtube.com/watch?v=${videoId}`;
-            
-            // إخفاء النص البديل
-            domElements.videoPlaceholder.style.display = 'none';
-            
-            // حفظ في السجل
-            saveToHistory(videoId);
-            
-            showToast('تم تحميل الفيديو بنجاح', 'success');
-        }
-
-        function loadLastVideo() {
-            videoStateRef.get().then((doc) => {
-                if (doc.exists) {
-                    const data = doc.data();
-                    if (data.videoId) {
-                        loadVideo(data.videoId, data.currentTime || 0);
-                    }
-                }
-            });
-        }
-
-        // ============================================
-        // الدردشة المباشرة
-        // ============================================
-        function listenToChat() {
-            chatListener = chatRef.onSnapshot((snapshot) => {
-                const messages = [];
+        // ====================================================
+        // 7. CHAT SYSTEM (FLOATING & DRAGGABLE)
+        // ====================================================
+        function startChatListener() {
+            chatRef.onSnapshot((snapshot) => {
+                const messagesViewport = document.getElementById('messagesViewport');
+                messagesViewport.innerHTML = '';
+                
                 snapshot.forEach((doc) => {
-                    messages.push({ id: doc.id, ...doc.data() });
+                    const msg = doc.data();
+                    addMessageToChat(msg);
                 });
                 
-                // عرض الرسائل بترتيب عكسي (الأقدم أولاً)
-                displayMessages(messages.reverse());
+                // Scroll to bottom
+                setTimeout(() => {
+                    messagesViewport.scrollTop = messagesViewport.scrollHeight;
+                }, 100);
                 
-                // تحديث عدد الرسائل
-                domElements.messageCount.textContent = messages.length;
-                
-                // إذا كانت الدردشة مصغرة، أضف إشعاراً
-                if (isChatMinimized && messages.length > 0) {
-                    const lastMessage = messages[messages.length - 1];
-                    if (lastMessage.senderId !== currentUser.uid) {
+                // Show notification if chat is minimized
+                if (isChatMinimized && snapshot.size > 0) {
+                    const lastMsg = snapshot.docs[snapshot.docs.length - 1].data();
+                    if (lastMsg.userId !== currentUser.uid) {
                         chatUnreadCount++;
                         updateChatNotification();
                     }
                 }
-            }, (error) => {
-                console.error('خطأ في تحميل الدردشة:', error);
             });
         }
 
-        function displayMessages(messages) {
-            const chatMessages = domElements.chatMessages;
-            chatMessages.innerHTML = '';
+        function addMessageToChat(message) {
+            const container = document.getElementById('messagesViewport');
+            const isMyMessage = message.userId === currentUser.uid;
             
-            if (messages.length === 0) {
-                const systemMsg = createSystemMessage('لا توجد رسائل بعد. كن أول من يرسل رسالة!');
-                chatMessages.appendChild(systemMsg);
-                return;
-            }
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message-bubble ${isMyMessage ? 'my-message' : 'their-message'}`;
             
-            messages.forEach((message) => {
-                const messageElement = createMessageElement(message);
-                chatMessages.appendChild(messageElement);
-            });
-            
-            // التمرير لأسفل
-            scrollToBottom();
-        }
-
-        function createMessageElement(message) {
-            const div = document.createElement('div');
-            
-            if (message.type === 'system') {
-                div.className = 'message-system';
-                div.innerHTML = `
-                    <i class="fas fa-${message.icon || 'info-circle'}"></i>
-                    ${message.text}
-                `;
-                return div;
-            }
-            
-            const isSent = message.senderId === currentUser.uid;
             const time = message.timestamp ? message.timestamp.toDate() : new Date();
-            const timeString = time.toLocaleTimeString('ar-EG', { 
+            const timeStr = time.toLocaleTimeString('ar-EG', { 
                 hour: '2-digit', 
                 minute: '2-digit',
                 hour12: true 
             });
             
-            div.className = `message ${isSent ? 'sent' : 'received'}`;
-            div.innerHTML = `
-                <div class="message-header">
-                    <div class="message-sender">${message.senderName || 'مستخدم'}</div>
-                    <div class="message-time">${timeString}</div>
-                </div>
+            messageDiv.innerHTML = `
+                ${!isMyMessage ? `<div class="message-sender">${message.userName || 'شخص'}</div>` : ''}
                 <div class="message-text">${message.text}</div>
+                <div class="message-time">${timeStr}</div>
             `;
             
-            return div;
+            container.appendChild(messageDiv);
         }
 
-        function createSystemMessage(text, icon = 'info-circle') {
-            return createMessageElement({
-                type: 'system',
-                text: text,
-                icon: icon
-            });
-        }
-
-        function sendMessage() {
-            const input = domElements.chatInput;
+        async function sendMessage() {
+            const input = document.getElementById('chatMessageInput');
             const text = input.value.trim();
             
             if (!text || !currentUser) return;
             
-            // إضافة الرسالة إلى Firestore
-            db.collection('rooms').doc(currentRoom).collection('chat').add({
-                text: text,
-                senderId: currentUser.uid,
-                senderName: `مستخدم_${currentUser.uid.substring(0, 6)}`,
-                timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                type: 'message'
-            }).then(() => {
+            try {
+                await roomRef.collection('messages').add({
+                    text: text,
+                    userId: currentUser.uid,
+                    userName: `شخص_${currentUser.uid.substring(0, 6)}`,
+                    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
                 input.value = '';
                 input.focus();
                 
-                // إخفاء مؤشر الكتابة
-                if (usersRef) {
-                    usersRef.update({ typing: false });
-                }
-            }).catch((error) => {
-                console.error('خطأ في إرسال الرسالة:', error);
-                showToast('فشل إرسال الرسالة', 'error');
-            });
+            } catch (error) {
+                console.error('Error sending message:', error);
+            }
         }
 
-        function handleTyping() {
-            if (!usersRef) return;
+        // ====================================================
+        // 8. DRAGGABLE CHAT WIDGET [citation:1]
+        // ====================================================
+        function makeChatDraggable() {
+            const chatWidget = document.getElementById('chatWidget');
+            const chatHeader = document.getElementById('chatHeader');
             
-            // تحديث حالة الكتابة
-            usersRef.update({ typing: true });
+            chatHeader.addEventListener('mousedown', startDrag);
             
-            // إعادة تعيين المؤقت
-            clearTimeout(userTypingTimeout);
-            userTypingTimeout = setTimeout(() => {
-                usersRef.update({ typing: false });
-            }, TYPING_TIMEOUT);
-        }
-
-        function clearChat() {
-            if (!confirm('هل أنت متأكد من رغبتك في مسح جميع رسائل الدردشة؟')) {
-                return;
+            function startDrag(e) {
+                e.preventDefault();
+                isDraggingChat = true;
+                
+                const rect = chatWidget.getBoundingClientRect();
+                dragOffsetX = e.clientX - rect.left;
+                dragOffsetY = e.clientY - rect.top;
+                
+                document.addEventListener('mousemove', onDrag);
+                document.addEventListener('mouseup', stopDrag);
             }
             
-            // حذف جميع الرسائل
-            db.collection('rooms').doc(currentRoom).collection('chat').get()
-                .then((snapshot) => {
-                    const batch = db.batch();
-                    snapshot.forEach((doc) => {
-                        batch.delete(doc.ref);
-                    });
-                    return batch.commit();
-                })
-                .then(() => {
-                    showToast('تم مسح الدردشة بنجاح', 'success');
-                })
-                .catch((error) => {
-                    console.error('خطأ في مسح الدردشة:', error);
-                    showToast('فشل مسح الدردشة', 'error');
-                });
-        }
-
-        // ============================================
-        // سجل الفيديوهات
-        // ============================================
-        function loadPartyHistory() {
-            historyRef.get().then((snapshot) => {
-                const historyGrid = domElements.historyGrid;
-                historyGrid.innerHTML = '';
+            function onDrag(e) {
+                if (!isDraggingChat) return;
                 
-                if (snapshot.empty) {
-                    historyGrid.innerHTML = `
-                        <div class="empty-history">
-                            <i class="fas fa-history"></i>
-                            <p>لا توجد فيديوهات سابقة</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                snapshot.forEach((doc) => {
-                    const video = { id: doc.id, ...doc.data() };
-                    addVideoToHistory(video);
-                });
-            }).catch((error) => {
-                console.error('خطأ في تحميل السجل:', error);
-            });
-        }
-
-        function addVideoToHistory(video) {
-            const historyGrid = domElements.historyGrid;
-            
-            // إزالة الرسالة الفارغة إذا كانت موجودة
-            const emptyMsg = historyGrid.querySelector('.empty-history');
-            if (emptyMsg) emptyMsg.remove();
-            
-            const card = document.createElement('div');
-            card.className = 'history-card';
-            card.dataset.videoId = video.videoId;
-            
-            card.innerHTML = `
-                <img src="https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg" 
-                     alt="${video.title || 'فيديو'}" 
-                     class="history-thumbnail">
-                <div class="history-overlay">
-                    <div class="play-overlay">
-                        <i class="fas fa-play"></i>
-                    </div>
-                </div>
-                <div class="history-info">
-                    <div class="history-title">${video.title || 'فيديو بدون عنوان'}</div>
-                    <div class="history-meta">
-                        <span>${formatDate(video.addedAt)}</span>
-                        <span>${video.addedBy ? video.addedBy.substring(0, 6) : ''}</span>
-                    </div>
-                </div>
-            `;
-            
-            card.addEventListener('click', () => {
-                loadVideo(video.videoId);
-            });
-            
-            historyGrid.prepend(card);
-        }
-
-        function saveToHistory(videoId) {
-            // الحصول على معلومات الفيديو
-            const title = `فيديو YouTube (${videoId})`;
-            
-            historyRef.add({
-                videoId: videoId,
-                title: title,
-                addedBy: currentUser.uid,
-                addedAt: firebase.firestore.FieldValue.serverTimestamp()
-            }).then(() => {
-                // إعادة تحميل التاريخ
-                loadPartyHistory();
-            }).catch((error) => {
-                console.error('خطأ في حفظ التاريخ:', error);
-            });
-        }
-
-        function clearHistory() {
-            if (!confirm('هل أنت متأكد من رغبتك في مسح سجل الفيديوهات؟')) {
-                return;
+                chatWidget.style.left = (e.clientX - dragOffsetX) + 'px';
+                chatWidget.style.top = (e.clientY - dragOffsetY) + 'px';
+                chatWidget.style.right = 'auto';
+                chatWidget.style.bottom = 'auto';
+                chatWidget.style.position = 'fixed';
             }
             
-            historyRef.get().then((snapshot) => {
-                const batch = db.batch();
-                snapshot.forEach((doc) => {
-                    batch.delete(doc.ref);
-                });
-                return batch.commit();
-            }).then(() => {
-                showToast('تم مسح السجل بنجاح', 'success');
-                loadPartyHistory();
-            }).catch((error) => {
-                console.error('خطأ في مسح السجل:', error);
-                showToast('فشل مسح السجل', 'error');
-            });
+            function stopDrag() {
+                isDraggingChat = false;
+                document.removeEventListener('mousemove', onDrag);
+                document.removeEventListener('mouseup', stopDrag);
+            }
         }
 
-        // ============================================
-        // المستخدمون المتصلون
-        // ============================================
-        function trackOnlineUsers() {
-            // تحديث عدد المستخدمين المتصلين
-            db.collection('rooms').doc(currentRoom).collection('users')
+        // ====================================================
+        // 9. USERS PRESENCE
+        // ====================================================
+        function startUsersListener() {
+            db.collection('rooms').doc(ROOM_ID).collection('users')
                 .where('online', '==', true)
                 .onSnapshot((snapshot) => {
                     let onlineCount = 0;
@@ -2192,208 +1300,374 @@
                         const user = doc.data();
                         if (user.lastSeen) {
                             const lastSeen = user.lastSeen.toDate().getTime();
-                            // يعتبر مستخدم متصل إذا كان آخر ظهوره قبل أقل من دقيقتين
                             if (now - lastSeen < 120000) {
                                 onlineCount++;
                             }
                         }
                     });
                     
-                    domElements.userCount.textContent = onlineCount;
+                    document.getElementById('onlineCount').textContent = onlineCount;
                 });
+            
+            // Update user status periodically
+            setInterval(() => {
+                if (usersRef) {
+                    usersRef.update({
+                        lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            }, 30000);
         }
 
-        // ============================================
-        // أدوات مساعدة
-        // ============================================
-        function togglePlayPause() {
-            if (!player) return;
-            
-            const state = player.getPlayerState();
-            if (state === 1) { // تشغيل
-                player.pauseVideo();
-            } else { // إيقاف
-                player.playVideo();
-            }
-        }
-
-        function toggleFullscreen() {
-            const container = document.querySelector('.video-container');
-            
-            if (!document.fullscreenElement) {
-                container.requestFullscreen().catch((err) => {
-                    console.error(`خطأ في تفعيل ملء الشاشة: ${err.message}`);
-                });
-                document.body.classList.add('fullscreen-video');
-                isFullscreen = true;
-            } else {
-                document.exitFullscreen();
-                document.body.classList.remove('fullscreen-video');
-                isFullscreen = false;
-            }
-        }
-
-        function toggleTheaterMode() {
-            isTheaterMode = !isTheaterMode;
-            document.body.classList.toggle('theater-mode', isTheaterMode);
-            
-            const btn = domElements.theaterBtn;
-            if (isTheaterMode) {
-                btn.classList.add('active');
-                btn.title = 'خروج من وضع المسرح';
-            } else {
-                btn.classList.remove('active');
-                btn.title = 'وضع المسرح';
-            }
-        }
-
-        function toggleChat() {
-            isChatMinimized = !isChatMinimized;
-            const chatSection = domElements.chatSection;
-            const toggleIcon = domElements.chatToggle.querySelector('i');
-            
-            if (isChatMinimized) {
-                chatSection.classList.add('minimized');
-                toggleIcon.className = 'fas fa-chevron-left';
+        // ====================================================
+        // 10. PARTY HISTORY
+        // ====================================================
+        async function loadPartyHistory() {
+            try {
+                const snapshot = await historyRef.get();
+                const historyGrid = document.getElementById('historyGrid');
+                historyGrid.innerHTML = '';
                 
-                // إضافة أيقونة مصغرة
-                if (!document.getElementById('minimizedChatIcon')) {
-                    const icon = document.createElement('div');
-                    icon.id = 'minimizedChatIcon';
-                    icon.className = 'chat-minimized-icon';
-                    icon.innerHTML = '<i class="fas fa-comment"></i>';
-                    icon.addEventListener('click', toggleChat);
-                    chatSection.appendChild(icon);
+                if (snapshot.empty) {
+                    historyGrid.innerHTML = `
+                        <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-gray)">
+                            <i class="fas fa-history" style="font-size: 3rem; margin-bottom: 1rem;"></i>
+                            <p>لا توجد فيديوهات سابقة</p>
+                        </div>
+                    `;
+                    return;
                 }
                 
-                updateChatNotification();
-            } else {
-                chatSection.classList.remove('minimized');
-                toggleIcon.className = 'fas fa-chevron-right';
+                snapshot.forEach(async (doc) => {
+                    const video = doc.data();
+                    await addVideoToHistory(video);
+                });
                 
-                // إزالة الأيقونة المصغرة
-                const icon = document.getElementById('minimizedChatIcon');
-                if (icon) icon.remove();
-                
-                // إعادة تعيين العداد
-                chatUnreadCount = 0;
+            } catch (error) {
+                console.error('Error loading history:', error);
             }
         }
 
-        function updateChatNotification() {
-            const icon = document.getElementById('minimizedChatIcon');
-            if (!icon) return;
+        async function addVideoToHistory(video) {
+            const historyGrid = document.getElementById('historyGrid');
             
-            // إزالة أي إشعارات سابقة
-            const oldBadge = icon.querySelector('.notification-badge');
-            if (oldBadge) oldBadge.remove();
+            // Remove empty message if exists
+            const emptyMsg = historyGrid.querySelector('div[style*="grid-column"]');
+            if (emptyMsg) emptyMsg.remove();
             
-            // إضافة إشعار جديد إذا كان هناك رسائل غير مقروءة
-            if (chatUnreadCount > 0) {
-                const badge = document.createElement('div');
-                badge.className = 'notification-badge';
-                badge.textContent = chatUnreadCount > 9 ? '9+' : chatUnreadCount;
-                icon.appendChild(badge);
+            const card = document.createElement('div');
+            card.className = 'history-card';
+            card.dataset.videoId = video.videoId;
+            
+            // Get video title
+            let videoTitle = video.title || 'فيديو';
+            if (!video.title && video.videoId) {
+                try {
+                    const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${video.videoId}`);
+                    const data = await response.json();
+                    videoTitle = data.title || 'فيديو';
+                } catch (e) {
+                    console.error('Error fetching video title:', e);
+                }
             }
+            
+            card.innerHTML = `
+                <img src="https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg" 
+                     alt="${videoTitle}" 
+                     class="history-thumb">
+                <div class="history-overlay">
+                    <div class="play-overlay-btn">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div class="history-info">
+                    <div class="history-video-title">${videoTitle}</div>
+                    <div class="history-meta">
+                        <span>${formatHistoryDate(video.addedAt)}</span>
+                    </div>
+                </div>
+            `;
+            
+            card.addEventListener('click', () => {
+                loadVideoFromId(video.videoId);
+            });
+            
+            historyGrid.appendChild(card);
+        }
+
+        async function addToHistory(videoId) {
+            if (!videoId) return;
+            
+            try {
+                // Get video title
+                let videoTitle = '';
+                try {
+                    const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${videoId}`);
+                    const data = await response.json();
+                    videoTitle = data.title || '';
+                } catch (e) {
+                    console.error('Error fetching video title:', e);
+                }
+                
+                // Add to history
+                await roomRef.collection('history').add({
+                    videoId: videoId,
+                    title: videoTitle,
+                    addedBy: currentUser.uid,
+                    addedAt: firebase.firestore.FieldValue.serverTimestamp()
+                });
+                
+                // Reload history
+                loadPartyHistory();
+                
+            } catch (error) {
+                console.error('Error adding to history:', error);
+            }
+        }
+
+        // ====================================================
+        // 11. VIDEO LOADING & CONTROLS
+        // ====================================================
+        function loadVideoFromInput() {
+            const url = document.getElementById('videoUrlInput').value.trim();
+            if (!url) return;
+            
+            const videoId = extractYouTubeId(url);
+            if (!videoId) {
+                alert('رابط YouTube غير صالح');
+                return;
+            }
+            
+            loadVideoFromId(videoId);
+        }
+
+        function loadVideoFromId(videoId) {
+            if (!player || !player.loadVideoById) return;
+            
+            currentVideoId = videoId;
+            player.loadVideoById(videoId);
+            
+            // Update Firestore
+            updateVideoState({
+                videoId: videoId,
+                currentTime: 0,
+                state: YT.PlayerState.PAUSED,
+                timestamp: Date.now(),
+                updatedBy: currentUser.uid
+            });
+            
+            // Update input
+            document.getElementById('videoUrlInput').value = `https://youtu.be/${videoId}`;
+            
+            // Hide placeholder
+            document.getElementById('playerPlaceholder').style.display = 'none';
+            
+            // Add to history
+            addToHistory(videoId);
+        }
+
+        function loadLastVideo() {
+            videoStateRef.get().then((doc) => {
+                if (doc.exists) {
+                    const data = doc.data();
+                    if (data.videoId) {
+                        loadVideoFromId(data.videoId);
+                    }
+                }
+            });
+        }
+
+        function extractYouTubeId(url) {
+            if (!url) return null;
+            
+            if (/^[a-zA-Z0-9_-]{11}$/.test(url)) return url;
+            
+            const patterns = [
+                /(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([a-zA-Z0-9_-]{11})/,
+                /youtube\.com\/.*[?&]v=([^&#]+)/,
+                /youtu\.be\/([^?#]+)/
+            ];
+            
+            for (const pattern of patterns) {
+                const match = url.match(pattern);
+                if (match && match[1]) return match[1];
+            }
+            
+            return null;
+        }
+
+        // ====================================================
+        // 12. UI CONTROLS & EVENT LISTENERS
+        // ====================================================
+        function setupEventListeners() {
+            // Video controls
+            document.getElementById('loadVideoBtn').addEventListener('click', loadVideoFromInput);
+            document.getElementById('videoUrlInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') loadVideoFromInput();
+            });
+            
+            document.getElementById('playPauseBtn').addEventListener('click', () => {
+                if (!player) return;
+                if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                    player.pauseVideo();
+                } else {
+                    player.playVideo();
+                }
+            });
+            
+            document.getElementById('speedUpBtn').addEventListener('click', () => {
+                if (!player) return;
+                const currentRate = player.getPlaybackRate();
+                const newRate = Math.min(currentRate + 0.25, 2);
+                player.setPlaybackRate(newRate);
+                updateVideoState({ playbackRate: newRate, timestamp: Date.now() });
+                document.getElementById('playbackSpeed').textContent = newRate + 'x';
+            });
+            
+            document.getElementById('speedDownBtn').addEventListener('click', () => {
+                if (!player) return;
+                const currentRate = player.getPlaybackRate();
+                const newRate = Math.max(currentRate - 0.25, 0.25);
+                player.setPlaybackRate(newRate);
+                updateVideoState({ playbackRate: newRate, timestamp: Date.now() });
+                document.getElementById('playbackSpeed').textContent = newRate + 'x';
+            });
+            
+            // Theater & Fullscreen
+            document.getElementById('theaterModeBtn').addEventListener('click', () => {
+                document.body.classList.toggle('theater-mode-active');
+            });
+            
+            document.getElementById('fullscreenBtn').addEventListener('click', () => {
+                const container = document.querySelector('.cinema-container');
+                if (!document.fullscreenElement) {
+                    container.requestFullscreen();
+                    document.body.classList.add('fullscreen-active');
+                    document.getElementById('chatWidget').classList.add('fullscreen-overlay');
+                } else {
+                    document.exitFullscreen();
+                    document.body.classList.remove('fullscreen-active');
+                    document.getElementById('chatWidget').classList.remove('fullscreen-overlay');
+                }
+            });
+            
+            document.addEventListener('fullscreenchange', () => {
+                if (!document.fullscreenElement) {
+                    document.body.classList.remove('fullscreen-active');
+                    document.getElementById('chatWidget').classList.remove('fullscreen-overlay');
+                }
+            });
+            
+            // Chat controls
+            document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
+            document.getElementById('chatMessageInput').addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') sendMessage();
+            });
+            
+            document.getElementById('miniChatIcon').addEventListener('click', () => {
+                document.getElementById('chatWidget').style.display = 'flex';
+                document.getElementById('miniChatIcon').style.display = 'none';
+                isChatMinimized = false;
+                chatUnreadCount = 0;
+                updateChatNotification();
+            });
+            
+            document.getElementById('minimizeChatBtn').addEventListener('click', () => {
+                document.getElementById('chatWidget').style.display = 'none';
+                document.getElementById('miniChatIcon').style.display = 'flex';
+                isChatMinimized = true;
+            });
+            
+            document.getElementById('closeChatBtn').addEventListener('click', () => {
+                document.getElementById('chatWidget').style.display = 'none';
+                document.getElementById('miniChatIcon').style.display = 'flex';
+                isChatMinimized = true;
+            });
+            
+            // History
+            document.getElementById('clearHistoryBtn').addEventListener('click', async () => {
+                if (!confirm('هل تريد مسح سجل الفيديوهات؟')) return;
+                
+                try {
+                    const snapshot = await historyRef.get();
+                    const batch = db.batch();
+                    snapshot.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    await batch.commit();
+                    loadPartyHistory();
+                } catch (error) {
+                    console.error('Error clearing history:', error);
+                }
+            });
+            
+            // Make chat draggable
+            makeChatDraggable();
         }
 
         function updateTimeDisplay() {
             if (!player || !player.getCurrentTime) return;
             
-            const currentTime = player.getCurrentTime();
+            const current = player.getCurrentTime();
             const duration = player.getDuration();
             
-            domElements.currentTime.textContent = formatTime(currentTime);
-            domElements.duration.textContent = formatTime(duration);
+            document.getElementById('currentTime').textContent = formatTime(current);
+            document.getElementById('duration').textContent = formatTime(duration);
         }
 
+        function updateChatNotification() {
+            const miniIcon = document.getElementById('miniChatIcon');
+            if (chatUnreadCount > 0) {
+                miniIcon.classList.add('has-notification');
+                
+                // Create or update badge
+                let badge = miniIcon.querySelector('.unread-badge');
+                if (!badge) {
+                    badge = document.createElement('div');
+                    badge.className = 'unread-badge';
+                    miniIcon.appendChild(badge);
+                }
+                badge.textContent = chatUnreadCount > 9 ? '9+' : chatUnreadCount;
+            } else {
+                miniIcon.classList.remove('has-notification');
+                const badge = miniIcon.querySelector('.unread-badge');
+                if (badge) badge.remove();
+            }
+        }
+
+        // ====================================================
+        // 13. UTILITY FUNCTIONS
+        // ====================================================
         function formatTime(seconds) {
             if (isNaN(seconds)) return '00:00';
-            
             const mins = Math.floor(seconds / 60);
             const secs = Math.floor(seconds % 60);
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function formatDate(timestamp) {
-            if (!timestamp) return 'قبل فترة';
-            
+        function formatHistoryDate(timestamp) {
+            if (!timestamp) return 'منذ فترة';
             const date = timestamp.toDate();
             const now = new Date();
             const diffMs = now - date;
             const diffMins = Math.floor(diffMs / 60000);
             
             if (diffMins < 1) return 'الآن';
-            if (diffMins < 60) return `قبل ${diffMins} دقيقة`;
-            if (diffMins < 1440) return `قبل ${Math.floor(diffMins / 60)} ساعة`;
-            return `قبل ${Math.floor(diffMins / 1440)} يوم`;
+            if (diffMins < 60) return `قبل ${diffMins} د`;
+            if (diffMins < 1440) return `قبل ${Math.floor(diffMins / 60)} س`;
+            return `قبل ${Math.floor(diffMins / 1440)} ي`;
         }
 
-        function scrollToBottom() {
-            const chatMessages = domElements.chatMessages;
-            chatMessages.scrollTop = chatMessages.scrollHeight;
-        }
-
-        function inviteFriends() {
-            const url = window.location.href;
-            navigator.clipboard.writeText(url).then(() => {
-                showToast('تم نسخ رابط الدعوة إلى الحافظة', 'success');
-            }).catch(() => {
-                prompt('انسخ الرابط التالي ودعو أصدقاءك:', url);
-            });
-        }
-
-        function showSettings() {
-            showToast('قريباً: إعدادات التطبيق', 'info');
-        }
-
-        function handleFullscreenChange() {
-            isFullscreen = !!document.fullscreenElement;
-            document.body.classList.toggle('fullscreen-video', isFullscreen);
-        }
-
-        function handleKeyPress(e) {
-            // تجاهل إذا كان المستخدم يكتب في حقل نصي
-            if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
-            
-            switch(e.code) {
-                case 'Space':
-                    e.preventDefault();
-                    togglePlayPause();
-                    break;
-                case 'KeyF':
-                    e.preventDefault();
-                    toggleFullscreen();
-                    break;
-                case 'KeyT':
-                    e.preventDefault();
-                    toggleTheaterMode();
-                    break;
-                case 'KeyM':
-                    e.preventDefault();
-                    toggleChat();
-                    break;
-            }
-        }
-
-        function handleBeforeUnload() {
-            // تحديث حالة المستخدم عند المغادرة
+        // ====================================================
+        // 14. INITIALIZE ON LOAD
+        // ====================================================
+        window.addEventListener('load', initializeApp);
+        
+        // Handle beforeunload
+        window.addEventListener('beforeunload', () => {
             if (usersRef) {
-                usersRef.update({ 
-                    online: false,
-                    typing: false 
-                });
+                usersRef.update({ online: false });
             }
-        }
-
-        // ============================================
-        // بدء التطبيق
-        // ============================================
-        document.addEventListener('DOMContentLoaded', () => {
-            setupEventListeners();
-            // عرض شاشة الترحيب تلقائياً
-            // يمكنك إزالة هذا السطر إذا أردت بدء التطبيق مباشرة
-            domElements.welcomeModal.style.display = 'flex';
         });
     </script>
 </body>
