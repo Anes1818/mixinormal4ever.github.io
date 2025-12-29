@@ -1,0 +1,1515 @@
+<!DOCTYPE html>
+<html dir="ltr" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <meta content="width=device-width,initial-scale=1" name="viewport">
+    <title>Cosmic Watch Party | A+K</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <link href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css" rel="stylesheet">
+    
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    
+    <!-- YouTube IFrame API -->
+    <script src="https://www.youtube.com/iframe_api"></script>
+    
+    <style>
+    @import url(https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@400;700&family=Great+Vibes&family=Raleway:wght@300;400&display=swap);
+
+    :root {
+        --main-bg: #0a011f;
+        --text-color: #f8e3ff;
+        --accent-pink: #ff4b8a;
+        --accent-gold: #ffcc00;
+        --accent-purple: #9d4edd;
+        --accent-blue: #4b9fff;
+        --card-bg: rgba(29, 0, 61, 0.3);
+        --glass-bg: rgba(255, 255, 255, 0.05);
+        --transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    body {
+        font-family: Amiri, serif;
+        background: var(--main-bg);
+        color: var(--text-color);
+        overflow-x: hidden;
+        min-height: 100vh;
+        position: relative;
+        background-image: radial-gradient(circle at 20% 30%, rgba(157,78,221,.15) 0, transparent 30%),
+                          radial-gradient(circle at 80% 70%, rgba(255,75,138,.15) 0, transparent 30%);
+    }
+
+    .cosmic-bg {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: -1;
+        overflow: hidden;
+    }
+
+    .star {
+        position: absolute;
+        background: #fff;
+        border-radius: 50%;
+        filter: drop-shadow(0 0 5px currentColor);
+        animation: twinkle var(--duration,5s) infinite alternate;
+    }
+
+    @keyframes twinkle {
+        0% { opacity: .3; transform: scale(.8); }
+        100% { opacity: 1; transform: scale(1.2); }
+    }
+
+    .magic-header {
+        text-align: center;
+        padding: 2rem 0 1rem;
+        position: relative;
+    }
+
+    .magic-header h1 {
+        font-family: 'Great Vibes', cursive;
+        font-size: 3.5rem;
+        margin-bottom: 0.5rem;
+        background: linear-gradient(135deg, var(--accent-pink), var(--accent-gold));
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-shadow: 0 0 20px rgba(255,75,138,.3);
+        animation: float 6s ease-in-out infinite;
+    }
+
+    @keyframes float {
+        0%, 100% { transform: translateY(0) rotate(-1deg); }
+        50% { transform: translateY(-10px) rotate(1deg); }
+    }
+
+    /* Main Container */
+    .watch-party-container {
+        display: flex;
+        max-width: 1600px;
+        margin: 0 auto;
+        padding: 1rem;
+        gap: 1.5rem;
+        min-height: calc(100vh - 120px);
+    }
+
+    /* Video Player Section */
+    .player-section {
+        flex: 3;
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+
+    .video-container {
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,.1);
+        box-shadow: 0 0 30px rgba(157,78,221,.3);
+        overflow: hidden;
+        position: relative;
+    }
+
+    #player {
+        width: 100%;
+        height: 500px;
+        border: none;
+        display: block;
+    }
+
+    .theater-mode #player {
+        height: 600px;
+    }
+
+    /* Video Controls */
+    .video-controls {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 1.5rem;
+        background: rgba(10, 1, 31, 0.8);
+        border-top: 1px solid rgba(255,255,255,.1);
+    }
+
+    .control-group {
+        display: flex;
+        gap: 1rem;
+        align-items: center;
+    }
+
+    .control-btn {
+        background: rgba(255,255,255,.1);
+        border: 1px solid rgba(255,255,255,.2);
+        color: #fff;
+        padding: 0.6rem 1.2rem;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-family: Amiri, serif;
+        font-size: 0.9rem;
+    }
+
+    .control-btn:hover {
+        background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(255,75,138,.3);
+    }
+
+    .control-btn.active {
+        background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+    }
+
+    #video-url-input {
+        flex: 1;
+        padding: 0.8rem 1rem;
+        background: rgba(255,255,255,.1);
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: 10px;
+        color: #fff;
+        font-family: Amiri, serif;
+        font-size: 1rem;
+    }
+
+    #video-url-input:focus {
+        outline: none;
+        border-color: var(--accent-pink);
+        box-shadow: 0 0 0 2px rgba(255,75,138,.2);
+    }
+
+    /* Chat Section */
+    .chat-section {
+        flex: 1;
+        min-width: 300px;
+        max-width: 400px;
+        display: flex;
+        flex-direction: column;
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,.1);
+        box-shadow: 0 0 30px rgba(157,78,221,.3);
+        overflow: hidden;
+    }
+
+    .chat-header {
+        padding: 1.2rem 1.5rem;
+        background: rgba(29, 0, 61, 0.5);
+        border-bottom: 1px solid rgba(255,255,255,.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chat-header h3 {
+        font-family: 'Great Vibes', cursive;
+        font-size: 1.8rem;
+        color: var(--accent-gold);
+    }
+
+    .chat-toggle {
+        background: transparent;
+        border: none;
+        color: var(--text-color);
+        font-size: 1.2rem;
+        cursor: pointer;
+        transition: var(--transition);
+    }
+
+    .chat-toggle:hover {
+        color: var(--accent-pink);
+        transform: scale(1.1);
+    }
+
+    .messages-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        max-height: 500px;
+    }
+
+    .message {
+        padding: 0.8rem 1rem;
+        border-radius: 15px;
+        max-width: 85%;
+        word-wrap: break-word;
+        animation: fadeIn 0.3s ease;
+        position: relative;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .message.my-message {
+        background: linear-gradient(135deg, rgba(157,78,221,.2), rgba(255,75,138,.2));
+        align-self: flex-end;
+        border-bottom-right-radius: 5px;
+        border: 1px solid rgba(255,75,138,.3);
+    }
+
+    .message.other-message {
+        background: rgba(255,255,255,.05);
+        align-self: flex-start;
+        border-bottom-left-radius: 5px;
+        border: 1px solid rgba(255,255,255,.1);
+    }
+
+    .message-sender {
+        font-weight: bold;
+        font-size: 0.85rem;
+        margin-bottom: 0.3rem;
+        color: var(--accent-gold);
+    }
+
+    .message-text {
+        font-size: 0.95rem;
+        line-height: 1.4;
+    }
+
+    .message-time {
+        font-size: 0.7rem;
+        opacity: 0.7;
+        text-align: right;
+        margin-top: 0.3rem;
+    }
+
+    .chat-input-container {
+        padding: 1rem;
+        background: rgba(29, 0, 61, 0.5);
+        border-top: 1px solid rgba(255,255,255,.1);
+        display: flex;
+        gap: 0.8rem;
+    }
+
+    #message-input {
+        flex: 1;
+        padding: 0.8rem 1rem;
+        background: rgba(255,255,255,.1);
+        border: 1px solid rgba(255,255,255,.2);
+        border-radius: 50px;
+        color: #fff;
+        font-family: Amiri, serif;
+        font-size: 0.95rem;
+    }
+
+    #message-input:focus {
+        outline: none;
+        border-color: var(--accent-pink);
+    }
+
+    #send-message {
+        background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+        border: none;
+        color: #fff;
+        width: 45px;
+        height: 45px;
+        border-radius: 50%;
+        cursor: pointer;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    #send-message:hover {
+        transform: scale(1.1);
+        box-shadow: 0 0 20px rgba(255,75,138,.5);
+    }
+
+    /* Mini Chat Icon */
+    .mini-chat {
+        position: fixed;
+        bottom: 30px;
+        right: 30px;
+        width: 60px;
+        height: 60px;
+        background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 0 20px rgba(255,75,138,.5);
+        z-index: 1000;
+        transition: var(--transition);
+        animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.05); }
+    }
+
+    .mini-chat:hover {
+        transform: scale(1.1);
+    }
+
+    .mini-chat i {
+        font-size: 1.5rem;
+    }
+
+    .notification-badge {
+        position: absolute;
+        top: -5px;
+        right: -5px;
+        background: var(--accent-gold);
+        color: var(--main-bg);
+        font-size: 0.7rem;
+        width: 20px;
+        height: 20px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-weight: bold;
+    }
+
+    /* Previous Videos Section */
+    .history-section {
+        margin-top: 2rem;
+        padding: 1.5rem;
+        background: var(--card-bg);
+        backdrop-filter: blur(10px);
+        border-radius: 20px;
+        border: 1px solid rgba(255,255,255,.1);
+        box-shadow: 0 0 30px rgba(157,78,221,.3);
+    }
+
+    .history-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .history-header h3 {
+        font-family: 'Great Vibes', cursive;
+        font-size: 2rem;
+        color: var(--accent-gold);
+    }
+
+    .videos-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 1rem;
+    }
+
+    .video-thumb {
+        position: relative;
+        border-radius: 10px;
+        overflow: hidden;
+        cursor: pointer;
+        transition: var(--transition);
+        aspect-ratio: 16/9;
+    }
+
+    .video-thumb:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(255,75,138,.3);
+    }
+
+    .video-thumb img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .video-thumb-overlay {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(to top, rgba(10,1,31,.9), transparent);
+        padding: 0.8rem;
+        transform: translateY(100%);
+        transition: var(--transition);
+    }
+
+    .video-thumb:hover .video-thumb-overlay {
+        transform: translateY(0);
+    }
+
+    .video-thumb-title {
+        font-size: 0.9rem;
+        font-weight: bold;
+        color: #fff;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    /* Loading State */
+    .loading {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        padding: 3rem;
+        color: var(--accent-gold);
+    }
+
+    .loading-spinner {
+        width: 40px;
+        height: 40px;
+        border: 3px solid rgba(255,255,255,.1);
+        border-top-color: var(--accent-pink);
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        margin-bottom: 1rem;
+    }
+
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+
+    /* Responsive Design */
+    @media (max-width: 1200px) {
+        .watch-party-container {
+            flex-direction: column;
+        }
+        
+        .chat-section {
+            max-width: 100%;
+            height: 400px;
+        }
+        
+        #player {
+            height: 400px;
+        }
+        
+        .theater-mode #player {
+            height: 500px;
+        }
+    }
+
+    @media (max-width: 768px) {
+        .magic-header h1 {
+            font-size: 2.5rem;
+        }
+        
+        .video-controls {
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .control-group {
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        #player {
+            height: 300px;
+        }
+        
+        .theater-mode #player {
+            height: 350px;
+        }
+        
+        .videos-grid {
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+        }
+        
+        .mini-chat {
+            bottom: 80px;
+            right: 20px;
+        }
+    }
+
+    /* Fullscreen Chat Styles */
+    .fullscreen-chat {
+        position: fixed;
+        top: 0;
+        right: 0;
+        width: 350px;
+        height: 100vh;
+        background: rgba(10, 1, 31, 0.95);
+        backdrop-filter: blur(20px);
+        z-index: 1001;
+        transform: translateX(100%);
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        border-left: 1px solid rgba(255,255,255,.1);
+        display: flex;
+        flex-direction: column;
+    }
+
+    .fullscreen-chat.active {
+        transform: translateX(0);
+    }
+
+    .fullscreen-chat .chat-header {
+        background: rgba(29, 0, 61, 0.8);
+    }
+
+    .fullscreen-chat .messages-container {
+        max-height: none;
+        flex: 1;
+    }
+
+    /* Theater Mode */
+    .theater-mode {
+        max-width: 100% !important;
+        padding: 0 !important;
+    }
+
+    .theater-mode .video-container {
+        border-radius: 0;
+        border: none;
+    }
+
+    /* User List */
+    .users-online {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        background: rgba(255,255,255,.05);
+        border-radius: 50px;
+        font-size: 0.9rem;
+    }
+
+    .user-dot {
+        width: 10px;
+        height: 10px;
+        background: #4CAF50;
+        border-radius: 50%;
+        animation: pulse 2s infinite;
+    }
+    </style>
+</head>
+<body>
+    <!-- Cosmic Background -->
+    <div class="cosmic-bg" id="cosmicBg"></div>
+
+    <!-- Header -->
+    <header class="magic-header">
+        <h1>Cosmic Watch Party</h1>
+        <p>Watch YouTube together in perfect sync • A+K's Space</p>
+    </header>
+
+    <!-- Main Container -->
+    <div class="watch-party-container" id="watchPartyContainer">
+        <!-- Video Player Section -->
+        <div class="player-section">
+            <!-- Video Container -->
+            <div class="video-container" id="videoContainer">
+                <div id="player"></div>
+                
+                <!-- Video Controls -->
+                <div class="video-controls">
+                    <input type="text" id="video-url-input" placeholder="Enter YouTube URL or Video ID..." dir="ltr">
+                    
+                    <div class="control-group">
+                        <button class="control-btn" id="play-btn">
+                            <i class="fas fa-play"></i> Play
+                        </button>
+                        <button class="control-btn" id="pause-btn">
+                            <i class="fas fa-pause"></i> Pause
+                        </button>
+                        <button class="control-btn" id="theater-btn">
+                            <i class="fas fa-expand-alt"></i> Theater
+                        </button>
+                        <button class="control-btn" id="fullscreen-btn">
+                            <i class="fas fa-expand"></i> Fullscreen
+                        </button>
+                        <div class="users-online">
+                            <span class="user-dot"></span>
+                            <span id="online-count">1</span> online
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Previous Videos History -->
+            <div class="history-section">
+                <div class="history-header">
+                    <h3>Party History</h3>
+                    <button class="control-btn" id="clear-history">
+                        <i class="fas fa-trash"></i> Clear
+                    </button>
+                </div>
+                
+                <div class="videos-grid" id="videosHistory">
+                    <!-- History videos will be loaded here -->
+                    <div class="loading">
+                        <div class="loading-spinner"></div>
+                        <p>Loading history...</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Section -->
+        <div class="chat-section" id="chatSection">
+            <div class="chat-header">
+                <h3>Live Chat</h3>
+                <button class="chat-toggle" id="chatToggle">
+                    <i class="fas fa-comments"></i>
+                </button>
+            </div>
+            
+            <div class="messages-container" id="messagesContainer">
+                <div class="message other-message">
+                    <div class="message-sender">System</div>
+                    <div class="message-text">Welcome to Cosmic Watch Party! Start watching videos together.</div>
+                    <div class="message-time">Just now</div>
+                </div>
+            </div>
+            
+            <div class="chat-input-container">
+                <input type="text" id="message-input" placeholder="Type a message..." dir="ltr">
+                <button id="send-message">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Mini Chat Icon (for fullscreen mode) -->
+    <div class="mini-chat" id="miniChat">
+        <i class="fas fa-comment-dots"></i>
+        <div class="notification-badge" id="notificationBadge" style="display: none;">0</div>
+    </div>
+
+    <!-- Fullscreen Chat -->
+    <div class="fullscreen-chat" id="fullscreenChat">
+        <div class="chat-header">
+            <h3>Live Chat</h3>
+            <button class="chat-toggle" id="closeFullscreenChat">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        
+        <div class="messages-container" id="fullscreenMessages"></div>
+        
+        <div class="chat-input-container">
+            <input type="text" id="fullscreen-message-input" placeholder="Type a message..." dir="ltr">
+            <button id="send-fullscreen-message">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Firebase Configuration -->
+    <!-- 🔥 REPLACE WITH YOUR FIREBASE CONFIG -->
+    <script>
+    // ⚠️ Replace this with your Firebase configuration
+    const firebaseConfig = {
+apiKey: "AIzaSyAJvohW3m1-sZAlrTjkv7UZqTLC6WigePo",
+  authDomain: "party-dfe30.firebaseapp.com",
+  projectId: "party-dfe30",
+  storageBucket: "party-dfe30.firebasestorage.app",
+  messagingSenderId: "783983668260",
+  appId: "1:783983668260:web:e353a1220e7621bbf53cb1",
+    };
+    </script>
+
+    <script>
+    // ============================================
+    // 1. Firebase Initialization
+    // ============================================
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    
+    // Firebase Collections
+    const PARTY_COLLECTION = 'watchParties';
+    const CHAT_COLLECTION = 'partyChats';
+    const HISTORY_COLLECTION = 'partyHistory';
+    
+    // Current Party ID (we'll use a fixed ID for simplicity, or generate from URL)
+    const PARTY_ID = 'A_K_COSMIC_PARTY';
+    
+    // User state
+    let currentUser = null;
+    let userId = null;
+    let userName = null;
+    
+    // YouTube Player
+    let player = null;
+    let isPlayerReady = false;
+    let currentVideoId = null;
+    
+    // Sync state
+    let isSyncing = false;
+    let lastSyncTime = 0;
+    let ignoreNextStateChange = false;
+    
+    // UI State
+    let isTheaterMode = false;
+    let isFullscreen = false;
+    let chatVisible = true;
+    let unreadMessages = 0;
+    
+    // ============================================
+    // 2. YouTube IFrame API
+    // ============================================
+    function onYouTubeIframeAPIReady() {
+        player = new YT.Player('player', {
+            height: '500',
+            width: '100%',
+            playerVars: {
+                'autoplay': 0,
+                'controls': 1,
+                'rel': 0,
+                'modestbranding': 1,
+                'playsinline': 1
+            },
+            events: {
+                'onReady': onPlayerReady,
+                'onStateChange': onPlayerStateChange,
+                'onError': onPlayerError
+            }
+        });
+    }
+    
+    function onPlayerReady(event) {
+        console.log('YouTube player ready');
+        isPlayerReady = true;
+        
+        // Load default video
+        loadVideo('dQw4w9WgXcQ'); // Default: Never Gonna Give You Up
+        
+        // Start listening to sync
+        startSyncListener();
+    }
+    
+    function onPlayerStateChange(event) {
+        if (!isPlayerReady || ignoreNextStateChange) {
+            ignoreNextStateChange = false;
+            return;
+        }
+        
+        const state = event.data;
+        const currentTime = player.getCurrentTime();
+        
+        // Don't sync if we're the one causing the change
+        if (!isSyncing) {
+            updatePartyState({
+                state: state,
+                currentTime: currentTime,
+                timestamp: Date.now()
+            });
+        }
+        
+        // Update UI buttons
+        updateControlButtons(state);
+    }
+    
+    function onPlayerError(event) {
+        console.error('YouTube player error:', event.data);
+        Swal.fire({
+            icon: 'error',
+            title: 'Video Error',
+            text: 'Could not load the video. Please check the URL.',
+            confirmButtonColor: 'var(--accent-pink)',
+            background: 'var(--main-bg)',
+            color: 'var(--text-color)'
+        });
+    }
+    
+    // ============================================
+    // 3. Firebase Authentication
+    // ============================================
+    async function initializeAuth() {
+        try {
+            // Sign in anonymously
+            const userCredential = await auth.signInAnonymously();
+            currentUser = userCredential.user;
+            userId = currentUser.uid;
+            
+            // Generate a random romantic name
+            const names = ['Moonlight', 'Starlight', 'Sunshine', 'Cosmic', 'Galaxy', 'Nebula', 'Aurora'];
+            const randomName = names[Math.floor(Math.random() * names.length)] + Math.floor(Math.random() * 1000);
+            userName = randomName;
+            
+            console.log('Signed in as:', userName);
+            
+            // Initialize user in Firestore
+            await db.collection('partyUsers').doc(userId).set({
+                name: userName,
+                joinedAt: firebase.firestore.FieldValue.serverTimestamp(),
+                isOnline: true
+            });
+            
+            // Set up presence
+            setupUserPresence();
+            
+        } catch (error) {
+            console.error('Auth error:', error);
+            // Fallback to local mode
+            userName = 'Guest' + Math.floor(Math.random() * 1000);
+            userId = 'local_' + Date.now();
+        }
+    }
+    
+    function setupUserPresence() {
+        const userRef = db.collection('partyUsers').doc(userId);
+        const isOfflineForFirestore = {
+            isOnline: false,
+            lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        // Update when online
+        db.collection('partyUsers').doc(userId).update({
+            isOnline: true
+        });
+        
+        // Update when offline
+        window.addEventListener('beforeunload', () => {
+            userRef.update(isOfflineForFirestore);
+        });
+    }
+    
+    // ============================================
+    // 4. Party Synchronization
+    // ============================================
+    let partyListener = null;
+    
+    function startSyncListener() {
+        // Stop existing listener if any
+        if (partyListener) {
+            partyListener();
+        }
+        
+        partyListener = db.collection(PARTY_COLLECTION).doc(PARTY_ID)
+            .onSnapshot((doc) => {
+                if (!doc.exists) {
+                    // Create initial party state
+                    db.collection(PARTY_COLLECTION).doc(PARTY_ID).set({
+                        videoId: currentVideoId || 'dQw4w9WgXcQ',
+                        state: YT.PlayerState.PAUSED,
+                        currentTime: 0,
+                        timestamp: Date.now(),
+                        createdBy: userId,
+                        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                    return;
+                }
+                
+                const data = doc.data();
+                
+                // Don't sync if this is our own update
+                if (data.lastUpdatedBy === userId && Date.now() - data.timestamp < 1000) {
+                    return;
+                }
+                
+                // Update video if changed
+                if (data.videoId && data.videoId !== currentVideoId) {
+                    loadVideo(data.videoId);
+                }
+                
+                // Sync playback state
+                if (isPlayerReady && player && data.state !== undefined && data.currentTime !== undefined) {
+                    syncPlayerState(data);
+                }
+            }, (error) => {
+                console.error('Sync listener error:', error);
+            });
+    }
+    
+    function syncPlayerState(partyState) {
+        isSyncing = true;
+        
+        const currentPlayerTime = player.getCurrentTime();
+        const timeDiff = Math.abs(currentPlayerTime - partyState.currentTime);
+        
+        // Only sync if difference is significant (> 1 second)
+        if (timeDiff > 1) {
+            player.seekTo(partyState.currentTime, true);
+        }
+        
+        // Sync play/pause state
+        if (partyState.state === YT.PlayerState.PLAYING && player.getPlayerState() !== YT.PlayerState.PLAYING) {
+            player.playVideo();
+        } else if (partyState.state === YT.PlayerState.PAUSED && player.getPlayerState() !== YT.PlayerState.PAUSED) {
+            player.pauseVideo();
+        }
+        
+        setTimeout(() => {
+            isSyncing = false;
+        }, 100);
+    }
+    
+    function updatePartyState(stateUpdate) {
+        if (!userId) return;
+        
+        db.collection(PARTY_COLLECTION).doc(PARTY_ID).update({
+            ...stateUpdate,
+            lastUpdatedBy: userId,
+            timestamp: Date.now()
+        });
+    }
+    
+    function updateVideoId(videoId) {
+        currentVideoId = videoId;
+        db.collection(PARTY_COLLECTION).doc(PARTY_ID).update({
+            videoId: videoId,
+            lastUpdatedBy: userId,
+            timestamp: Date.now()
+        });
+        
+        // Add to history
+        addToHistory(videoId);
+    }
+    
+    // ============================================
+    // 5. Video Controls
+    // ============================================
+    function loadVideo(videoIdOrUrl) {
+        if (!isPlayerReady) return;
+        
+        let videoId = extractVideoId(videoIdOrUrl);
+        if (!videoId) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Invalid URL',
+                text: 'Please enter a valid YouTube URL or Video ID.',
+                confirmButtonColor: 'var(--accent-pink)',
+                background: 'var(--main-bg)',
+                color: 'var(--text-color)'
+            });
+            return;
+        }
+        
+        // Store the video ID
+        currentVideoId = videoId;
+        
+        // Load in player
+        player.loadVideoById(videoId);
+        
+        // Update in Firestore
+        updateVideoId(videoId);
+        
+        // Update URL input
+        document.getElementById('video-url-input').value = `https://youtu.be/${videoId}`;
+        
+        return videoId;
+    }
+    
+    function extractVideoId(url) {
+        if (!url) return null;
+        
+        // If it's already a video ID (11 characters)
+        if (/^[a-zA-Z0-9_-]{11}$/.test(url)) {
+            return url;
+        }
+        
+        const patterns = [
+            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/watch\?v=([a-zA-Z0-9_-]{11})/,
+            /(?:https?:\/\/)?(?:www\.)?youtu\.be\/([a-zA-Z0-9_-]{11})/,
+            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+            /(?:https?:\/\/)?(?:www\.)?youtube\.com\/shorts\/([a-zA-Z0-9_-]{11})/,
+            /[?&]v=([a-zA-Z0-9_-]{11})/
+        ];
+        
+        for (const pattern of patterns) {
+            const match = url.match(pattern);
+            if (match && match[1]) {
+                return match[1];
+            }
+        }
+        
+        return null;
+    }
+    
+    function updateControlButtons(state) {
+        const playBtn = document.getElementById('play-btn');
+        const pauseBtn = document.getElementById('pause-btn');
+        
+        if (state === YT.PlayerState.PLAYING) {
+            playBtn.classList.add('active');
+            pauseBtn.classList.remove('active');
+        } else {
+            playBtn.classList.remove('active');
+            pauseBtn.classList.add('active');
+        }
+    }
+    
+    // ============================================
+    // 6. Chat System
+    // ============================================
+    let chatListener = null;
+    
+    function initializeChat() {
+        // Clear existing listener
+        if (chatListener) {
+            chatListener();
+        }
+        
+        chatListener = db.collection(CHAT_COLLECTION)
+            .where('partyId', '==', PARTY_ID)
+            .orderBy('timestamp', 'desc')
+            .limit(50)
+            .onSnapshot((snapshot) => {
+                const messagesContainer = document.getElementById('messagesContainer');
+                const fullscreenMessages = document.getElementById('fullscreenMessages');
+                
+                // Clear loading state
+                if (messagesContainer.querySelector('.loading')) {
+                    messagesContainer.innerHTML = '';
+                    fullscreenMessages.innerHTML = '';
+                }
+                
+                const messages = [];
+                snapshot.forEach(doc => {
+                    messages.push({ id: doc.id, ...doc.data() });
+                });
+                
+                // Reverse to show oldest first
+                messages.reverse();
+                
+                // Update chat displays
+                updateChatDisplay(messagesContainer, messages);
+                updateChatDisplay(fullscreenMessages, messages);
+                
+                // Show notification if chat is hidden
+                if (!chatVisible && messages.length > 0) {
+                    const latestMessage = messages[messages.length - 1];
+                    if (latestMessage.userId !== userId) {
+                        unreadMessages++;
+                        updateNotificationBadge();
+                    }
+                }
+            });
+    }
+    
+    function updateChatDisplay(container, messages) {
+        container.innerHTML = '';
+        
+        if (messages.length === 0) {
+            container.innerHTML = `
+                <div class="message other-message">
+                    <div class="message-sender">System</div>
+                    <div class="message-text">No messages yet. Start the conversation!</div>
+                    <div class="message-time">Just now</div>
+                </div>
+            `;
+            return;
+        }
+        
+        messages.forEach(msg => {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${msg.userId === userId ? 'my-message' : 'other-message'}`;
+            
+            const time = msg.timestamp ? msg.timestamp.toDate().toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'}) : 'Just now';
+            
+            messageDiv.innerHTML = `
+                <div class="message-sender">${msg.userName || 'Anonymous'}</div>
+                <div class="message-text">${escapeHtml(msg.text)}</div>
+                <div class="message-time">${time}</div>
+            `;
+            
+            container.appendChild(messageDiv);
+        });
+        
+        // Scroll to bottom
+        container.scrollTop = container.scrollHeight;
+    }
+    
+    async function sendMessage(text) {
+        if (!text.trim() || !userId) return;
+        
+        try {
+            await db.collection(CHAT_COLLECTION).add({
+                partyId: PARTY_ID,
+                userId: userId,
+                userName: userName,
+                text: text.trim(),
+                timestamp: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // Clear input
+            document.getElementById('message-input').value = '';
+            document.getElementById('fullscreen-message-input').value = '';
+            
+        } catch (error) {
+            console.error('Error sending message:', error);
+        }
+    }
+    
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
+    
+    // ============================================
+    // 7. History Management
+    // ============================================
+    async function loadHistory() {
+        try {
+            const snapshot = await db.collection(HISTORY_COLLECTION)
+                .where('partyId', '==', PARTY_ID)
+                .orderBy('watchedAt', 'desc')
+                .limit(12)
+                .get();
+            
+            const historyContainer = document.getElementById('videosHistory');
+            
+            if (snapshot.empty) {
+                historyContainer.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 2rem; color: var(--accent-gold)">
+                        <i class="fas fa-history" style="font-size: 2rem; margin-bottom: 1rem;"></i>
+                        <p>No watch history yet. Videos you watch will appear here.</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            historyContainer.innerHTML = '';
+            
+            snapshot.forEach(async (doc) => {
+                const video = doc.data();
+                const thumbUrl = `https://img.youtube.com/vi/${video.videoId}/mqdefault.jpg`;
+                
+                const thumbDiv = document.createElement('div');
+                thumbDiv.className = 'video-thumb';
+                thumbDiv.onclick = () => loadVideo(video.videoId);
+                
+                // Fetch video title
+                let videoTitle = video.title || 'Unknown Video';
+                if (!video.title) {
+                    try {
+                        const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${video.videoId}`);
+                        const data = await response.json();
+                        videoTitle = data.title || 'Unknown Video';
+                    } catch (e) {
+                        console.error('Error fetching video title:', e);
+                    }
+                }
+                
+                thumbDiv.innerHTML = `
+                    <img src="${thumbUrl}" alt="${videoTitle}" loading="lazy">
+                    <div class="video-thumb-overlay">
+                        <div class="video-thumb-title">${videoTitle}</div>
+                    </div>
+                `;
+                
+                historyContainer.appendChild(thumbDiv);
+            });
+            
+        } catch (error) {
+            console.error('Error loading history:', error);
+        }
+    }
+    
+    async function addToHistory(videoId) {
+        if (!videoId) return;
+        
+        try {
+            // Try to get video title
+            let videoTitle = '';
+            try {
+                const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${videoId}`);
+                const data = await response.json();
+                videoTitle = data.title || '';
+            } catch (e) {
+                console.error('Error fetching video title:', e);
+            }
+            
+            // Add to history
+            await db.collection(HISTORY_COLLECTION).add({
+                partyId: PARTY_ID,
+                videoId: videoId,
+                title: videoTitle,
+                watchedBy: userId,
+                watchedByUser: userName,
+                watchedAt: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            
+            // Reload history
+            loadHistory();
+            
+        } catch (error) {
+            console.error('Error adding to history:', error);
+        }
+    }
+    
+    async function clearHistory() {
+        Swal.fire({
+            title: 'Clear History?',
+            text: "This will remove all watched videos from history!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: 'var(--accent-pink)',
+            cancelButtonColor: 'var(--accent-purple)',
+            confirmButtonText: 'Yes, clear it!',
+            cancelButtonText: 'Cancel',
+            background: 'var(--main-bg)',
+            color: 'var(--text-color)'
+        }).then(async (result) => {
+            if (result.isConfirmed) {
+                try {
+                    const snapshot = await db.collection(HISTORY_COLLECTION)
+                        .where('partyId', '==', PARTY_ID)
+                        .get();
+                    
+                    const batch = db.batch();
+                    snapshot.forEach(doc => {
+                        batch.delete(doc.ref);
+                    });
+                    
+                    await batch.commit();
+                    loadHistory();
+                    
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'History Cleared!',
+                        text: 'All watch history has been removed.',
+                        confirmButtonColor: 'var(--accent-pink)',
+                        background: 'var(--main-bg)',
+                        color: 'var(--text-color)'
+                    });
+                } catch (error) {
+                    console.error('Error clearing history:', error);
+                }
+            }
+        });
+    }
+    
+    // ============================================
+    // 8. UI Controls & Event Listeners
+    // ============================================
+    function setupEventListeners() {
+        // Video URL Input
+        const urlInput = document.getElementById('video-url-input');
+        urlInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                const videoId = loadVideo(urlInput.value);
+                if (videoId) {
+                    urlInput.value = `https://youtu.be/${videoId}`;
+                }
+            }
+        });
+        
+        // Control Buttons
+        document.getElementById('play-btn').addEventListener('click', () => {
+            if (player) {
+                player.playVideo();
+                ignoreNextStateChange = true;
+            }
+        });
+        
+        document.getElementById('pause-btn').addEventListener('click', () => {
+            if (player) {
+                player.pauseVideo();
+                ignoreNextStateChange = true;
+            }
+        });
+        
+        document.getElementById('theater-btn').addEventListener('click', toggleTheaterMode);
+        document.getElementById('fullscreen-btn').addEventListener('click', toggleFullscreen);
+        
+        // Chat Controls
+        document.getElementById('chatToggle').addEventListener('click', toggleChat);
+        document.getElementById('closeFullscreenChat').addEventListener('click', closeFullscreenChat);
+        
+        // Message Inputs
+        const messageInput = document.getElementById('message-input');
+        const fullscreenMessageInput = document.getElementById('fullscreen-message-input');
+        
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage(messageInput.value);
+            }
+        });
+        
+        fullscreenMessageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage(fullscreenMessageInput.value);
+            }
+        });
+        
+        document.getElementById('send-message').addEventListener('click', () => {
+            sendMessage(messageInput.value);
+        });
+        
+        document.getElementById('send-fullscreen-message').addEventListener('click', () => {
+            sendMessage(fullscreenMessageInput.value);
+        });
+        
+        // Mini Chat
+        document.getElementById('miniChat').addEventListener('click', () => {
+            document.getElementById('fullscreenChat').classList.add('active');
+            unreadMessages = 0;
+            updateNotificationBadge();
+        });
+        
+        // Clear History
+        document.getElementById('clear-history').addEventListener('click', clearHistory);
+    }
+    
+    function toggleTheaterMode() {
+        const container = document.getElementById('watchPartyContainer');
+        const theaterBtn = document.getElementById('theater-btn');
+        
+        isTheaterMode = !isTheaterMode;
+        
+        if (isTheaterMode) {
+            container.classList.add('theater-mode');
+            theaterBtn.classList.add('active');
+            theaterBtn.innerHTML = '<i class="fas fa-compress-alt"></i> Normal';
+        } else {
+            container.classList.remove('theater-mode');
+            theaterBtn.classList.remove('active');
+            theaterBtn.innerHTML = '<i class="fas fa-expand-alt"></i> Theater';
+        }
+    }
+    
+    function toggleFullscreen() {
+        const videoContainer = document.getElementById('videoContainer');
+        
+        if (!isFullscreen) {
+            if (videoContainer.requestFullscreen) {
+                videoContainer.requestFullscreen();
+            } else if (videoContainer.webkitRequestFullscreen) {
+                videoContainer.webkitRequestFullscreen();
+            } else if (videoContainer.msRequestFullscreen) {
+                videoContainer.msRequestFullscreen();
+            }
+            
+            // Hide chat in fullscreen
+            document.getElementById('chatSection').style.display = 'none';
+            document.getElementById('miniChat').style.display = 'flex';
+            
+            isFullscreen = true;
+        }
+    }
+    
+    function exitFullscreen() {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+            document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+            document.msExitFullscreen();
+        }
+        
+        // Show chat again
+        document.getElementById('chatSection').style.display = 'flex';
+        document.getElementById('miniChat').style.display = 'none';
+        
+        isFullscreen = false;
+    }
+    
+    document.addEventListener('fullscreenchange', () => {
+        if (!document.fullscreenElement) {
+            exitFullscreen();
+        }
+    });
+    
+    function toggleChat() {
+        const chatSection = document.getElementById('chatSection');
+        chatVisible = !chatVisible;
+        
+        if (chatVisible) {
+            chatSection.style.display = 'flex';
+            unreadMessages = 0;
+            updateNotificationBadge();
+        } else {
+            chatSection.style.display = 'none';
+        }
+    }
+    
+    function closeFullscreenChat() {
+        document.getElementById('fullscreenChat').classList.remove('active');
+    }
+    
+    function updateNotificationBadge() {
+        const badge = document.getElementById('notificationBadge');
+        if (unreadMessages > 0) {
+            badge.style.display = 'flex';
+            badge.textContent = unreadMessages > 9 ? '9+' : unreadMessages;
+        } else {
+            badge.style.display = 'none';
+        }
+    }
+    
+    // ============================================
+    // 9. Cosmic Background Animation
+    // ============================================
+    function createCosmicBackground() {
+        const cosmicBg = document.getElementById('cosmicBg');
+        cosmicBg.innerHTML = '';
+        
+        const isMobile = window.innerWidth < 768;
+        const starCount = isMobile ? 80 : 150;
+        
+        for (let i = 0; i < starCount; i++) {
+            const star = document.createElement('div');
+            star.classList.add('star');
+            star.style.left = Math.random() * 100 + 'vw';
+            star.style.top = Math.random() * 100 + 'vh';
+            star.style.width = (Math.random() * 2 + 1) + 'px';
+            star.style.height = star.style.width;
+            star.style.color = i % 3 === 0 ? 'var(--accent-pink)' : 
+                             i % 2 === 0 ? 'var(--accent-gold)' : 'white';
+            star.style.setProperty('--duration', (Math.random() * 5 + 3) + 's');
+            star.style.opacity = 0.7;
+            cosmicBg.appendChild(star);
+        }
+    }
+    
+    // ============================================
+    // 10. Initialize Everything
+    // ============================================
+    async function initializeApp() {
+        // Create cosmic background
+        createCosmicBackground();
+        
+        // Initialize Firebase Auth
+        await initializeAuth();
+        
+        // Setup event listeners
+        setupEventListeners();
+        
+        // Initialize chat
+        initializeChat();
+        
+        // Load history
+        loadHistory();
+        
+        // Update online users count periodically
+        setInterval(updateOnlineUsers, 10000);
+        updateOnlineUsers();
+        
+        console.log('Cosmic Watch Party initialized!');
+    }
+    
+    async function updateOnlineUsers() {
+        try {
+            const snapshot = await db.collection('partyUsers')
+                .where('isOnline', '==', true)
+                .get();
+            
+            document.getElementById('online-count').textContent = snapshot.size;
+        } catch (error) {
+            console.error('Error updating online users:', error);
+        }
+    }
+    
+    // Start the app when everything is loaded
+    window.addEventListener('load', initializeApp);
+    
+    // YouTube API will call onYouTubeIframeAPIReady when ready
+    </script>
+</body>
+</html>
