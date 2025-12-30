@@ -37,7 +37,7 @@
             --transition-normal: 0.3s ease;
             --transition-slow: 0.5s ease;
             
-            /* Golden Ratio for cinema mode */
+            /* Golden Ratio for cinema mode - تم تبديل القيم للشات على اليسار */
             --golden-video: 61.8%;
             --golden-chat: 38.2%;
         }
@@ -360,12 +360,12 @@
             font-size: 14px;
         }
 
-        /* ===== CHAT SECTION - OPTIMIZED VIDEO BACKGROUND ===== */
+        /* ===== CHAT SECTION - WITH DYNAMIC VIDEO BACKGROUND ===== */
         .chat-section {
             display: flex;
             flex-direction: column;
             height: 520px;
-            background: rgba(13, 13, 23, 0.7);
+            background: rgba(255, 255, 255, 0.03);
             border-radius: var(--radius-xl);
             overflow: hidden;
             border: 1px solid var(--glass-border);
@@ -373,25 +373,30 @@
             animation: fadeIn 0.8s ease 0.3s both;
             box-shadow: var(--shadow-md);
             position: relative;
-            isolation: isolate;
+            isolation: isolate; /* Creates new stacking context */
         }
 
-        /* Optimized Video Background Layer */
+        /* Video Background Layer for Chat */
         .chat-video-bg {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1;
-            pointer-events: none;
+            z-index: -1; /* Behind everything */
+            pointer-events: none; /* Don't interfere with clicks */
             overflow: hidden;
             border-radius: var(--radius-xl);
-            opacity: 0.15; /* Reduced opacity for better readability */
+            opacity: 0.4; /* Base opacity */
             transition: opacity 0.5s ease;
+            visibility: hidden; /* Hidden by default */
         }
 
-        /* Video mirror - lightweight approach */
+        .chat-video-bg.active {
+            visibility: visible;
+        }
+
+        /* Main video mirror for chat background */
         .chat-video-mirror {
             position: absolute;
             top: 50%;
@@ -400,24 +405,36 @@
             min-height: 100%;
             width: auto;
             height: auto;
-            transform: translate(-50%, -50%);
             object-fit: cover;
             
             /* Strong blur and color adjustments */
-            filter: blur(32px) saturate(0.6) brightness(0.5);
-            -webkit-filter: blur(32px) saturate(0.6) brightness(0.5);
+            filter: blur(24px) saturate(0.7) brightness(0.8);
+            -webkit-filter: blur(24px) saturate(0.7) brightness(0.8);
             
             /* Scale up to hide blur edges */
-            transform: translate(-50%, -50%) scale(1.3);
+            transform: translate3d(-50%, -50%, 0) scale(1.2);
             
-            /* Hide when video is not playing */
-            opacity: 0;
-            transition: opacity 0.8s ease;
+            /* Hide the actual YouTube controls and UI */
+            opacity: 0.6;
+            
+            /* Hardware acceleration */
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            perspective: 1000;
+            -webkit-perspective: 1000;
         }
 
-        /* Active state when video is playing */
-        .video-playing .chat-video-mirror {
-            opacity: 0.7;
+        /* Alternative backdrop-filter for browsers that support it */
+        .chat-video-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(20px) saturate(0.8) brightness(0.85);
+            -webkit-backdrop-filter: blur(20px) saturate(0.8) brightness(0.85);
+            border-radius: var(--radius-xl);
         }
 
         /* Gradient overlay for better text readability */
@@ -429,11 +446,11 @@
             width: 100%;
             height: 100%;
             background: linear-gradient(
-                135deg,
-                rgba(13, 13, 23, 0.9) 0%,
-                rgba(13, 13, 23, 0.7) 30%,
-                rgba(13, 13, 23, 0.8) 70%,
-                rgba(13, 13, 23, 0.95) 100%
+                to bottom,
+                rgba(13, 13, 23, 0.15) 0%,
+                rgba(13, 13, 23, 0.4) 30%,
+                rgba(13, 13, 23, 0.7) 70%,
+                rgba(13, 13, 23, 0.85) 100%
             );
             z-index: 1;
             border-radius: var(--radius-xl);
@@ -444,11 +461,11 @@
             justify-content: space-between;
             align-items: center;
             padding: 20px 24px;
-            background: rgba(13, 13, 23, 0.85);
+            background: rgba(255, 255, 255, 0.04);
             border-bottom: 1px solid var(--glass-border);
             position: relative;
-            z-index: 2;
-            backdrop-filter: blur(12px);
+            z-index: 2; /* Above video background */
+            backdrop-filter: blur(8px);
         }
 
         .chat-title {
@@ -497,7 +514,7 @@
             transform: scale(1.08);
         }
 
-        /* Messages container */
+        /* Messages container - only messages scroll */
         .messages-container {
             flex: 1;
             padding: 24px;
@@ -506,10 +523,15 @@
             flex-direction: column;
             gap: 16px;
             position: relative;
-            z-index: 2;
+            z-index: 1; /* Above video background */
+            transition: all var(--transition-normal);
         }
 
-        /* Message bubbles with better contrast */
+        .chat-section.typing-mode .messages-container {
+            opacity: 0.7;
+            transform: translateY(-20px);
+        }
+
         .message {
             max-width: 80%;
             padding: 16px 20px;
@@ -519,23 +541,28 @@
             word-break: break-word;
             backdrop-filter: blur(8px);
             border: 1px solid transparent;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .message.my-message {
             align-self: flex-end;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.25), rgba(255, 255, 255, 0.15));
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.1));
             border-bottom-right-radius: 8px;
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             margin-left: 40px;
         }
 
         .message.their-message {
             align-self: flex-start;
-            background: linear-gradient(135deg, rgba(255, 107, 157, 0.35), rgba(179, 153, 255, 0.25));
+            background: linear-gradient(135deg, rgba(255, 107, 157, 0.3), rgba(179, 153, 255, 0.2));
             border-bottom-left-radius: 8px;
-            border: 1px solid rgba(255, 107, 157, 0.3);
+            border: 1px solid rgba(255, 107, 157, 0.25);
             margin-right: 40px;
+        }
+
+        /* Remove avatars and decorative usernames */
+        .message-avatar {
+            display: none;
         }
 
         .message-sender {
@@ -556,6 +583,7 @@
             color: var(--accent-romantic);
         }
 
+        /* Add heart for 3omri */
         .their-message .message-sender::before {
             content: "💕";
             font-size: 12px;
@@ -572,25 +600,38 @@
             color: var(--text-primary);
             position: relative;
             z-index: 1;
-            text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
         }
 
         .message-time {
             font-size: 11px;
-            opacity: 0.8;
+            opacity: 0.7;
             text-align: right;
             margin-top: 6px;
             font-weight: 400;
-            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
         }
 
         .chat-input-container {
             padding: 20px 24px;
-            background: rgba(13, 13, 23, 0.9);
+            background: rgba(255, 255, 255, 0.04);
             border-top: 1px solid var(--glass-border);
             position: relative;
-            z-index: 2;
-            backdrop-filter: blur(20px);
+            z-index: 2; /* Above video background */
+            backdrop-filter: blur(10px);
+            transition: all var(--transition-normal);
+        }
+
+        /* Focus mode for mobile typing */
+        .chat-section.typing-mode .chat-input-container {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(13, 13, 23, 0.98);
+            backdrop-filter: blur(25px);
+            border-top: 1px solid var(--accent-romantic);
+            z-index: 2000;
+            padding: 16px 20px;
+            box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
         }
 
         .chat-input-group {
@@ -601,20 +642,21 @@
         #chatMessageInput {
             flex: 1;
             padding: 16px 20px;
-            background: rgba(255, 255, 255, 0.07);
+            background: rgba(255, 255, 255, 0.05);
             border: 1px solid var(--glass-border);
             border-radius: var(--radius-xl);
             color: var(--text-primary);
             font-size: 15px;
-            transition: all var(--transition-fast);
+            transition: all var(--transition-normal);
             backdrop-filter: blur(5px);
         }
 
         #chatMessageInput:focus {
             outline: none;
             border-color: var(--accent-romantic);
-            background: rgba(255, 255, 255, 0.1);
-            box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.1);
+            background: rgba(255, 255, 255, 0.12);
+            box-shadow: 0 0 0 4px rgba(255, 107, 157, 0.15);
+            transform: translateY(-3px);
         }
 
         #sendMessageBtn {
@@ -743,110 +785,152 @@
             color: var(--text-muted);
         }
 
-        /* ===== CINEMA MODE - OPTIMIZED ===== */
-        /* Desktop Cinema Mode - Golden Ratio Layout */
-        .cinema-mode.desktop .app-wrapper {
-            max-width: 100%;
-            margin: 76px auto 0;
-            padding: 0;
-            display: grid;
-            grid-template-columns: var(--golden-chat) var(--golden-video);
-            gap: 0;
-            height: calc(100vh - 76px);
-            align-items: stretch;
+        /* ===== CINEMA MODE - DESKTOP (Video on RIGHT, Chat on LEFT) ===== */
+        @media (min-width: 768px) {
+            .cinema-mode .app-wrapper {
+                max-width: 100%;
+                margin: 76px auto 30px;
+                padding: 0 20px;
+                display: grid;
+                /* تم تبديل الأعمدة: الشات على اليسار (38.2%) والفيديو على اليمين (61.8%) */
+                grid-template-columns: var(--golden-chat) var(--golden-video);
+                gap: 24px;
+                align-items: start;
+            }
+            
+            .cinema-mode .player-section {
+                position: sticky;
+                top: 86px;
+                height: calc(100vh - 106px);
+                z-index: 900;
+                /* الفيديو في العمود الثاني (على اليمين) */
+                grid-column: 2;
+                order: 2;
+            }
+            
+            .cinema-mode .chat-section {
+                height: calc(100vh - 106px);
+                background: rgba(255, 255, 255, 0.02);
+                backdrop-filter: blur(12px);
+                /* الشات في العمود الأول (على اليسار) */
+                grid-column: 1;
+                order: 1;
+            }
+            
+            .cinema-mode .player-container {
+                padding-bottom: 0;
+                height: 100%;
+            }
+            
+            .cinema-mode .video-input-section,
+            .cinema-mode .history-section {
+                display: none;
+            }
+            
+            .cinema-mode .main-content {
+                grid-column: 1 / -1;
+                display: contents;
+            }
         }
 
-        .cinema-mode.desktop .player-section {
-            position: relative;
-            height: 100%;
-            border-radius: 0;
-            background: #000;
-            order: 2;
-        }
-
-        .cinema-mode.desktop .player-container {
-            padding-bottom: 0;
-            height: 100%;
-        }
-
-        .cinema-mode.desktop .chat-section {
-            height: 100%;
-            border-radius: 0;
-            border-right: 1px solid var(--glass-border);
-            background: rgba(13, 13, 23, 0.95);
-            order: 1;
-        }
-
-        .cinema-mode.desktop .chat-video-bg {
-            opacity: 0.1; /* Very subtle in cinema mode */
-        }
-
-        .cinema-mode.desktop .video-input-section,
-        .cinema-mode.desktop .history-section {
-            display: none;
-        }
-
-        /* Mobile Cinema Mode - Fixed Layout */
-        .cinema-mode.mobile .app-wrapper {
-            max-width: 100%;
-            margin: 56px 0 0;
-            padding: 0;
-            display: flex;
-            flex-direction: column;
-            height: calc(100vh - 56px);
-        }
-
-        .cinema-mode.mobile .player-section {
-            position: relative;
-            width: 100%;
-            height: 56.25vw; /* 16:9 based on viewport width */
-            min-height: 56.25vw;
-            flex-shrink: 0;
-            border-radius: 0;
-        }
-
-        .cinema-mode.mobile .player-container {
-            padding-bottom: 0;
-            height: 100%;
-        }
-
-        .cinema-mode.mobile .chat-section {
-            flex: 1;
-            min-height: 0;
-            border-radius: 0;
-            border-top: 1px solid var(--glass-border);
-            background: rgba(13, 13, 23, 0.98);
-        }
-
-        .cinema-mode.mobile .chat-video-bg {
-            opacity: 0.08; /* Very subtle on mobile */
-        }
-
-        .cinema-mode.mobile .video-input-section,
-        .cinema-mode.mobile .history-section {
-            display: none;
-        }
-
-        /* Mobile Keyboard Handling */
-        .keyboard-visible .player-section {
-            position: fixed !important;
-            top: 56px;
-            left: 0;
-            right: 0;
-            height: 56.25vw;
-            z-index: 1000;
-        }
-
-        .keyboard-visible .chat-section {
-            margin-top: 56.25vw;
-            height: calc(100vh - 56px - 56.25vw);
-        }
-
-        .keyboard-visible .chat-input-container {
-            position: sticky;
-            bottom: 0;
-            background: rgba(13, 13, 23, 0.98);
-            backdrop-filter: blur(25px);
+        /* ===== CINEMA MODE - MOBILE (Video fixed, chat attached, input fixed) ===== */
+        @media (max-width: 767px) {
+            .cinema-mode .app-wrapper {
+                max-width: 100%;
+                margin: 56px 0 0;
+                padding: 0;
+                display: flex;
+                flex-direction: column;
+                height: calc(100vh - 56px);
+            }
+            
+            .cinema-mode .player-section {
+                position: relative;
+                width: 100%;
+                height: calc(100vw * 9 / 16); /* 16:9 based on width */
+                flex-shrink: 0;
+                border-radius: 0;
+                z-index: 10;
+            }
+            
+            .cinema-mode .player-container {
+                padding-bottom: 0;
+                height: 100%;
+            }
+            
+            .cinema-mode .chat-section {
+                flex: 1;
+                margin-top: 0;
+                margin-left: 0;
+                margin-right: 0;
+                height: calc(100vh - (100vw * 9 / 16 + 56px));
+                border-radius: 0;
+                border-left: none;
+                border-right: none;
+                border-bottom: none;
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .cinema-mode .chat-header {
+                flex-shrink: 0;
+                padding: 16px 20px;
+            }
+            
+            .cinema-mode .messages-container {
+                flex: 1;
+                padding: 20px;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                min-height: 0; /* Important for flex scroll */
+            }
+            
+            .cinema-mode .chat-input-container {
+                flex-shrink: 0;
+                padding: 16px 20px;
+                background: rgba(13, 13, 23, 0.9);
+                backdrop-filter: blur(20px);
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                position: sticky;
+                bottom: 0;
+                width: 100%;
+            }
+            
+            .cinema-mode .video-input-section,
+            .cinema-mode .history-section {
+                display: none;
+            }
+            
+            /* Adjust message margins for mobile cinema */
+            .cinema-mode .message.my-message {
+                margin-left: 20px;
+                margin-right: 0;
+            }
+            
+            .cinema-mode .message.their-message {
+                margin-right: 20px;
+                margin-left: 0;
+            }
+            
+            /* In cinema mode, reduce background opacity slightly */
+            .cinema-mode .chat-video-bg.active {
+                opacity: 0.3;
+            }
+            
+            /* Mobile typing mode */
+            .chat-section.typing-mode .messages-container {
+                padding-bottom: 100px; /* Extra space for input */
+                opacity: 0.5;
+            }
+            
+            .chat-section.typing-mode .chat-header {
+                opacity: 0.3;
+            }
+            
+            /* Make sure video stays fixed during typing */
+            .chat-section.typing-mode + .player-section {
+                z-index: 5; /* Below the chat input */
+            }
         }
 
         /* ===== RESPONSIVE DESIGN ===== */
@@ -891,12 +975,6 @@
             .chat-section {
                 height: 500px;
             }
-            
-            /* Tablet cinema mode */
-            .cinema-mode:not(.desktop):not(.mobile) .app-wrapper {
-                grid-template-columns: 40% 60%;
-                height: calc(100vh - 76px);
-            }
         }
 
         /* Mobile Layout - Normal Mode */
@@ -931,17 +1009,45 @@
                 height: 480px;
             }
             
-            /* Mobile chat input fixed at bottom */
+            .messages-container {
+                padding-bottom: 20px;
+            }
+            
+            /* Fix input position on mobile normal mode */
             .chat-input-container {
                 position: sticky;
                 bottom: 0;
-                background: rgba(13, 13, 23, 0.98);
+                background: rgba(13, 13, 23, 0.95);
                 backdrop-filter: blur(20px);
-                border-top: 1px solid rgba(255, 255, 255, 0.15);
             }
             
-            .messages-container {
-                padding-bottom: 20px;
+            /* Mobile typing mode adjustments */
+            .chat-section.typing-mode {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                z-index: 2000;
+                background: rgba(13, 13, 23, 0.98);
+                border-radius: 0;
+                height: 100vh;
+                margin: 0;
+            }
+            
+            .chat-section.typing-mode .messages-container {
+                padding-top: 70px;
+                padding-bottom: 120px;
+                flex: 1;
+            }
+            
+            .chat-section.typing-mode .chat-header {
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                background: rgba(13, 13, 23, 0.95);
+                z-index: 2001;
             }
         }
 
@@ -973,50 +1079,21 @@
             background: linear-gradient(to bottom, var(--accent-romantic), var(--accent-soft));
         }
 
-        /* ===== PERFORMANCE OPTIMIZATIONS ===== */
-        .chat-video-mirror {
-            will-change: transform;
-            image-rendering: -webkit-optimize-contrast;
-            image-rendering: crisp-edges;
-        }
-
-        /* Hardware acceleration */
-        .chat-section,
-        .chat-video-bg,
-        .message {
-            transform: translateZ(0);
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-        }
-
-        /* Reduce motion for users who prefer it */
-        @media (prefers-reduced-motion: reduce) {
-            *,
-            *::before,
-            *::after {
-                animation-duration: 0.01ms !important;
-                animation-iteration-count: 1 !important;
-                transition-duration: 0.01ms !important;
+        /* Fallback for browsers that don't support backdrop-filter */
+        @supports not (backdrop-filter: blur(10px)) {
+            .chat-video-bg::after {
+                display: none;
             }
             
             .chat-video-mirror {
-                opacity: 0.3 !important;
-            }
-        }
-
-        /* Fallback for browsers that don't support backdrop-filter */
-        @supports not (backdrop-filter: blur(10px)) {
-            .chat-section {
-                background: rgba(13, 13, 23, 0.95);
+                filter: blur(28px) saturate(0.6) brightness(0.7);
+                -webkit-filter: blur(28px) saturate(0.6) brightness(0.7);
+                opacity: 0.5;
             }
             
             .chat-header,
             .chat-input-container {
-                background: rgba(13, 13, 23, 0.98);
-            }
-            
-            .message {
-                background: rgba(25, 20, 45, 0.9);
+                background: rgba(13, 13, 23, 0.9);
             }
         }
     </style>
@@ -1083,11 +1160,18 @@
                 </div>
             </section>
 
-            <!-- Chat Section - Optimized Video Background -->
+            <!-- Chat Section - With Dynamic Video Background -->
             <section class="chat-section" id="chatSection">
-                <!-- Optimized Video Background -->
+                <!-- Dynamic Video Background -->
                 <div class="chat-video-bg" id="chatVideoBg">
-                    <div class="chat-video-mirror" id="chatVideoMirror"></div>
+                    <iframe 
+                        class="chat-video-mirror" 
+                        id="chatVideoMirror"
+                        frameborder="0"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen
+                        style="pointer-events: none;">
+                    </iframe>
                 </div>
                 
                 <div class="chat-header">
@@ -1105,6 +1189,7 @@
                 
                 <div class="messages-container" id="messagesContainer">
                     <!-- Messages will appear here -->
+                    <!-- Only two users will be visible: Me and 3omri -->
                 </div>
                 
                 <div class="chat-input-container" id="chatInputContainer">
@@ -1140,7 +1225,7 @@
 
     <script>
         // ============================================
-        // OPTIMIZED VIDEO BACKGROUND FOR CHAT
+        // DYNAMIC VIDEO BACKGROUND FOR CHAT - WITH RESOURCE MANAGEMENT
         // ============================================
         
         // Variables for video background
@@ -1148,8 +1233,7 @@
         let backgroundSyncInterval = null;
         let lastVideoId = null;
         let isBackgroundActive = false;
-        let isPageVisible = true;
-        let lastPlayerState = -1;
+        let backgroundSyncRate = 500; // Reduced from 200ms to save resources
         
         // Initialize chat video background
         function initChatVideoBackground() {
@@ -1162,78 +1246,86 @@
                 return;
             }
             
-            // Start background sync only if page is visible
-            if (isPageVisible) {
-                startBackgroundVideoSync();
-            }
-            
-            // Page visibility API for performance optimization
-            document.addEventListener('visibilitychange', handlePageVisibilityChange);
-            
-            console.log('✅ Optimized chat video background initialized');
+            console.log('✅ Chat video background initialized');
         }
         
-        function handlePageVisibilityChange() {
-            isPageVisible = !document.hidden;
+        // Check if background should be active
+        function shouldBackgroundBeActive() {
+            if (!player || !currentVideoId) return false;
             
-            if (isPageVisible && currentVideoId && player) {
-                // Page became visible - restart background sync
+            const playerState = player.getPlayerState();
+            const isPlaying = playerState === YT.PlayerState.PLAYING;
+            const isCinema = document.querySelector('.app-wrapper').classList.contains('cinema-mode');
+            
+            // Active only when video is playing AND in cinema mode
+            return isPlaying && isCinema && currentVideoId;
+        }
+        
+        // Update background video sync based on conditions
+        function updateBackgroundVideoSync() {
+            const shouldBeActive = shouldBackgroundBeActive();
+            
+            if (shouldBeActive && !isBackgroundActive) {
                 startBackgroundVideoSync();
-                updateBackgroundVideoState();
-            } else if (!isPageVisible) {
-                // Page became hidden - stop background sync
-                stopBackgroundVideoSync();
-                deactivateBackgroundVideo();
+            } else if (!shouldBeActive && isBackgroundActive) {
+                cleanupBackgroundVideo();
             }
         }
         
+        // Sync background video with main player
         function startBackgroundVideoSync() {
             if (backgroundSyncInterval) {
                 clearInterval(backgroundSyncInterval);
             }
             
-            // Only sync if video is playing and page is visible
-            if (!isPageVisible || !currentVideoId) return;
+            // Activate the background
+            const chatVideoBg = document.getElementById('chatVideoBg');
+            if (chatVideoBg) {
+                chatVideoBg.classList.add('active');
+            }
             
+            // Update the background video with current video
+            if (currentVideoId && currentVideoId !== lastVideoId) {
+                updateBackgroundVideo(currentVideoId);
+                lastVideoId = currentVideoId;
+            }
+            
+            // Start sync at a reduced rate to save resources
             backgroundSyncInterval = setInterval(() => {
-                if (player && currentVideoId && isPageVisible) {
-                    syncBackgroundWithPlayer();
-                }
-            }, 500); // Reduced frequency for better performance
+                syncBackgroundWithPlayer();
+            }, backgroundSyncRate);
             
+            isBackgroundActive = true;
             console.log('🔄 Background video sync started');
         }
         
-        function stopBackgroundVideoSync() {
-            if (backgroundSyncInterval) {
-                clearInterval(backgroundSyncInterval);
-                backgroundSyncInterval = null;
-            }
-            
-            console.log('⏸️ Background video sync stopped');
-        }
-        
         function syncBackgroundWithPlayer() {
-            if (!player || !chatVideoMirror || !currentVideoId || !isPageVisible) return;
+            if (!player || !chatVideoMirror || !currentVideoId || !isBackgroundActive) return;
             
             try {
-                const playerState = player.getPlayerState();
-                const currentTime = player.getCurrentTime();
-                
                 // Update background video if video changed
                 if (currentVideoId !== lastVideoId) {
                     updateBackgroundVideo(currentVideoId);
                     lastVideoId = currentVideoId;
                 }
                 
-                // Update background video state based on player state
-                if (playerState !== lastPlayerState) {
-                    updateBackgroundVideoState();
-                    lastPlayerState = playerState;
-                }
+                // Get current time from main player
+                const currentTime = player.getCurrentTime();
+                const playerState = player.getPlayerState();
                 
-                // Update background video time (lightweight approach)
-                updateBackgroundVideoTime(currentTime);
+                // Only update if player is playing
+                if (playerState === YT.PlayerState.PLAYING && chatVideoMirror.src) {
+                    const baseUrl = chatVideoMirror.src.split('?')[0];
+                    const newUrl = `${baseUrl}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&start=${Math.floor(currentTime)}&playsinline=1&enablejsapi=0`;
+                    
+                    // Only update if time difference is significant (more than 3 seconds to save resources)
+                    const urlParams = new URLSearchParams(chatVideoMirror.src.split('?')[1] || '');
+                    const currentStartTime = parseInt(urlParams.get('start') || '0');
+                    
+                    if (Math.abs(currentStartTime - currentTime) > 3) {
+                        chatVideoMirror.src = newUrl;
+                    }
+                }
                 
             } catch (error) {
                 console.warn('Background sync error:', error);
@@ -1244,13 +1336,10 @@
             if (!chatVideoMirror || !videoId) return;
             
             try {
-                // Lightweight approach: Use thumbnail as background with gradient overlay
-                // This is much more performant than creating another video element
-                const chatSection = document.getElementById('chatSection');
+                // Create YouTube embed URL for background
+                const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&playsinline=1&enablejsapi=0&loop=1&playlist=${videoId}`;
                 
-                // Add video-playing class to show the effect
-                chatSection.classList.add('video-playing');
-                
+                chatVideoMirror.src = embedUrl;
                 console.log(`🎬 Background video updated: ${videoId}`);
                 
             } catch (error) {
@@ -1258,174 +1347,125 @@
             }
         }
         
-        function updateBackgroundVideoState() {
-            if (!player || !chatVideoMirror) return;
-            
-            const playerState = player.getPlayerState();
-            const chatSection = document.getElementById('chatSection');
-            
-            // Only show background effect when video is playing
-            if (playerState === YT.PlayerState.PLAYING) {
-                chatSection.classList.add('video-playing');
-                isBackgroundActive = true;
-            } else {
-                chatSection.classList.remove('video-playing');
-                isBackgroundActive = false;
-            }
-        }
-        
-        function updateBackgroundVideoTime(currentTime) {
-            // Lightweight time sync - we don't actually seek in a background video
-            // Just update a CSS custom property for potential visual effects
-            const chatVideoBg = document.getElementById('chatVideoBg');
-            if (chatVideoBg && isBackgroundActive) {
-                // This is a very lightweight operation
-                chatVideoBg.style.setProperty('--video-time', currentTime);
-            }
-        }
-        
-        function deactivateBackgroundVideo() {
-            const chatSection = document.getElementById('chatSection');
-            chatSection.classList.remove('video-playing');
-            isBackgroundActive = false;
-            
-            console.log('🔇 Background video deactivated');
-        }
-        
+        // Clean up background video
         function cleanupBackgroundVideo() {
-            stopBackgroundVideoSync();
-            deactivateBackgroundVideo();
+            if (backgroundSyncInterval) {
+                clearInterval(backgroundSyncInterval);
+                backgroundSyncInterval = null;
+            }
             
-            // Remove visibility change listener
-            document.removeEventListener('visibilitychange', handlePageVisibilityChange);
+            if (chatVideoMirror) {
+                chatVideoMirror.src = '';
+            }
             
+            // Hide the background
+            const chatVideoBg = document.getElementById('chatVideoBg');
+            if (chatVideoBg) {
+                chatVideoBg.classList.remove('active');
+            }
+            
+            isBackgroundActive = false;
+            lastVideoId = null;
             console.log('🧹 Background video cleaned up');
         }
         
         // ============================================
-        // CINEMA MODE TOGGLE FUNCTION - OPTIMIZED
+        // MOBILE TYPING MODE HANDLING
         // ============================================
-        function setupCinemaModeToggle() {
-            const toggleCinemaBtn = document.getElementById('toggleCinemaBtn');
-            const appWrapper = document.querySelector('.app-wrapper');
-            const body = document.body;
+        
+        function setupMobileTypingMode() {
+            const chatInput = document.getElementById('chatMessageInput');
+            const chatSection = document.getElementById('chatSection');
+            const isMobile = window.innerWidth < 768;
+            
+            if (!chatInput || !chatSection || !isMobile) return;
+            
+            // Focus event
+            chatInput.addEventListener('focus', function() {
+                chatSection.classList.add('typing-mode');
+                
+                // Scroll to bottom of messages
+                setTimeout(() => {
+                    const messagesContainer = document.getElementById('messagesContainer');
+                    if (messagesContainer) {
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }
+                }, 100);
+                
+                // Reduce background video opacity during typing
+                const chatVideoBg = document.getElementById('chatVideoBg');
+                if (chatVideoBg && chatVideoBg.classList.contains('active')) {
+                    chatVideoBg.style.opacity = '0.2';
+                }
+                
+                console.log('📱 Mobile typing mode activated');
+            });
+            
+            // Blur event
+            chatInput.addEventListener('blur', function() {
+                chatSection.classList.remove('typing-mode');
+                
+                // Restore background video opacity
+                const chatVideoBg = document.getElementById('chatVideoBg');
+                if (chatVideoBg && chatVideoBg.classList.contains('active')) {
+                    chatVideoBg.style.opacity = '0.4';
+                }
+                
+                console.log('📱 Mobile typing mode deactivated');
+            });
+            
+            // Handle virtual keyboard events
+            window.addEventListener('resize', function() {
+                // If window height changed significantly, it's likely due to keyboard
+                if (chatInput === document.activeElement) {
+                    // Ensure input stays visible
+                    setTimeout(() => {
+                        chatInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }, 300);
+                }
+            });
+        }
+        
+        // ============================================
+        // MODIFIED MESSAGE DISPLAY FUNCTION
+        // ============================================
+        
+        // Save the original addMessageToChat function
+        const originalAddMessageToChat = window.addMessageToChat;
 
-            toggleCinemaBtn.addEventListener('click', () => {
-                const isMobile = window.innerWidth < 768;
-                
-                // Remove existing cinema mode classes
-                appWrapper.classList.remove('cinema-mode', 'desktop', 'mobile');
-                body.classList.remove('cinema-mode', 'desktop', 'mobile');
-                
-                if (!appWrapper.classList.contains('cinema-mode')) {
-                    // Enter cinema mode
-                    appWrapper.classList.add('cinema-mode');
-                    body.classList.add('cinema-mode');
-                    
-                    if (isMobile) {
-                        appWrapper.classList.add('mobile');
-                        body.classList.add('mobile');
-                        console.log("📱 Mobile cinema mode activated");
-                    } else {
-                        appWrapper.classList.add('desktop');
-                        body.classList.add('desktop');
-                        console.log("🖥️ Desktop cinema mode activated");
-                    }
-                    
-                    // Change icon
-                    const icon = toggleCinemaBtn.querySelector('i');
-                    icon.className = 'fas fa-compress';
-                    toggleCinemaBtn.setAttribute('title', 'Exit Cinema Mode');
-                    
-                    // Adjust background video opacity
-                    const chatVideoBg = document.getElementById('chatVideoBg');
-                    if (chatVideoBg) {
-                        chatVideoBg.style.opacity = isMobile ? '0.08' : '0.1';
-                    }
-                    
-                } else {
-                    // Exit cinema mode
-                    const icon = toggleCinemaBtn.querySelector('i');
-                    icon.className = 'fas fa-expand';
-                    toggleCinemaBtn.setAttribute('title', 'Cinema Mode');
-                    console.log("📺 Cinema mode deactivated");
-                    
-                    // Reset background video opacity
-                    const chatVideoBg = document.getElementById('chatVideoBg');
-                    if (chatVideoBg) {
-                        chatVideoBg.style.opacity = '0.15';
-                    }
-                }
-                
-                // Handle mobile keyboard adjustments
-                if (isMobile) {
-                    setupMobileKeyboardHandling();
-                }
-                
-                // Recalculate layout
-                setTimeout(adjustLayoutForCinemaMode, 50);
-            });
-        }
-        
-        function adjustLayoutForCinemaMode() {
-            const playerSection = document.querySelector('.player-section');
-            const chatSection = document.querySelector('.chat-section');
+        // Override with UI-only modifications
+        window.addMessageToChat = function(message, container) {
+            const isMyMessage = message.userId === currentUser.uid;
+            const timestamp = message.timestamp ? 
+                new Date(message.timestamp.toDate()).toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                }) : 'Just now';
             
-            if (playerSection && chatSection) {
-                // Force reflow for smooth transition
-                void playerSection.offsetHeight;
-                void chatSection.offsetHeight;
-            }
-        }
-        
-        // ============================================
-        // MOBILE KEYBOARD HANDLING
-        // ============================================
-        function setupMobileKeyboardHandling() {
-            if (window.innerWidth >= 768) return;
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isMyMessage ? 'my-message' : 'their-message'}`;
             
-            const chatMessageInput = document.getElementById('chatMessageInput');
-            const body = document.body;
+            // Display only "Me" and "3omri" - no user IDs
+            const senderName = isMyMessage ? 'Me' : '3omri';
             
-            // Detect keyboard appearance on mobile
-            let originalViewportHeight = window.innerHeight;
+            messageDiv.innerHTML = `
+                <div class="message-sender">${senderName}</div>
+                <div class="message-text">${message.text}</div>
+                <div class="message-time">${timestamp}</div>
+            `;
             
-            function handleResize() {
-                const currentViewportHeight = window.innerHeight;
-                const isKeyboardVisible = currentViewportHeight < originalViewportHeight * 0.8;
-                
-                if (isKeyboardVisible) {
-                    body.classList.add('keyboard-visible');
-                    console.log("⌨️ Keyboard detected, adjusting layout...");
-                } else {
-                    body.classList.remove('keyboard-visible');
-                }
-            }
+            container.appendChild(messageDiv);
             
-            // Listen for resize (keyboard triggers resize on mobile)
-            window.addEventListener('resize', handleResize);
-            
-            // Also check on focus/blur
-            chatMessageInput.addEventListener('focus', () => {
+            // Auto-scroll only if user is at bottom
+            if (userAtBottom && autoScrollEnabled) {
                 setTimeout(() => {
-                    handleResize();
-                }, 300);
-            });
-            
-            chatMessageInput.addEventListener('blur', () => {
-                setTimeout(() => {
-                    body.classList.remove('keyboard-visible');
-                }, 300);
-            });
-            
-            // Cleanup on page unload
-            window.addEventListener('beforeunload', () => {
-                window.removeEventListener('resize', handleResize);
-            });
-        }
-        
+                    container.scrollTop = container.scrollHeight;
+                }, 50);
+            }
+        };
+
         // ============================================
-        // ORIGINAL APPLICATION CODE (MINIMAL MODIFICATIONS)
+        // REST OF THE ORIGINAL CODE (NO CHANGES TO LOGIC)
         // ============================================
         const firebaseConfig = {
             apiKey: "AIzaSyAJvohW3m1-sZAlrTjkv7UZqTLC6WigePo",
@@ -1471,7 +1511,7 @@
         let historyRef = null;
 
         // ============================================
-        // INITIALIZATION FUNCTION
+        // INITIALIZATION FUNCTION (MODIFIED)
         // ============================================
         async function initializeApp() {
             console.log("🚀 our watch 7afla :3 - Initializing");
@@ -1504,13 +1544,15 @@
                 startUsersListener();
                 loadPartyHistory();
                 
-                // Initialize optimized chat video background
+                // Initialize chat video background
                 setTimeout(() => {
                     initChatVideoBackground();
                 }, 1000);
                 
-                // Setup mobile keyboard handling
-                setupMobileKeyboardHandling();
+                // Setup mobile typing mode
+                setTimeout(() => {
+                    setupMobileTypingMode();
+                }, 500);
                 
                 // Update view based on screen size
                 updateViewBasedOnScreenSize();
@@ -1525,43 +1567,118 @@
         }
 
         // ============================================
-        // MESSAGE DISPLAY FUNCTION (OPTIMIZED)
+        // CINEMA MODE TOGGLE FUNCTION (MODIFIED)
         // ============================================
-        function addMessageToChat(message, container) {
-            const isMyMessage = message.userId === currentUser.uid;
-            const timestamp = message.timestamp ? 
-                new Date(message.timestamp.toDate()).toLocaleTimeString('en-US', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                }) : 'Just now';
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isMyMessage ? 'my-message' : 'their-message'}`;
-            
-            // Display only "Me" and "3omri"
-            const senderName = isMyMessage ? 'Me' : '3omri';
-            
-            messageDiv.innerHTML = `
-                <div class="message-sender">${senderName}</div>
-                <div class="message-text">${message.text}</div>
-                <div class="message-time">${timestamp}</div>
-            `;
-            
-            container.appendChild(messageDiv);
-            
-            // Auto-scroll only if user is at bottom
-            if (userAtBottom && autoScrollEnabled) {
+        function setupCinemaModeToggle() {
+            const toggleCinemaBtn = document.getElementById('toggleCinemaBtn');
+            const appWrapper = document.querySelector('.app-wrapper');
+
+            toggleCinemaBtn.addEventListener('click', () => {
+                appWrapper.classList.toggle('cinema-mode');
+                isCinemaMode = appWrapper.classList.contains('cinema-mode');
+                
+                // Change icon and tooltip
+                const icon = toggleCinemaBtn.querySelector('i');
+                const title = toggleCinemaBtn.getAttribute('title');
+                
+                if (isCinemaMode) {
+                    icon.className = 'fas fa-compress';
+                    toggleCinemaBtn.setAttribute('title', 'Exit Cinema Mode');
+                    console.log("🎬 Cinema mode activated");
+                    
+                    // Update background video based on new state
+                    setTimeout(() => {
+                        updateBackgroundVideoSync();
+                    }, 100);
+                } else {
+                    icon.className = 'fas fa-expand';
+                    toggleCinemaBtn.setAttribute('title', 'Cinema Mode');
+                    console.log("📱 Cinema mode deactivated");
+                    
+                    // Clean up background video when exiting cinema mode
+                    cleanupBackgroundVideo();
+                }
+                
+                // Recalculate layout after toggle
                 setTimeout(() => {
-                    container.scrollTop = container.scrollHeight;
-                }, 50);
-            }
+                    adjustLayoutForCinemaMode();
+                }, 100);
+            });
+        }
+
+        function adjustLayoutForCinemaMode() {
+            const playerSection = document.querySelector('.player-section');
+            const chatSection = document.querySelector('.chat-section');
+            const messagesContainer = document.getElementById('messagesContainer');
             
-            // Add fade-in animation
-            messageDiv.style.animation = 'messageAppear 0.4s ease';
+            if (isCinemaMode) {
+                if (isMobileView) {
+                    // On mobile: fixed video with chat attached directly below
+                    const videoHeight = window.innerWidth * 9 / 16; // 16:9 aspect ratio
+                    
+                    playerSection.style.height = `${videoHeight}px`;
+                    
+                    // Ensure chat section fills remaining space
+                    chatSection.style.height = `calc(100vh - ${videoHeight + 56}px)`;
+                    
+                    // Adjust messages container padding
+                    const inputHeight = document.getElementById('chatInputContainer').offsetHeight;
+                    messagesContainer.style.paddingBottom = `${inputHeight + 20}px`;
+                }
+                // Desktop layout is handled by CSS grid with swapped columns
+            }
         }
 
         // ============================================
-        // YOUTUBE PLAYER FUNCTIONS
+        // ONLINE PRESENCE FUNCTIONS WITH VISUAL COUNTER
+        // ============================================
+        function startUsersListener() {
+            roomRef.collection('users')
+                .where('online', '==', true)
+                .onSnapshot((snapshot) => {
+                    let onlineCount = 0;
+                    const now = Date.now();
+                    
+                    snapshot.forEach((doc) => {
+                        const user = doc.data();
+                        if (user.lastSeen) {
+                            const lastSeen = user.lastSeen.toDate().getTime();
+                            if (now - lastSeen < 120000) {
+                                onlineCount++;
+                            }
+                        }
+                    });
+                    
+                    // Update online count display
+                    updateOnlineCountDisplay(onlineCount);
+                });
+            
+            // Update user status every 30 seconds
+            setInterval(() => {
+                if (usersRef) {
+                    usersRef.update({
+                        lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                    });
+                }
+            }, 30000);
+        }
+
+        function updateOnlineCountDisplay(count) {
+            const onlineCountElement = document.getElementById('onlineCount');
+            const roomName = document.querySelector('.room-name');
+            
+            if (onlineCountElement) {
+                onlineCountElement.textContent = `${count} online`;
+            }
+            
+            // Also update room name if needed
+            if (roomName) {
+                roomName.textContent = `our watch 7afla :3`;
+            }
+        }
+
+        // ============================================
+        // YOUTUBE PLAYER FUNCTIONS (MODIFIED)
         // ============================================
         function loadYouTubePlayer() {
             if (window.YT && window.YT.Player) {
@@ -1598,7 +1715,7 @@
             loadLastVideo();
             startManualSeekDetection();
             
-            console.log("🎬 Player ready, background video will activate when playing starts");
+            console.log("🎬 Player ready - checking background video");
         }
 
         function onPlayerStateChange(event) {
@@ -1608,6 +1725,11 @@
             const now = Date.now();
 
             updatePlayPauseButton(state);
+
+            // Update background video sync based on player state
+            setTimeout(() => {
+                updateBackgroundVideoSync();
+            }, 100);
 
             if (now - lastLocalActionTime < 300) return;
 
@@ -1622,8 +1744,10 @@
                 });
             }
             
-            // Update background video state
-            updateBackgroundVideoState();
+            // Clean up background if video ended
+            if (state === YT.PlayerState.ENDED) {
+                cleanupBackgroundVideo();
+            }
         }
 
         function onPlayerError(error) {
@@ -1638,7 +1762,7 @@
         }
 
         // ============================================
-        // PERFECT SYNC ENGINE (UNCHANGED)
+        // PERFECT SYNC ENGINE
         // ============================================
         function startManualSeekDetection() {
             if (manualSeekInterval) clearInterval(manualSeekInterval);
@@ -1756,7 +1880,7 @@
         }
 
         // ============================================
-        // CHAT SYSTEM FUNCTIONS
+        // CHAT SYSTEM FUNCTIONS WITH AUTO-SCROLL
         // ============================================
         function startChatListener() {
             chatRef.onSnapshot((snapshot) => {
@@ -1846,7 +1970,7 @@
         }
 
         // ============================================
-        // VIDEO HISTORY FUNCTIONS (UNCHANGED)
+        // VIDEO HISTORY FUNCTIONS
         // ============================================
         async function loadPartyHistory() {
             try {
@@ -2015,10 +2139,12 @@
             updateVideoTitle(videoId);
             addToHistory(videoId);
             
-            // Update background video
-            updateBackgroundVideo(videoId);
-            
             console.log(`🎥 Loading video: ${videoId}`);
+            
+            // Update background video after a delay
+            setTimeout(() => {
+                updateBackgroundVideoSync();
+            }, 500);
         }
 
         async function updateVideoTitle(videoId) {
@@ -2046,9 +2172,6 @@
                     lastKnownTime = data.currentTime || 0;
                     
                     updateVideoTitle(data.videoId);
-                    
-                    // Update background video
-                    updateBackgroundVideo(data.videoId);
                 }
             } catch (error) {
                 console.error('❌ Error loading last video:', error);
@@ -2071,7 +2194,7 @@
         }
 
         // ============================================
-        // UI CONTROLS & EVENT LISTENERS
+        // UI CONTROLS & EVENT LISTENERS (MODIFIED)
         // ============================================
         function setupEventListeners() {
             // Load video
@@ -2088,6 +2211,11 @@
                 } else {
                     player.playVideo();
                 }
+                
+                // Update background video state
+                setTimeout(() => {
+                    updateBackgroundVideoSync();
+                }, 100);
             });
             
             // Chat
@@ -2134,10 +2262,22 @@
             isMobileView = window.innerWidth < 768;
             
             if (wasMobileView !== isMobileView) {
+                // Re-setup mobile typing mode if needed
+                if (isMobileView) {
+                    setTimeout(() => {
+                        setupMobileTypingMode();
+                    }, 100);
+                }
+                
                 if (isCinemaMode) {
                     adjustLayoutForCinemaMode();
                 }
             }
+            
+            // Update background video sync based on screen size
+            setTimeout(() => {
+                updateBackgroundVideoSync();
+            }, 200);
         }
 
         // ============================================
@@ -2160,6 +2300,30 @@
             cleanupBackgroundVideo();
             
             console.log("👋 Closing app");
+        });
+
+        window.addEventListener('pagehide', () => {
+            cleanupBackgroundVideo();
+        });
+
+        window.addEventListener('blur', () => {
+            // Reduce sync rate when tab is not focused to save resources
+            if (backgroundSyncInterval) {
+                clearInterval(backgroundSyncInterval);
+                backgroundSyncInterval = setInterval(() => {
+                    syncBackgroundWithPlayer();
+                }, 1000); // Reduced to 1 second when not focused
+            }
+        });
+
+        window.addEventListener('focus', () => {
+            // Restore normal sync rate when tab is focused
+            if (backgroundSyncInterval && isBackgroundActive) {
+                clearInterval(backgroundSyncInterval);
+                backgroundSyncInterval = setInterval(() => {
+                    syncBackgroundWithPlayer();
+                }, backgroundSyncRate);
+            }
         });
 
         // ============================================
