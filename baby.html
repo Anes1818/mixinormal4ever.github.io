@@ -360,7 +360,7 @@
             font-size: 14px;
         }
 
-        /* ===== CHAT SECTION - COUPLE FOCUSED WITH FIXED INPUT ON MOBILE ===== */
+        /* ===== CHAT SECTION - WITH DYNAMIC VIDEO BACKGROUND ===== */
         .chat-section {
             display: flex;
             flex-direction: column;
@@ -372,6 +372,81 @@
             backdrop-filter: blur(14px);
             animation: fadeIn 0.8s ease 0.3s both;
             box-shadow: var(--shadow-md);
+            position: relative;
+            isolation: isolate; /* Creates new stacking context */
+        }
+
+        /* Video Background Layer for Chat */
+        .chat-video-bg {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1; /* Behind everything */
+            pointer-events: none; /* Don't interfere with clicks */
+            overflow: hidden;
+            border-radius: var(--radius-xl);
+            opacity: 0.4; /* Base opacity */
+            transition: opacity 0.5s ease;
+        }
+
+        /* Main video mirror for chat background */
+        .chat-video-mirror {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            min-width: 100%;
+            min-height: 100%;
+            width: auto;
+            height: auto;
+            transform: translate(-50%, -50%);
+            object-fit: cover;
+            
+            /* Strong blur and color adjustments */
+            filter: blur(24px) saturate(0.7) brightness(0.8);
+            -webkit-filter: blur(24px) saturate(0.7) brightness(0.8);
+            
+            /* Scale up to hide blur edges */
+            transform: translate(-50%, -50%) scale(1.2);
+            
+            /* Ensure smooth animation */
+            will-change: transform;
+            
+            /* Hide the actual YouTube controls and UI */
+            opacity: 0.6;
+        }
+
+        /* Alternative backdrop-filter for browsers that support it */
+        .chat-video-bg::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backdrop-filter: blur(20px) saturate(0.8) brightness(0.85);
+            -webkit-backdrop-filter: blur(20px) saturate(0.8) brightness(0.85);
+            border-radius: var(--radius-xl);
+        }
+
+        /* Gradient overlay for better text readability */
+        .chat-video-bg::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(13, 13, 23, 0.15) 0%,
+                rgba(13, 13, 23, 0.4) 30%,
+                rgba(13, 13, 23, 0.7) 70%,
+                rgba(13, 13, 23, 0.85) 100%
+            );
+            z-index: 1;
+            border-radius: var(--radius-xl);
         }
 
         .chat-header {
@@ -381,6 +456,9 @@
             padding: 20px 24px;
             background: rgba(255, 255, 255, 0.04);
             border-bottom: 1px solid var(--glass-border);
+            position: relative;
+            z-index: 2; /* Above video background */
+            backdrop-filter: blur(8px);
         }
 
         .chat-title {
@@ -420,6 +498,8 @@
             align-items: center;
             justify-content: center;
             transition: all var(--transition-fast);
+            z-index: 3;
+            position: relative;
         }
 
         .chat-action-btn:hover {
@@ -435,14 +515,8 @@
             display: flex;
             flex-direction: column;
             gap: 16px;
-            background: transparent;
-            /* Dynamic background that syncs with video */
-            background-image: 
-                linear-gradient(rgba(13, 13, 23, 0.7), rgba(13, 13, 23, 0.9)),
-                radial-gradient(circle at 20% 30%, rgba(179, 153, 255, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 80% 70%, rgba(255, 107, 157, 0.15) 0%, transparent 40%);
-            background-attachment: fixed;
-            background-size: cover;
+            position: relative;
+            z-index: 1; /* Above video background */
         }
 
         .message {
@@ -452,9 +526,9 @@
             animation: messageAppear 0.4s ease;
             position: relative;
             word-break: break-word;
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(8px);
             border: 1px solid transparent;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
         }
 
         .message.my-message {
@@ -511,6 +585,8 @@
             font-size: 15px;
             line-height: 1.5;
             color: var(--text-primary);
+            position: relative;
+            z-index: 1;
         }
 
         .message-time {
@@ -526,7 +602,8 @@
             background: rgba(255, 255, 255, 0.04);
             border-top: 1px solid var(--glass-border);
             position: relative;
-            z-index: 100;
+            z-index: 2; /* Above video background */
+            backdrop-filter: blur(10px);
         }
 
         .chat-input-group {
@@ -543,6 +620,7 @@
             color: var(--text-primary);
             font-size: 15px;
             transition: all var(--transition-fast);
+            backdrop-filter: blur(5px);
         }
 
         #chatMessageInput:focus {
@@ -757,6 +835,11 @@
                 margin-left: 0;
             }
             
+            /* In cinema mode, reduce background opacity slightly */
+            .cinema-mode .chat-video-bg {
+                opacity: 0.3;
+            }
+            
             /* Make input fixed on mobile */
             .chat-input-container.fixed-input {
                 position: fixed;
@@ -803,15 +886,6 @@
                 height: calc(100vh - 106px);
                 background: rgba(255, 255, 255, 0.02);
                 backdrop-filter: blur(12px);
-            }
-            
-            .cinema-mode .messages-container {
-                background: transparent;
-                background-image: 
-                    linear-gradient(rgba(13, 13, 23, 0.7), rgba(13, 13, 23, 0.9)),
-                    radial-gradient(circle at 20% 30%, rgba(179, 153, 255, 0.15) 0%, transparent 40%),
-                    radial-gradient(circle at 80% 70%, rgba(255, 107, 157, 0.15) 0%, transparent 40%);
-                background-attachment: fixed;
             }
             
             .cinema-mode .video-input-section,
@@ -942,26 +1016,32 @@
             background: linear-gradient(to bottom, var(--accent-romantic), var(--accent-soft));
         }
 
-        /* ===== LOADING STATES ===== */
-        .loading {
-            position: relative;
-            overflow: hidden;
+        /* ===== PERFORMANCE OPTIMIZATIONS ===== */
+        .chat-video-mirror {
+            /* Hardware acceleration */
+            transform: translate3d(-50%, -50%, 0) scale(1.2);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
+            perspective: 1000;
+            -webkit-perspective: 1000;
         }
 
-        .loading::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.03), transparent);
-            animation: loading 1.5s infinite;
-        }
-
-        @keyframes loading {
-            0% { transform: translateX(-100%); }
-            100% { transform: translateX(100%); }
+        /* Fallback for browsers that don't support backdrop-filter */
+        @supports not (backdrop-filter: blur(10px)) {
+            .chat-video-bg::after {
+                display: none;
+            }
+            
+            .chat-video-mirror {
+                filter: blur(28px) saturate(0.6) brightness(0.7);
+                -webkit-filter: blur(28px) saturate(0.6) brightness(0.7);
+                opacity: 0.5;
+            }
+            
+            .chat-header,
+            .chat-input-container {
+                background: rgba(13, 13, 23, 0.9);
+            }
         }
     </style>
 </head>
@@ -1027,8 +1107,20 @@
                 </div>
             </section>
 
-            <!-- Chat Section - Couple Focused -->
+            <!-- Chat Section - With Dynamic Video Background -->
             <section class="chat-section" id="chatSection">
+                <!-- Dynamic Video Background -->
+                <div class="chat-video-bg" id="chatVideoBg">
+                    <iframe 
+                        class="chat-video-mirror" 
+                        id="chatVideoMirror"
+                        frameborder="0"
+                        allow="autoplay; encrypted-media"
+                        allowfullscreen
+                        style="pointer-events: none;">
+                    </iframe>
+                </div>
+                
                 <div class="chat-header">
                     <div class="chat-title">
                         <i class="fas fa-heart"></i>
@@ -1080,12 +1172,110 @@
 
     <script>
         // ============================================
-        // IMPORTANT: All JavaScript logic remains EXACTLY THE SAME
-        // Only UI wrapper modifications are made below
+        // DYNAMIC VIDEO BACKGROUND FOR CHAT
         // ============================================
         
-        // We need to modify the message display function to show only "Me" and "3omri"
-        // This is a UI wrapper change only - no backend logic is changed
+        // Variables for video background
+        let chatVideoMirror = null;
+        let backgroundSyncInterval = null;
+        let lastVideoId = null;
+        
+        // Initialize chat video background
+        function initChatVideoBackground() {
+            const chatVideoBg = document.getElementById('chatVideoBg');
+            const chatVideoMirrorElement = document.getElementById('chatVideoMirror');
+            chatVideoMirror = chatVideoMirrorElement;
+            
+            if (!chatVideoBg || !chatVideoMirror) {
+                console.warn('Chat video background elements not found');
+                return;
+            }
+            
+            // Start background sync
+            startBackgroundVideoSync();
+            
+            console.log('✅ Chat video background initialized');
+        }
+        
+        // Sync background video with main player
+        function startBackgroundVideoSync() {
+            if (backgroundSyncInterval) {
+                clearInterval(backgroundSyncInterval);
+            }
+            
+            backgroundSyncInterval = setInterval(() => {
+                syncBackgroundWithPlayer();
+            }, 200); // Sync every 200ms for smooth motion
+            
+            console.log('🔄 Background video sync started');
+        }
+        
+        function syncBackgroundWithPlayer() {
+            if (!player || !chatVideoMirror || !currentVideoId) return;
+            
+            try {
+                // Update background video if video changed
+                if (currentVideoId !== lastVideoId) {
+                    updateBackgroundVideo(currentVideoId);
+                    lastVideoId = currentVideoId;
+                }
+                
+                // Get current time from main player
+                const currentTime = player.getCurrentTime();
+                const playerState = player.getPlayerState();
+                
+                // Update background video URL with current time
+                // We use the YouTube embed URL with autoplay and mute
+                if (chatVideoMirror.src) {
+                    const baseUrl = chatVideoMirror.src.split('?')[0];
+                    const newUrl = `${baseUrl}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&start=${Math.floor(currentTime)}&playsinline=1&enablejsapi=0`;
+                    
+                    // Only update if time difference is significant (more than 2 seconds)
+                    const urlParams = new URLSearchParams(chatVideoMirror.src.split('?')[1] || '');
+                    const currentStartTime = parseInt(urlParams.get('start') || '0');
+                    
+                    if (Math.abs(currentStartTime - currentTime) > 2) {
+                        chatVideoMirror.src = newUrl;
+                    }
+                }
+                
+            } catch (error) {
+                console.warn('Background sync error:', error);
+            }
+        }
+        
+        function updateBackgroundVideo(videoId) {
+            if (!chatVideoMirror || !videoId) return;
+            
+            try {
+                // Create YouTube embed URL for background
+                const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&playsinline=1&enablejsapi=0&loop=1&playlist=${videoId}`;
+                
+                chatVideoMirror.src = embedUrl;
+                console.log(`🎬 Background video updated: ${videoId}`);
+                
+            } catch (error) {
+                console.error('Error updating background video:', error);
+            }
+        }
+        
+        // Clean up background video
+        function cleanupBackgroundVideo() {
+            if (backgroundSyncInterval) {
+                clearInterval(backgroundSyncInterval);
+                backgroundSyncInterval = null;
+            }
+            
+            if (chatVideoMirror) {
+                chatVideoMirror.src = '';
+            }
+            
+            console.log('🧹 Background video cleaned up');
+        }
+        
+        // ============================================
+        // MODIFIED MESSAGE DISPLAY FUNCTION
+        // ============================================
         
         // Save the original addMessageToChat function
         const originalAddMessageToChat = window.addMessageToChat;
@@ -1121,9 +1311,8 @@
             }
         };
 
-        // Rest of the JavaScript code remains EXACTLY THE SAME as your original code
         // ============================================
-        // 1. FIREBASE CONFIGURATION (NO CHANGES)
+        // REST OF THE ORIGINAL CODE (NO CHANGES TO LOGIC)
         // ============================================
         const firebaseConfig = {
             apiKey: "AIzaSyAJvohW3m1-sZAlrTjkv7UZqTLC6WigePo",
@@ -1139,7 +1328,7 @@
         const auth = firebase.auth();
 
         // ============================================
-        // 2. APPLICATION STATE & VARIABLES
+        // APPLICATION STATE & VARIABLES
         // ============================================
         let player = null;
         let currentUser = null;
@@ -1169,7 +1358,7 @@
         let historyRef = null;
 
         // ============================================
-        // 3. INITIALIZATION FUNCTION
+        // INITIALIZATION FUNCTION (MODIFIED)
         // ============================================
         async function initializeApp() {
             console.log("🚀 our watch 7afla :3 - Initializing");
@@ -1202,6 +1391,11 @@
                 startUsersListener();
                 loadPartyHistory();
                 
+                // Initialize chat video background
+                setTimeout(() => {
+                    initChatVideoBackground();
+                }, 1000);
+                
                 // Update view based on screen size
                 updateViewBasedOnScreenSize();
                 window.addEventListener('resize', updateViewBasedOnScreenSize);
@@ -1218,7 +1412,7 @@
         }
 
         // ============================================
-        // 4. SETUP FIXED INPUT FOR MOBILE
+        // SETUP FIXED INPUT FOR MOBILE
         // ============================================
         function setupFixedInputForMobile() {
             if (!isMobileView) return;
@@ -1245,7 +1439,7 @@
         }
 
         // ============================================
-        // 5. CINEMA MODE TOGGLE FUNCTION
+        // CINEMA MODE TOGGLE FUNCTION
         // ============================================
         function setupCinemaModeToggle() {
             const toggleCinemaBtn = document.getElementById('toggleCinemaBtn');
@@ -1267,6 +1461,12 @@
                     icon.className = 'fas fa-expand';
                     toggleCinemaBtn.setAttribute('title', 'Cinema Mode');
                     console.log("📱 Cinema mode deactivated");
+                }
+                
+                // Adjust background video opacity in cinema mode
+                const chatVideoBg = document.getElementById('chatVideoBg');
+                if (chatVideoBg) {
+                    chatVideoBg.style.opacity = isCinemaMode ? '0.3' : '0.4';
                 }
                 
                 // Recalculate layout after toggle
@@ -1302,7 +1502,7 @@
         }
 
         // ============================================
-        // 6. ONLINE PRESENCE FUNCTIONS WITH VISUAL COUNTER
+        // ONLINE PRESENCE FUNCTIONS WITH VISUAL COUNTER
         // ============================================
         function startUsersListener() {
             roomRef.collection('users')
@@ -1350,7 +1550,7 @@
         }
 
         // ============================================
-        // 7. YOUTUBE PLAYER FUNCTIONS (NO CHANGES)
+        // YOUTUBE PLAYER FUNCTIONS
         // ============================================
         function loadYouTubePlayer() {
             if (window.YT && window.YT.Player) {
@@ -1386,6 +1586,13 @@
             setInterval(updateTimeDisplay, 1000);
             loadLastVideo();
             startManualSeekDetection();
+            
+            // Start background video after player is ready
+            setTimeout(() => {
+                if (currentVideoId) {
+                    updateBackgroundVideo(currentVideoId);
+                }
+            }, 500);
         }
 
         function onPlayerStateChange(event) {
@@ -1422,7 +1629,7 @@
         }
 
         // ============================================
-        // 8. PERFECT SYNC ENGINE (NO CHANGES)
+        // PERFECT SYNC ENGINE
         // ============================================
         function startManualSeekDetection() {
             if (manualSeekInterval) clearInterval(manualSeekInterval);
@@ -1499,6 +1706,9 @@
                         updateVideoTitle(action.videoId);
                         addToHistory(action.videoId);
                         lastKnownTime = 0;
+                        
+                        // Update background video
+                        updateBackgroundVideo(action.videoId);
                     }
                     break;
 
@@ -1537,7 +1747,7 @@
         }
 
         // ============================================
-        // 9. CHAT SYSTEM FUNCTIONS WITH AUTO-SCROLL
+        // CHAT SYSTEM FUNCTIONS WITH AUTO-SCROLL
         // ============================================
         function startChatListener() {
             chatRef.onSnapshot((snapshot) => {
@@ -1627,7 +1837,7 @@
         }
 
         // ============================================
-        // 10. VIDEO HISTORY FUNCTIONS
+        // VIDEO HISTORY FUNCTIONS
         // ============================================
         async function loadPartyHistory() {
             try {
@@ -1756,7 +1966,7 @@
         }
 
         // ============================================
-        // 11. VIDEO LOADING FUNCTIONS
+        // VIDEO LOADING FUNCTIONS
         // ============================================
         function loadVideoFromInput() {
             const url = document.getElementById('videoUrlInput').value.trim();
@@ -1796,6 +2006,9 @@
             updateVideoTitle(videoId);
             addToHistory(videoId);
             
+            // Update background video
+            updateBackgroundVideo(videoId);
+            
             console.log(`🎥 Loading video: ${videoId}`);
         }
 
@@ -1824,6 +2037,9 @@
                     lastKnownTime = data.currentTime || 0;
                     
                     updateVideoTitle(data.videoId);
+                    
+                    // Update background video
+                    updateBackgroundVideo(data.videoId);
                 }
             } catch (error) {
                 console.error('❌ Error loading last video:', error);
@@ -1846,7 +2062,7 @@
         }
 
         // ============================================
-        // 12. UI CONTROLS & EVENT LISTENERS
+        // UI CONTROLS & EVENT LISTENERS
         // ============================================
         function setupEventListeners() {
             // Load video
@@ -1918,7 +2134,7 @@
         }
 
         // ============================================
-        // 13. START APPLICATION & CLEANUP
+        // START APPLICATION & CLEANUP
         // ============================================
         window.addEventListener('load', initializeApp);
 
@@ -1933,13 +2149,15 @@
                 clearInterval(manualSeekInterval);
             }
             
+            // Clean up background video
+            cleanupBackgroundVideo();
+            
             console.log("👋 Closing app");
         });
 
         // ============================================
-        // 14. ADDITIONAL UI ENHANCEMENTS
+        // ADDITIONAL UI ENHANCEMENTS
         // ============================================
-        // Add effects when elements load
         document.addEventListener('DOMContentLoaded', () => {
             // Add effects to cards when they appear
             const observerOptions = {
