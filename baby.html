@@ -108,8 +108,6 @@
             padding: 20px 0;
             margin-bottom: 30px;
             border-bottom: 1px solid var(--glass-border);
-            position: sticky;
-            top: 0;
             background: rgba(15, 11, 30, 0.9);
             backdrop-filter: blur(20px);
             z-index: 100;
@@ -180,26 +178,6 @@
             background: var(--success);
             border-radius: 50%;
             animation: pulse 2s infinite;
-        }
-
-        .cinema-mode-toggle {
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-            border: none;
-            color: white;
-            padding: 12px 24px;
-            border-radius: var(--radius-xl);
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            transition: all var(--transition-fast);
-            box-shadow: var(--shadow-sm);
-        }
-
-        .cinema-mode-toggle:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--shadow-md);
         }
 
         /* ===== VIDEO INPUT SECTION ===== */
@@ -606,101 +584,6 @@
             color: var(--text-muted);
         }
 
-        /* ===== CINEMA MODE STYLES ===== */
-        .app-wrapper.cinema-mode {
-            padding: 0;
-            background: #000;
-        }
-
-        .cinema-mode .main-header,
-        .cinema-mode .video-input-section,
-        .cinema-mode .history-section,
-        .cinema-mode .player-controls-bar {
-            display: none;
-        }
-
-        .cinema-mode .player-section {
-            position: fixed;
-            top: 0;
-            right: 0;
-            width: 100vw;
-            height: 100vh;
-            border-radius: 0;
-            z-index: 1000;
-        }
-
-        .cinema-mode .player-container {
-            height: 100vh;
-            padding-bottom: 0;
-        }
-
-        .cinema-mode .chat-section {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            width: 400px;
-            height: 300px;
-            z-index: 1001;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-        }
-
-        /* ===== CINEMA MODE CHAT BUBBLES ===== */
-        .cinema-chat-bubble {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: var(--radius-xl);
-            padding: 15px 20px;
-            max-width: 300px;
-            z-index: 1001;
-            animation: fadeIn 0.5s ease;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            transition: all var(--transition-normal);
-        }
-
-        .cinema-chat-bubble .message {
-            max-width: 100%;
-            margin-bottom: 10px;
-        }
-
-        .cinema-chat-bubble.hidden {
-            opacity: 0;
-            transform: translateY(20px);
-            pointer-events: none;
-        }
-
-        /* ===== MINI CHAT TOGGLE ===== */
-        .mini-chat-toggle {
-            position: fixed;
-            bottom: 30px;
-            left: 30px;
-            width: 60px;
-            height: 60px;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            z-index: 999;
-            box-shadow: var(--shadow-lg);
-            font-size: 22px;
-            transition: all var(--transition-normal);
-        }
-
-        .mini-chat-toggle:hover {
-            transform: scale(1.1);
-        }
-
-        .mini-chat-toggle.has-notification {
-            animation: pulse 1.5s infinite;
-            box-shadow: 0 0 30px rgba(138, 43, 226, 0.7);
-        }
-
         /* ===== RESPONSIVE DESIGN ===== */
         /* Desktop Layout */
         @media (min-width: 1024px) {
@@ -755,23 +638,6 @@
             .history-grid {
                 grid-template-columns: 1fr;
             }
-            
-            .cinema-mode .chat-section {
-                width: calc(100% - 40px);
-                right: 20px;
-            }
-            
-            .mini-chat-toggle {
-                bottom: 20px;
-                left: 20px;
-                width: 50px;
-                height: 50px;
-            }
-            
-            .cinema-chat-bubble {
-                width: calc(100% - 40px);
-                right: 20px;
-            }
         }
 
         /* ===== UTILITY CLASSES ===== */
@@ -806,17 +672,6 @@
 
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(to bottom, var(--accent-pink), var(--accent-cyan));
-        }
-
-        /* ===== CINEMA MODE VIDEO LAYOUT ADJUSTMENTS ===== */
-        .cinema-mode.desktop-layout .player-section {
-            width: 75vw;
-            right: 0;
-        }
-        
-        .cinema-mode.desktop-layout .chat-section {
-            left: 20px;
-            right: auto;
         }
 
         /* ===== LOADING STATES ===== */
@@ -862,11 +717,6 @@
                     <span>المتصلون:</span>
                     <span id="onlineCount">1</span>
                 </div>
-                
-                <button class="cinema-mode-toggle" id="cinemaModeBtn">
-                    <i class="fas fa-expand"></i>
-                    وضع السينما
-                </button>
             </div>
         </header>
 
@@ -919,9 +769,6 @@
                         <button class="chat-action-btn" id="clearChatBtn" title="مسح الدردشة">
                             <i class="fas fa-trash"></i>
                         </button>
-                        <button class="chat-action-btn" id="minimizeChatBtn" title="تصغير">
-                            <i class="fas fa-minus"></i>
-                        </button>
                     </div>
                 </div>
                 
@@ -958,18 +805,6 @@
                 <!-- History cards will be loaded here -->
             </div>
         </section>
-
-        <!-- Mini Chat Toggle -->
-        <div class="mini-chat-toggle hidden" id="miniChatToggle">
-            <i class="fas fa-comment"></i>
-        </div>
-    </div>
-
-    <!-- Cinema Mode Chat Bubbles -->
-    <div class="cinema-chat-bubble hidden" id="cinemaChatBubble">
-        <div id="cinemaMessagesContainer">
-            <!-- Cinema mode messages will appear here -->
-        </div>
     </div>
 
     <script>
@@ -1005,12 +840,6 @@
         let manualSeekInterval = null;
         const SYNC_TOLERANCE = 0.8;
         const SEEK_DETECT_THRESHOLD = 1.0;
-        
-        // UI State Variables
-        let isCinemaMode = false;
-        let isMobileView = window.innerWidth < 768;
-        let chatUnreadCount = 0;
-        let cinemaChatTimeout = null;
         
         // Firebase References
         let roomRef = null;
@@ -1052,10 +881,6 @@
                 startChatListener();
                 startUsersListener();
                 loadPartyHistory();
-                
-                // تحديث حالة العرض
-                updateViewBasedOnScreenSize();
-                window.addEventListener('resize', updateViewBasedOnScreenSize);
                 
                 console.log("🎉 تم تهيئة التطبيق بنجاح");
                 
@@ -1258,42 +1083,20 @@
         function startChatListener() {
             chatRef.onSnapshot((snapshot) => {
                 const container = document.getElementById('messagesContainer');
-                const cinemaContainer = document.getElementById('cinemaMessagesContainer');
                 
                 // مسح المحتوى القديم
                 container.innerHTML = '';
-                cinemaContainer.innerHTML = '';
                 
-                // عرض الرسائل في الوضع العادي
+                // عرض الرسائل
                 snapshot.forEach((doc) => {
                     const msg = doc.data();
                     addMessageToChat(msg, container);
-                    
-                    // في وضع السينما، نعرض فقط آخر 3 رسائل
-                    if (isCinemaMode) {
-                        addMessageToCinemaChat(msg, cinemaContainer);
-                    }
                 });
                 
                 // التمرير إلى الأسفل
                 setTimeout(() => {
                     container.scrollTop = container.scrollHeight;
-                    cinemaContainer.scrollTop = cinemaContainer.scrollHeight;
                 }, 100);
-                
-                // إشعارات الرسائل غير المقروءة
-                if (document.getElementById('chatSection').classList.contains('hidden') || isCinemaMode) {
-                    const lastMsg = snapshot.docs[snapshot.docs.length - 1]?.data();
-                    if (lastMsg && lastMsg.userId !== currentUser.uid) {
-                        chatUnreadCount++;
-                        updateChatNotification();
-                        
-                        // في وضع السينما، نظهر فقاعة الدردشة مؤقتًا
-                        if (isCinemaMode) {
-                            showCinemaChatBubble();
-                        }
-                    }
-                }
             });
         }
 
@@ -1307,21 +1110,6 @@
                 ${!isMyMessage ? `<div class="message-sender">مستخدم</div>` : ''}
                 <div class="message-text">${message.text}</div>
             `;
-            
-            container.appendChild(messageDiv);
-        }
-
-        function addMessageToCinemaChat(message, container) {
-            const isMyMessage = message.userId === currentUser.uid;
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isMyMessage ? 'my-message' : 'their-message'}`;
-            messageDiv.textContent = message.text;
-            
-            // إضافة فقط آخر 3 رسائل
-            if (container.children.length >= 3) {
-                container.removeChild(container.firstChild);
-            }
             
             container.appendChild(messageDiv);
         }
@@ -1373,101 +1161,8 @@
             }
         }
 
-        function updateChatNotification() {
-            const miniToggle = document.getElementById('miniChatToggle');
-            if (chatUnreadCount > 0) {
-                miniToggle.classList.add('has-notification');
-                miniToggle.innerHTML = `<i class="fas fa-comment"></i><span class="notification-badge">${chatUnreadCount}</span>`;
-            } else {
-                miniToggle.classList.remove('has-notification');
-                miniToggle.innerHTML = `<i class="fas fa-comment"></i>`;
-            }
-        }
-
         // ============================================
-        // 7. CINEMA MODE FUNCTIONS
-        // ============================================
-        function toggleCinemaMode() {
-            const appWrapper = document.getElementById('appWrapper');
-            const chatSection = document.getElementById('chatSection');
-            const miniToggle = document.getElementById('miniChatToggle');
-            const cinemaBubble = document.getElementById('cinemaChatBubble');
-            
-            isCinemaMode = !isCinemaMode;
-            
-            if (isCinemaMode) {
-                // تفعيل وضع السينما
-                appWrapper.classList.add('cinema-mode');
-                chatSection.classList.add('hidden');
-                miniToggle.classList.remove('hidden');
-                
-                // إضافة كلاس للتصميم بناءً على نوع الجهاز
-                if (!isMobileView) {
-                    appWrapper.classList.add('desktop-layout');
-                }
-                
-                // تحديث زر التبديل
-                document.getElementById('cinemaModeBtn').innerHTML = `
-                    <i class="fas fa-compress"></i>
-                    الخروج من وضع السينما
-                `;
-                
-                console.log("🎬 تم تفعيل وضع السينما");
-            } else {
-                // تعطيل وضع السينما
-                appWrapper.classList.remove('cinema-mode');
-                appWrapper.classList.remove('desktop-layout');
-                chatSection.classList.remove('hidden');
-                miniToggle.classList.add('hidden');
-                cinemaBubble.classList.add('hidden');
-                
-                // تحديث زر التبديل
-                document.getElementById('cinemaModeBtn').innerHTML = `
-                    <i class="fas fa-expand"></i>
-                    وضع السينما
-                `;
-                
-                console.log("📱 تم الخروج من وضع السينما");
-            }
-        }
-
-        function showCinemaChatBubble() {
-            const cinemaBubble = document.getElementById('cinemaChatBubble');
-            cinemaBubble.classList.remove('hidden');
-            
-            // إخفاء الفقاعة بعد 10 ثوانٍ
-            if (cinemaChatTimeout) {
-                clearTimeout(cinemaChatTimeout);
-            }
-            
-            cinemaChatTimeout = setTimeout(() => {
-                cinemaBubble.classList.add('hidden');
-            }, 10000);
-        }
-
-        function toggleMiniChat() {
-            const chatSection = document.getElementById('chatSection');
-            const miniToggle = document.getElementById('miniChatToggle');
-            
-            if (isCinemaMode) {
-                // في وضع السينما، نعرض فقاعة الدردشة مؤقتًا
-                showCinemaChatBubble();
-            } else {
-                // في الوضع العادي، نعرض/نخفي قسم الدردشة
-                chatSection.classList.toggle('hidden');
-                
-                if (chatSection.classList.contains('hidden')) {
-                    miniToggle.classList.remove('hidden');
-                } else {
-                    miniToggle.classList.add('hidden');
-                    chatUnreadCount = 0;
-                    updateChatNotification();
-                }
-            }
-        }
-
-        // ============================================
-        // 8. ONLINE PRESENCE FUNCTIONS
+        // 7. ONLINE PRESENCE FUNCTIONS
         // ============================================
         function startUsersListener() {
             roomRef.collection('users')
@@ -1500,7 +1195,7 @@
         }
 
         // ============================================
-        // 9. VIDEO HISTORY FUNCTIONS
+        // 8. VIDEO HISTORY FUNCTIONS
         // ============================================
         async function loadPartyHistory() {
             try {
@@ -1632,7 +1327,7 @@
         }
 
         // ============================================
-        // 10. VIDEO LOADING FUNCTIONS
+        // 9. VIDEO LOADING FUNCTIONS
         // ============================================
         function loadVideoFromInput() {
             const url = document.getElementById('videoUrlInput').value.trim();
@@ -1722,7 +1417,7 @@
         }
 
         // ============================================
-        // 11. UI CONTROLS & EVENT LISTENERS
+        // 10. UI CONTROLS & EVENT LISTENERS
         // ============================================
         function setupEventListeners() {
             // تحميل الفيديو
@@ -1749,24 +1444,9 @@
             
             // أزرار الدردشة
             document.getElementById('clearChatBtn').addEventListener('click', clearChat);
-            document.getElementById('minimizeChatBtn').addEventListener('click', () => {
-                document.getElementById('chatSection').classList.add('hidden');
-                document.getElementById('miniChatToggle').classList.remove('hidden');
-            });
-            
-            // زر الدردشة المصغرة
-            document.getElementById('miniChatToggle').addEventListener('click', toggleMiniChat);
-            
-            // وضع السينما
-            document.getElementById('cinemaModeBtn').addEventListener('click', toggleCinemaMode);
             
             // سجل المشاهدة
             document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
-            
-            // إغلاق فقاعة الدردشة في وضع السينما
-            document.getElementById('cinemaChatBubble').addEventListener('click', () => {
-                document.getElementById('cinemaChatBubble').classList.add('hidden');
-            });
         }
 
         function updateTimeDisplay() {
@@ -1786,27 +1466,8 @@
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
-        function updateViewBasedOnScreenSize() {
-            const wasMobileView = isMobileView;
-            isMobileView = window.innerWidth < 768;
-            
-            if (wasMobileView !== isMobileView) {
-                console.log(`🔄 تغيير العرض: ${isMobileView ? 'جوال' : 'كمبيوتر'}`);
-                
-                // إذا كنا في وضع السينما، نعدل التصميم بناءً على حجم الشاشة
-                if (isCinemaMode) {
-                    const appWrapper = document.getElementById('appWrapper');
-                    if (isMobileView) {
-                        appWrapper.classList.remove('desktop-layout');
-                    } else {
-                        appWrapper.classList.add('desktop-layout');
-                    }
-                }
-            }
-        }
-
         // ============================================
-        // 12. START APPLICATION & CLEANUP
+        // 11. START APPLICATION & CLEANUP
         // ============================================
         window.addEventListener('load', initializeApp);
 
@@ -1821,15 +1482,11 @@
                 clearInterval(manualSeekInterval);
             }
             
-            if (cinemaChatTimeout) {
-                clearTimeout(cinemaChatTimeout);
-            }
-            
             console.log("👋 إغلاق التطبيق");
         });
 
         // ============================================
-        // 13. ADDITIONAL UI ENHANCEMENTS
+        // 12. ADDITIONAL UI ENHANCEMENTS
         // ============================================
         // إضافة تأثيرات عند تحميل العناصر
         document.addEventListener('DOMContentLoaded', () => {
