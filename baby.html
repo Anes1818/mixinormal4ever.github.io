@@ -1692,7 +1692,25 @@
                 startUsersListener();
                 
                 // Load history
-                loadPartyHistory();
+             // في دالة initializeApp، استبدل loadPartyHistory() بهذا:
+async function loadHistoryOnStart() {
+    // انتظر ثانية لتحميل بقية التطبيق أولاً
+    setTimeout(async () => {
+        await loadPartyHistory();
+        
+        // تحقق من وجود أي فيديو في السجل وإظهار رسالة
+        const historyGrid = document.getElementById('historyGrid');
+        if (historyGrid.children.length === 0) {
+            console.log('📝 History is empty, showing placeholder');
+        } else {
+            console.log(`📝 Loaded ${historyGrid.children.length} items from history`);
+        }
+    }, 1500);
+}
+
+// ثم في initializeApp، بدلاً من loadPartyHistory():
+// Load history
+loadHistoryOnStart();
                 
                 // Initialize chat video background
                 setTimeout(() => {
@@ -2379,176 +2397,224 @@
 
         // ============================================
         // VIDEO HISTORY FUNCTIONS - UPDATED
-        // ============================================
-        async function loadPartyHistory() {
-            try {
-                const snapshot = await historyRef.get();
-                const historyGrid = document.getElementById('historyGrid');
-                
-                if (snapshot.empty) {
-                    historyGrid.innerHTML = `
-                        <div style="text-align:center; padding: 2rem; color: var(--text-muted); grid-column: 1/-1;">
-                            <i class="fas fa-history" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                            <p>No videos in history yet</p>
-                        </div>
-                    `;
-                    return;
-                }
-                
-                historyGrid.innerHTML = '';
-                
-                // Process in order
-                const historyData = [];
-                snapshot.forEach(doc => {
-                    historyData.push(doc.data());
-                });
-                
-                // Sort by date (newest first)
-                historyData.sort((a, b) => {
-                    return b.addedAt?.toDate() - a.addedAt?.toDate();
-                });
-                
-                // Add each video to history
-                for (const video of historyData) {
-                    await addVideoToHistory(video);
-                }
-                
-            } catch (error) {
-                console.error('❌ Error loading history:', error);
-            }
-        }
-
-        async function addVideoToHistory(video) {
-            const historyGrid = document.getElementById('historyGrid');
-            
-            const card = document.createElement('div');
-            card.className = 'history-card';
-            card.dataset.videoId = video.videoId;
-            card.dataset.videoType = video.type || 'youtube';
-            
-            let videoTitle = video.title || 'Video';
-            let addedDate = 'Unknown';
-            let thumbnail = '';
-            
-            // Format date
-            if (video.addedAt) {
-                const date = video.addedAt.toDate();
-                addedDate = date.toLocaleDateString('en-US', {
-                    month: 'short',
-                    day: 'numeric',
-                    year: 'numeric'
-                });
-            }
-            
-            // Set thumbnail based on video type
-            if (video.type === 'mp4') {
-                thumbnail = 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80';
-            } else {
-                thumbnail = `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`;
-            }
-            
-            const typeBadge = video.type === 'mp4' ? 
-                '<div class="history-type-badge mp4">MP4</div>' : 
-                '<div class="history-type-badge youtube">YouTube</div>';
-            
-            card.innerHTML = `
-                ${typeBadge}
-                <img src="${thumbnail}" 
-                     alt="${videoTitle}" 
-                     class="history-thumb"
-                     onerror="this.src='https://via.placeholder.com/320x180/333/fff?text=No+Thumbnail'">
-                <div class="history-info">
-                    <div class="history-video-title">${videoTitle}</div>
-                    <div class="history-meta">
-                        <span><i class="far fa-calendar"></i> ${addedDate}</span>
-                        <span><i class="fas fa-${video.type === 'mp4' ? 'video' : 'youtube'}"></i> ${video.type === 'mp4' ? 'MP4' : 'YouTube'}</span>
-                    </div>
+      // ============================================
+// VIDEO HISTORY FUNCTIONS - FIXED
+// ============================================
+async function loadPartyHistory() {
+    try {
+        const snapshot = await historyRef.get();
+        const historyGrid = document.getElementById('historyGrid');
+        
+        if (snapshot.empty) {
+            historyGrid.innerHTML = `
+                <div style="text-align:center; padding: 2rem; color: var(--text-muted); grid-column: 1/-1;">
+                    <i class="fas fa-history" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                    <p>No videos in history yet</p>
                 </div>
             `;
-            
-            card.addEventListener('click', () => {
-                if (video.type === 'mp4') {
-                    loadMP4Video(video.videoId, video.src || video.videoId, video.title);
-                } else {
-                    loadVideoFromId(video.videoId);
-                }
+            return;
+        }
+        
+        historyGrid.innerHTML = '';
+        
+        // Process in order (already sorted by addedAt desc in query)
+        const historyData = [];
+        snapshot.forEach(doc => {
+            const data = doc.data();
+            data.id = doc.id; // Save document ID
+            historyData.push(data);
+        });
+        
+        // Add each video to history
+        for (const video of historyData) {
+            await addVideoToHistory(video);
+        }
+        
+    } catch (error) {
+        console.error('❌ Error loading history:', error);
+    }
+}
+
+async function addVideoToHistory(video) {
+    const historyGrid = document.getElementById('historyGrid');
+    
+    const card = document.createElement('div');
+    card.className = 'history-card';
+    card.dataset.videoId = video.videoId;
+    card.dataset.videoType = video.type || 'youtube';
+    card.dataset.src = video.src || video.videoId;
+    
+    let videoTitle = video.title || 'Video';
+    let addedDate = 'Unknown';
+    let thumbnail = '';
+    
+    // Format date
+    if (video.addedAt) {
+        try {
+            const date = video.addedAt.toDate ? video.addedAt.toDate() : new Date(video.addedAt);
+            addedDate = date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
             });
-            
-            historyGrid.appendChild(card);
+        } catch (e) {
+            console.log('Date formatting error:', e);
+            addedDate = 'Recently';
         }
+    }
+    
+    // Set thumbnail based on video type
+    if (video.type === 'mp4') {
+        thumbnail = 'https://i.postimg.cc/XJTh4jLH/da0449f4-cb13-47a9-8f46-334ed864a324-home-alone-2.jpg';
+    } else if (video.videoId) {
+        // YouTube video - use YouTube thumbnail
+        thumbnail = `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`;
+    } else {
+        // Fallback
+        thumbnail = 'https://via.placeholder.com/320x180/333/fff?text=Video';
+    }
+    
+    const typeBadge = (video.type === 'mp4') ? 
+        '<div class="history-type-badge mp4">MP4</div>' : 
+        '<div class="history-type-badge youtube">YouTube</div>';
+    
+    card.innerHTML = `
+        ${typeBadge}
+        <img src="${thumbnail}" 
+             alt="${videoTitle}" 
+             class="history-thumb"
+             onerror="this.onerror=null; this.src='https://via.placeholder.com/320x180/333/fff?text=No+Thumbnail'">
+        <div class="history-info">
+            <div class="history-video-title">${videoTitle}</div>
+            <div class="history-meta">
+                <span><i class="far fa-calendar"></i> ${addedDate}</span>
+                <span><i class="fas fa-${video.type === 'mp4' ? 'video' : 'youtube'}"></i> ${video.type === 'mp4' ? 'MP4' : 'YouTube'}</span>
+            </div>
+        </div>
+    `;
+    
+    card.addEventListener('click', () => {
+        if (video.type === 'mp4') {
+            loadMP4Video(video.videoId || video.id || 'mp4-video', 
+                        video.src || video.videoId, 
+                        video.title || 'MP4 Video');
+        } else {
+            // YouTube video
+            if (video.videoId && video.videoId.length === 11) {
+                loadVideoFromId(video.videoId);
+            } else if (video.id && video.id.length === 11) {
+                loadVideoFromId(video.id);
+            } else if (video.src && video.src.length === 11) {
+                loadVideoFromId(video.src);
+            } else {
+                console.error('Invalid YouTube video ID:', video);
+                alert('Cannot load this video - invalid ID');
+            }
+        }
+    });
+    
+    historyGrid.appendChild(card);
+}
 
-        async function addToHistory(videoId, title, type = "youtube", src = null) {
-            if (!videoId) return;
+async function addToHistory(videoId, title, type = "youtube", src = null) {
+    if (!videoId) {
+        console.error('Cannot add to history: videoId is null');
+        return;
+    }
+    
+    try {
+        // Generate a consistent ID for checking duplicates
+        const historyId = type === "youtube" ? `yt_${videoId}` : `mp4_${videoId}`;
+        
+        // Check if video already exists in history (by videoId and type)
+        const existing = await historyRef.where('videoId', '==', videoId).where('type', '==', type).get();
+        
+        if (!existing.empty) {
+            console.log(`Video ${videoId} (${type}) already in history`);
             
+            // Update the timestamp if it exists
+            const doc = existing.docs[0];
+            await doc.ref.update({
+                lastPlayed: firebase.firestore.FieldValue.serverTimestamp()
+            });
+            return;
+        }
+        
+        // For YouTube videos, fetch title if not provided
+        if (type === "youtube" && (!title || title === 'Loading...' || title === 'Video')) {
             try {
-                // Check if video already exists in history
-                const existing = await historyRef.where('videoId', '==', videoId).get();
-                if (!existing.empty) {
-                    console.log(`Video ${videoId} already in history`);
-                    return;
+                const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${videoId}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    title = data.title || `YouTube Video (${videoId})`;
+                    console.log(`✅ Fetched YouTube title: ${title}`);
                 }
-                
-                // For YouTube videos, fetch title if not provided
-                if (type === "youtube" && !title) {
-                    try {
-                        const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${videoId}`);
-                        if (response.ok) {
-                            const data = await response.json();
-                            title = data.title || '';
-                        }
-                    } catch (e) {
-                        console.error('Error fetching video info:', e);
-                    }
-                }
-                
-                // For MP4 videos, use provided title
-                if (type === "mp4" && !title) {
-                    title = "MP4 Video";
-                }
-                
-                // Add to history
-                await roomRef.collection('history').add({
-                    videoId: videoId,
-                    type: type,
-                    src: src || videoId,
-                    title: title,
-                    addedAt: firebase.firestore.FieldValue.serverTimestamp()
-                });
-                
-                console.log(`✅ Added ${videoId} (${type}) to history`);
-                
-                // Update history display
-                loadPartyHistory();
-                
-            } catch (error) {
-                console.error('❌ Error adding video to history:', error);
+            } catch (e) {
+                console.error('Error fetching YouTube video info:', e);
+                title = `YouTube Video (${videoId})`;
             }
         }
+        
+        // For MP4 videos, use provided title or default
+        if (type === "mp4" && (!title || title === 'Loading...')) {
+            title = title || "MP4 Video";
+        }
+        
+        // Prepare data for history
+        const historyData = {
+            videoId: videoId,
+            type: type,
+            title: title,
+            addedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            lastPlayed: firebase.firestore.FieldValue.serverTimestamp()
+        };
+        
+        // Add src for MP4 videos
+        if (type === "mp4" && src) {
+            historyData.src = src;
+        } else if (type === "youtube") {
+            historyData.src = `https://youtube.com/watch?v=${videoId}`;
+        }
+        
+        // Add to history
+        await roomRef.collection('history').add(historyData);
+        
+        console.log(`✅ Added ${videoId} (${type}) to history: ${title}`);
+        
+        // Update history display
+        setTimeout(() => {
+            loadPartyHistory();
+        }, 500);
+        
+    } catch (error) {
+        console.error('❌ Error adding video to history:', error);
+    }
+}
 
-        async function clearHistory() {
-            if (!confirm('Are you sure you want to clear all watch history? This cannot be undone.')) {
-                return;
-            }
-            
-            try {
-                const history = await historyRef.get();
-                const batch = db.batch();
-                
-                history.docs.forEach((doc) => {
-                    batch.delete(doc.ref);
-                });
-                
-                await batch.commit();
-                console.log('✅ History cleared');
-                
-                // Update UI
-                loadPartyHistory();
-                
-            } catch (error) {
-                console.error('❌ Error clearing history:', error);
-                alert('Error clearing watch history.');
-            }
-        }
+async function clearHistory() {
+    if (!confirm('Are you sure you want to clear all watch history? This cannot be undone.')) {
+        return;
+    }
+    
+    try {
+        const history = await historyRef.get();
+        const batch = db.batch();
+        
+        history.docs.forEach((doc) => {
+            batch.delete(doc.ref);
+        });
+        
+        await batch.commit();
+        console.log('✅ History cleared');
+        
+        // Update UI
+        loadPartyHistory();
+        
+    } catch (error) {
+        console.error('❌ Error clearing history:', error);
+        alert('Error clearing watch history.');
+    }
+}
 
         // ============================================
         // VIDEO LOADING FUNCTIONS - UPDATED
