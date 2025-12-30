@@ -834,105 +834,148 @@
         }
 
         /* ===== CINEMA MODE - MOBILE (Video fixed, chat attached, input fixed) ===== */
-        @media (max-width: 767px) {
-            .cinema-mode .app-wrapper {
-                max-width: 100%;
-                margin: 56px 0 0;
-                padding: 0;
-                display: flex;
-                flex-direction: column;
-                height: calc(100vh - 56px);
-            }
-            
-            .cinema-mode .player-section {
-                position: relative;
-                width: 100%;
-                height: calc(100vw * 9 / 16); /* 16:9 based on width */
-                flex-shrink: 0;
-                border-radius: 0;
-                z-index: 10;
-            }
-            
-            .cinema-mode .player-container {
-                padding-bottom: 0;
-                height: 100%;
-            }
-            
-            .cinema-mode .chat-section {
-                flex: 1;
-                margin-top: 0;
-                margin-left: 0;
-                margin-right: 0;
-                height: calc(100vh - (100vw * 9 / 16 + 56px));
-                border-radius: 0;
-                border-left: none;
-                border-right: none;
-                border-bottom: none;
-                display: flex;
-                flex-direction: column;
-            }
-            
-            .cinema-mode .chat-header {
-                flex-shrink: 0;
-                padding: 16px 20px;
-            }
-            
-            .cinema-mode .messages-container {
-                flex: 1;
-                padding: 20px;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
-                min-height: 0; /* Important for flex scroll */
-            }
-            
-            .cinema-mode .chat-input-container {
-                flex-shrink: 0;
-                padding: 16px 20px;
-                background: rgba(13, 13, 23, 0.9);
-                backdrop-filter: blur(20px);
-                border-top: 1px solid rgba(255, 255, 255, 0.1);
-                position: sticky;
-                bottom: 0;
-                width: 100%;
-            }
-            
-            .cinema-mode .video-input-section,
-            .cinema-mode .history-section {
-                display: none;
-            }
-            
-            /* Adjust message margins for mobile cinema */
-            .cinema-mode .message.my-message {
-                margin-left: 20px;
-                margin-right: 0;
-            }
-            
-            .cinema-mode .message.their-message {
-                margin-right: 20px;
-                margin-left: 0;
-            }
-            
-            /* In cinema mode, reduce background opacity slightly */
-            .cinema-mode .chat-video-bg.active {
-                opacity: 0.3;
-            }
-            
-            /* Mobile typing mode */
-            .chat-section.typing-mode .messages-container {
-                padding-bottom: 100px; /* Extra space for input */
-                opacity: 0.5;
-            }
-            
-            .chat-section.typing-mode .chat-header {
-                opacity: 0.3;
-            }
-            
-            /* Make sure video stays fixed during typing */
-            .chat-section.typing-mode + .player-section {
-                z-index: 5; /* Below the chat input */
-            }
-        }
-
+    /* ===== CINEMA MODE - MOBILE (Video FIXED on top, chat below, input fixed) ===== */
+@media (max-width: 767px) {
+    .cinema-mode .app-wrapper {
+        max-width: 100%;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        flex-direction: column;
+        height: 100vh;
+        overflow: hidden;
+    }
+    
+    .cinema-mode .player-section {
+        position: fixed;
+        top: 56px; /* تحت التوب بار مباشرة */
+        left: 0;
+        right: 0;
+        width: 100%;
+        height: calc(100vw * 9 / 16); /* 16:9 نسبة العرض إلى الارتفاع */
+        flex-shrink: 0;
+        border-radius: 0;
+        z-index: 100;
+        background: #000;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+    }
+    
+    .cinema-mode .player-container {
+        padding-bottom: 0;
+        height: 100%;
+    }
+    
+    .cinema-mode .player-controls-bar {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(0, 0, 0, 0.7);
+        backdrop-filter: blur(10px);
+        z-index: 101;
+    }
+    
+    .cinema-mode .chat-section {
+        margin-top: calc(100vw * 9 / 16 + 56px); /* يبدأ تحت الفيديو والتوب بار */
+        height: calc(100vh - (100vw * 9 / 16 + 56px));
+        border-radius: 0;
+        border-left: none;
+        border-right: none;
+        border-bottom: none;
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        z-index: 1;
+        background: rgba(13, 13, 23, 0.9);
+    }
+    
+    .cinema-mode .chat-header {
+        flex-shrink: 0;
+        padding: 16px 20px;
+        position: sticky;
+        top: 0;
+        z-index: 2;
+        background: rgba(13, 13, 23, 0.9);
+        backdrop-filter: blur(20px);
+    }
+    
+    .cinema-mode .messages-container {
+        flex: 1;
+        padding: 20px;
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+        min-height: 0;
+        padding-bottom: 100px; /* مساحة لحقل الإدخال الثابت */
+    }
+    
+    .cinema-mode .chat-input-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(13, 13, 23, 0.95);
+        backdrop-filter: blur(20px);
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 16px 20px;
+        z-index: 1000;
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.3);
+    }
+    
+    .cinema-mode .video-input-section,
+    .cinema-mode .history-section {
+        display: none;
+    }
+    
+    /* تعديل الهوامش للرسائل */
+    .cinema-mode .message.my-message {
+        margin-left: 20px;
+        margin-right: 0;
+    }
+    
+    .cinema-mode .message.their-message {
+        margin-right: 20px;
+        margin-left: 0;
+    }
+    
+    /* في وضع السينما، تقليل عتامة خلفية الفيديو */
+    .cinema-mode .chat-video-bg.active {
+        opacity: 0.25;
+    }
+    
+    /* وضع الكتابة على الجوال - الفيديو يبقى ثابتًا */
+    .chat-section.typing-mode {
+        /* لا تغيير في الفيديو، فقط الشات */
+    }
+    
+    .chat-section.typing-mode .chat-input-container {
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: rgba(13, 13, 23, 0.98);
+        backdrop-filter: blur(25px);
+        border-top: 1px solid var(--accent-romantic);
+        z-index: 2000;
+        padding: 16px 20px;
+        box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+    }
+    
+    .chat-section.typing-mode .messages-container {
+        padding-bottom: 120px; /* مساحة أكبر للإدخال عند الكتابة */
+        opacity: 0.7;
+    }
+    
+    .chat-section.typing-mode .chat-header {
+        opacity: 0.5;
+    }
+    
+    /* تأكد من أن الفيديو يبقى في مكانه عند الكتابة */
+    .chat-section.typing-mode ~ .player-section {
+        position: fixed !important;
+        top: 56px !important;
+        z-index: 100 !important;
+    }
+}
         /* ===== RESPONSIVE DESIGN ===== */
         /* Desktop Layout - Normal Mode */
         @media (min-width: 1024px) {
