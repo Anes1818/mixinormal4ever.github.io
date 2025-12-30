@@ -277,6 +277,18 @@
             width: 100%;
             height: 100%;
             border: none;
+            transition: opacity 0.3s ease;
+        }
+
+        #mp4Player {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            background: #000;
+            display: none;
         }
 
         .player-placeholder {
@@ -644,8 +656,8 @@
             box-shadow: 0 0 24px rgba(255, 107, 157, 0.4);
         }
 
-        /* ===== HISTORY SECTION ===== */
-        .history-section {
+        /* ===== NEW OUR MOVIES SECTION ===== */
+        .our-movies-section {
             margin-top: 30px;
             animation: fadeIn 0.8s ease 0.4s both;
         }
@@ -689,6 +701,97 @@
             border-color: var(--accent-romantic);
         }
 
+        .movies-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 20px;
+        }
+
+        .movie-card {
+            background: var(--card-bg);
+            border-radius: var(--radius-xl);
+            overflow: hidden;
+            cursor: pointer;
+            transition: all var(--transition-normal);
+            border: 1px solid var(--glass-border);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-8px);
+            border-color: var(--accent-romantic);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .movie-type-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 10px;
+            border-radius: var(--radius-lg);
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 2;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .movie-type-badge.mp4 {
+            background: linear-gradient(135deg, #ff6b9d, #ff8e53);
+        }
+
+        .movie-type-badge.youtube {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+        }
+
+        .movie-thumb {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            transition: transform var(--transition-normal);
+        }
+
+        .movie-card:hover .movie-thumb {
+            transform: scale(1.08);
+        }
+
+        .movie-info {
+            padding: 18px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .movie-title {
+            font-size: 15px;
+            font-weight: 500;
+            margin-bottom: 10px;
+            line-height: 1.4;
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+
+        .movie-meta {
+            display: flex;
+            justify-content: space-between;
+            margin-top: auto;
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        /* ===== HISTORY SECTION ===== */
+        .history-section {
+            margin-top: 30px;
+            animation: fadeIn 0.8s ease 0.5s both;
+        }
+
         .history-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
@@ -705,12 +808,36 @@
             height: 100%;
             display: flex;
             flex-direction: column;
+            position: relative;
         }
 
         .history-card:hover {
             transform: translateY(-8px);
             border-color: var(--accent-romantic);
             box-shadow: var(--shadow-lg);
+        }
+
+        .history-type-badge {
+            position: absolute;
+            top: 12px;
+            right: 12px;
+            background: rgba(0, 0, 0, 0.8);
+            color: white;
+            padding: 4px 10px;
+            border-radius: var(--radius-lg);
+            font-size: 11px;
+            font-weight: 600;
+            z-index: 2;
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .history-type-badge.mp4 {
+            background: linear-gradient(135deg, #ff6b9d, #ff8e53);
+        }
+
+        .history-type-badge.youtube {
+            background: linear-gradient(135deg, #ff0000, #cc0000);
         }
 
         .history-thumb {
@@ -844,6 +971,7 @@
             }
             
             .cinema-mode .video-input-section,
+            .cinema-mode .our-movies-section,
             .cinema-mode .history-section {
                 display: none;
             }
@@ -873,6 +1001,10 @@
                 height: 600px;
             }
             
+            .our-movies-section {
+                grid-column: 1;
+            }
+            
             .history-section {
                 grid-column: 1;
             }
@@ -884,6 +1016,7 @@
                 max-width: 800px;
             }
             
+            .movies-grid,
             .history-grid {
                 grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
             }
@@ -909,6 +1042,7 @@
                 padding: 18px;
             }
             
+            .movies-grid,
             .history-grid {
                 grid-template-columns: 1fr;
             }
@@ -1000,11 +1134,23 @@
             <!-- Player Section -->
             <section class="player-section">
                 <div class="player-container">
+                    <!-- YouTube Player -->
                     <div id="youtubePlayer"></div>
+                    
+                    <!-- MP4 Player -->
+                    <video 
+                        id="mp4Player" 
+                        playsinline 
+                        controls 
+                        preload="metadata"
+                        style="display: none;">
+                        Your browser does not support the video tag.
+                    </video>
+                    
                     <div class="player-placeholder" id="playerPlaceholder">
                         <i class="fas fa-film placeholder-icon"></i>
                         <h2>Welcome to our cinema</h2>
-                        <p>Share a video link to start watching together</p>
+                        <p>Share a video link or choose from our movies</p>
                     </div>
                 </div>
                 
@@ -1063,6 +1209,37 @@
             </section>
         </div>
 
+        <!-- Our Movies Section -->
+        <section class="our-movies-section">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-film"></i>
+                    <span>Our Movies</span>
+                </div>
+            </div>
+            
+            <div class="movies-grid" id="moviesGrid">
+                <!-- Movie cards will be loaded here -->
+                <div class="movie-card" 
+                     data-type="mp4"
+                     data-src="https://pub-a1e215071f3845a291b927539859c4ca.r2.dev/movie.mp4"
+                     data-title="Home Alone – Lost in New York"
+                     data-id="home-alone-lost-in-ny">
+                    <div class="movie-type-badge mp4">MP4</div>
+                    <img src="https://i.postimg.cc/XJTh4jLH/da0449f4-cb13-47a9-8f46-334ed864a324-home-alone-2.jpg" 
+                         alt="Home Alone – Lost in New York" 
+                         class="movie-thumb">
+                    <div class="movie-info">
+                        <div class="movie-title">Home Alone – Lost in New York</div>
+                        <div class="movie-meta">
+                            <span><i class="fas fa-clock"></i> Movie</span>
+                            <span><i class="fas fa-video"></i> MP4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
         <!-- History Section -->
         <section class="history-section">
             <div class="section-header">
@@ -1092,7 +1269,7 @@
         let backgroundSyncInterval = null;
         let lastVideoId = null;
         let isBackgroundActive = false;
-        let backgroundSyncRate = 1000; // Sync every 1 second to save resources
+        let backgroundSyncRate = 1000;
         
         function initChatVideoBackground() {
             const chatVideoBg = document.getElementById('chatVideoBg');
@@ -1108,7 +1285,8 @@
         }
         
         function shouldBackgroundBeActive() {
-            if (!player || !currentVideoId) return false;
+            if (!currentVideo || currentVideo.type !== "youtube") return false;
+            if (!player) return false;
             
             const playerState = player.getPlayerState();
             const isPlaying = playerState === YT.PlayerState.PLAYING;
@@ -1120,7 +1298,7 @@
             }
             
             // Activate only when video is playing and not in mobile cinema mode
-            return isPlaying && currentVideoId;
+            return isPlaying && currentVideo.id;
         }
         
         function updateBackgroundVideoSync() {
@@ -1145,9 +1323,9 @@
             }
             
             // Update the background video with current video
-            if (currentVideoId && currentVideoId !== lastVideoId) {
-                updateBackgroundVideo(currentVideoId);
-                lastVideoId = currentVideoId;
+            if (currentVideo && currentVideo.type === "youtube" && currentVideo.id !== lastVideoId) {
+                updateBackgroundVideo(currentVideo.id);
+                lastVideoId = currentVideo.id;
             }
             
             // Start sync at a reduced rate to save resources
@@ -1160,13 +1338,13 @@
         }
         
         function syncBackgroundWithPlayer() {
-            if (!player || !chatVideoMirror || !currentVideoId || !isBackgroundActive) return;
+            if (!player || !chatVideoMirror || !currentVideo || currentVideo.type !== "youtube" || !isBackgroundActive) return;
             
             try {
                 // Update background video if video changed
-                if (currentVideoId !== lastVideoId) {
-                    updateBackgroundVideo(currentVideoId);
-                    lastVideoId = currentVideoId;
+                if (currentVideo.id !== lastVideoId) {
+                    updateBackgroundVideo(currentVideo.id);
+                    lastVideoId = currentVideo.id;
                 }
                 
                 // Get current time from main player
@@ -1428,7 +1606,7 @@
         };
 
         // ============================================
-        // REST OF THE ORIGINAL CODE
+        // REST OF THE ORIGINAL CODE + NEW MP4 SYSTEM
         // ============================================
         const firebaseConfig = {
             apiKey: "AIzaSyAJvohW3m1-sZAlrTjkv7UZqTLC6WigePo",
@@ -1444,13 +1622,20 @@
         const auth = firebase.auth();
 
         // ============================================
-        // APPLICATION STATE & VARIABLES
+        // APPLICATION STATE & VARIABLES - UPDATED
         // ============================================
         let player = null;
+        let mp4Player = null;
         let currentUser = null;
         const ROOM_ID = "cosmic_room_v1";
-        let currentVideoId = null;
-        let currentVideoTitle = "No video loaded";
+        
+        // UNIFIED VIDEO OBJECT
+        let currentVideo = {
+            type: null, // "youtube" or "mp4"
+            id: null,   // YouTube ID or MP4 identifier
+            src: null,  // YouTube ID or MP4 URL
+            title: "No video loaded"
+        };
         
         // Sync Engine Variables
         let isApplyingRemoteAction = false;
@@ -1472,7 +1657,7 @@
         let historyRef = null;
 
         // ============================================
-        // INITIALIZATION FUNCTION
+        // INITIALIZATION FUNCTION - UPDATED
         // ============================================
         async function initializeApp() {
             console.log("🚀 our watch 7afla :3 - Initializing");
@@ -1499,7 +1684,9 @@
                 
                 // Initialize components
                 loadYouTubePlayer();
+                setupMP4Player();
                 setupEventListeners();
+                setupMovieCards();
                 startVideoSyncListener();
                 startChatListener();
                 startUsersListener();
@@ -1530,6 +1717,206 @@
                 console.error('❌ App initialization failed:', error);
                 alert('App initialization error. Please refresh the page.');
             }
+        }
+
+        // ============================================
+        // MP4 PLAYER SYSTEM - NEW
+        // ============================================
+        function setupMP4Player() {
+            mp4Player = document.getElementById('mp4Player');
+            
+            if (!mp4Player) {
+                console.error('❌ MP4 player element not found');
+                return;
+            }
+            
+            // Setup MP4 player events
+            mp4Player.addEventListener('play', onMP4Play);
+            mp4Player.addEventListener('pause', onMP4Pause);
+            mp4Player.addEventListener('seeking', onMP4Seeking);
+            mp4Player.addEventListener('timeupdate', updateTimeDisplay);
+            mp4Player.addEventListener('loadedmetadata', onMP4Loaded);
+            mp4Player.addEventListener('ended', onMP4Ended);
+            
+            console.log('✅ MP4 player initialized');
+        }
+        
+        function onMP4Play() {
+            if (isApplyingRemoteAction) return;
+            
+            const now = Date.now();
+            if (now - lastLocalActionTime < 300) return;
+            
+            lastLocalActionTime = now;
+            sendVideoAction({
+                type: 'PLAY',
+                videoType: 'mp4',
+                videoId: currentVideo.id,
+                src: currentVideo.src,
+                timestamp: now,
+                updatedBy: currentUser.uid,
+                currentTime: mp4Player.currentTime
+            });
+        }
+        
+        function onMP4Pause() {
+            if (isApplyingRemoteAction) return;
+            
+            const now = Date.now();
+            if (now - lastLocalActionTime < 300) return;
+            
+            lastLocalActionTime = now;
+            sendVideoAction({
+                type: 'PAUSE',
+                videoType: 'mp4',
+                videoId: currentVideo.id,
+                src: currentVideo.src,
+                timestamp: now,
+                updatedBy: currentUser.uid,
+                currentTime: mp4Player.currentTime
+            });
+        }
+        
+        function onMP4Seeking() {
+            if (isApplyingRemoteAction) return;
+            
+            const now = Date.now();
+            if (now - lastLocalActionTime < 300) return;
+            
+            lastLocalActionTime = now;
+            sendVideoAction({
+                type: 'SEEK',
+                videoType: 'mp4',
+                videoId: currentVideo.id,
+                src: currentVideo.src,
+                timestamp: now,
+                updatedBy: currentUser.uid,
+                currentTime: mp4Player.currentTime
+            });
+        }
+        
+        function onMP4Loaded() {
+            console.log('✅ MP4 video loaded');
+            updateTimeDisplay();
+            document.getElementById('playerPlaceholder').style.display = 'none';
+            
+            // Update duration display
+            const duration = mp4Player.duration;
+            document.getElementById('duration').textContent = formatTime(duration);
+        }
+        
+        function onMP4Ended() {
+            console.log('🎬 MP4 video ended');
+            // Clean up background if active
+            cleanupBackgroundVideo();
+        }
+        
+        function switchToMP4Player() {
+            // Hide YouTube player, show MP4 player
+            const youtubePlayer = document.getElementById('youtubePlayer');
+            if (youtubePlayer) {
+                youtubePlayer.style.display = 'none';
+            }
+            
+            if (mp4Player) {
+                mp4Player.style.display = 'block';
+            }
+            
+            // Update play/pause button state
+            updateMP4PlayPauseButton();
+        }
+        
+        function switchToYouTubePlayer() {
+            // Hide MP4 player, show YouTube player
+            if (mp4Player) {
+                mp4Player.style.display = 'none';
+            }
+            
+            const youtubePlayer = document.getElementById('youtubePlayer');
+            if (youtubePlayer) {
+                youtubePlayer.style.display = 'block';
+            }
+            
+            // Update play/pause button state
+            if (player) {
+                updatePlayPauseButton(player.getPlayerState());
+            }
+        }
+        
+        function updateMP4PlayPauseButton() {
+            const btn = document.getElementById('playPauseBtn');
+            const icon = btn.querySelector('i');
+            
+            if (mp4Player && !mp4Player.paused) {
+                icon.className = 'fas fa-pause';
+            } else {
+                icon.className = 'fas fa-play';
+            }
+        }
+        
+        // ============================================
+        // MOVIE CARDS SETUP - NEW
+        // ============================================
+        function setupMovieCards() {
+            const movieCards = document.querySelectorAll('.movie-card');
+            
+            movieCards.forEach(card => {
+                card.addEventListener('click', () => {
+                    const type = card.getAttribute('data-type');
+                    const src = card.getAttribute('data-src');
+                    const title = card.getAttribute('data-title');
+                    const id = card.getAttribute('data-id') || src;
+                    
+                    loadMP4Video(id, src, title);
+                });
+            });
+        }
+        
+        function loadMP4Video(id, src, title) {
+            if (!mp4Player) return;
+            
+            // Update current video object
+            currentVideo = {
+                type: "mp4",
+                id: id,
+                src: src,
+                title: title
+            };
+            
+            lastLocalActionTime = Date.now();
+            lastKnownTime = 0;
+            
+            // Send load action to Firebase
+            sendVideoAction({
+                type: 'LOAD',
+                videoType: 'mp4',
+                videoId: id,
+                src: src,
+                title: title,
+                currentTime: 0,
+                timestamp: Date.now(),
+                updatedBy: currentUser.uid
+            });
+            
+            // Load and play the video
+            mp4Player.src = src;
+            mp4Player.load();
+            
+            // Switch to MP4 player
+            switchToMP4Player();
+            
+            // Update UI
+            document.getElementById('videoUrlInput').value = '';
+            document.getElementById('playerPlaceholder').style.display = 'none';
+            document.getElementById('playerTitle').textContent = title;
+            
+            // Add to history
+            addToHistory(id, title, 'mp4');
+            
+            console.log(`🎥 Loading MP4 video: ${title}`);
+            
+            // Clean up YouTube background
+            cleanupBackgroundVideo();
         }
 
         // ============================================
@@ -1580,7 +1967,7 @@
         }
 
         // ============================================
-        // YOUTUBE PLAYER FUNCTIONS
+        // YOUTUBE PLAYER FUNCTIONS - UPDATED
         // ============================================
         function loadYouTubePlayer() {
             if (window.YT && window.YT.Player) {
@@ -1637,7 +2024,8 @@
                 lastLocalActionTime = now;
                 sendVideoAction({
                     type: state === YT.PlayerState.PLAYING ? 'PLAY' : 'PAUSE',
-                    videoId: currentVideoId,
+                    videoType: 'youtube',
+                    videoId: currentVideo.id,
                     timestamp: now,
                     updatedBy: currentUser.uid,
                     currentTime: player.getCurrentTime()
@@ -1662,7 +2050,7 @@
         }
 
         // ============================================
-        // PERFECT SYNC ENGINE
+        // UNIFIED SYNC ENGINE - UPDATED
         // ============================================
         function startManualSeekDetection() {
             if (manualSeekInterval) clearInterval(manualSeekInterval);
@@ -1671,42 +2059,79 @@
             let previousState = -1;
             
             manualSeekInterval = setInterval(() => {
-                if (!player || isApplyingRemoteAction) return;
+                if (!currentVideo.type) return;
+                if (isApplyingRemoteAction) return;
 
-                const currentState = player.getPlayerState();
-                const currentTime = player.getCurrentTime();
                 const now = Date.now();
+                
+                if (currentVideo.type === "youtube" && player) {
+                    const currentState = player.getPlayerState();
+                    const currentTime = player.getCurrentTime();
 
-                if (currentState === YT.PlayerState.PLAYING) {
+                    if (currentState === YT.PlayerState.PLAYING) {
+                        previousTime = currentTime;
+                        previousState = currentState;
+                        return;
+                    }
+
+                    const timeDiff = Math.abs(currentTime - previousTime);
+                    const isManualSeek = timeDiff > SEEK_DETECT_THRESHOLD && 
+                                        currentState !== YT.PlayerState.BUFFERING &&
+                                        currentState !== YT.PlayerState.CUED &&
+                                        now - lastLocalActionTime > 300;
+
+                    if (isManualSeek && currentState === previousState) {
+                        lastLocalActionTime = now;
+                        sendVideoAction({
+                            type: 'SEEK',
+                            videoType: 'youtube',
+                            videoId: currentVideo.id,
+                            timestamp: now,
+                            updatedBy: currentUser.uid,
+                            currentTime: currentTime
+                        });
+                    }
+
                     previousTime = currentTime;
                     previousState = currentState;
-                    return;
                 }
-
-                const timeDiff = Math.abs(currentTime - previousTime);
-                const isManualSeek = timeDiff > SEEK_DETECT_THRESHOLD && 
-                                    currentState !== YT.PlayerState.BUFFERING &&
-                                    currentState !== YT.PlayerState.CUED &&
-                                    now - lastLocalActionTime > 300;
-
-                if (isManualSeek && currentState === previousState) {
-                    lastLocalActionTime = now;
-                    sendVideoAction({
-                        type: 'SEEK',
-                        videoId: currentVideoId,
-                        currentTime: currentTime,
-                        timestamp: now,
-                        updatedBy: currentUser.uid
-                    });
+                else if (currentVideo.type === "mp4" && mp4Player) {
+                    // MP4 seek detection
+                    const currentTime = mp4Player.currentTime;
+                    const isPlaying = !mp4Player.paused;
+                    
+                    // Simple seek detection for MP4
+                    if (!isPlaying) {
+                        const timeDiff = Math.abs(currentTime - previousTime);
+                        const isManualSeek = timeDiff > SEEK_DETECT_THRESHOLD && 
+                                            now - lastLocalActionTime > 300;
+                        
+                        if (isManualSeek) {
+                            lastLocalActionTime = now;
+                            sendVideoAction({
+                                type: 'SEEK',
+                                videoType: 'mp4',
+                                videoId: currentVideo.id,
+                                timestamp: now,
+                                updatedBy: currentUser.uid,
+                                currentTime: currentTime
+                            });
+                        }
+                    }
+                    
+                    previousTime = currentTime;
                 }
-
-                previousTime = currentTime;
-                previousState = currentState;
             }, 400);
         }
 
         function sendVideoAction(action) {
             if (!videoStateRef) return;
+
+            // Add video info to action
+            action.videoType = currentVideo.type;
+            action.videoId = currentVideo.id;
+            action.videoTitle = currentVideo.title;
+            action.src = currentVideo.src;
 
             videoStateRef.set({
                 ...action,
@@ -1716,7 +2141,7 @@
 
         function startVideoSyncListener() {
             videoStateRef.onSnapshot((doc) => {
-                if (!doc.exists || !player || isApplyingRemoteAction) return;
+                if (!doc.exists || isApplyingRemoteAction) return;
 
                 const data = doc.data();
                 if (!data || data.updatedBy === currentUser.uid) return;
@@ -1730,53 +2155,138 @@
         function applyRemoteAction(action) {
             isApplyingRemoteAction = true;
 
-            switch (action.type) {
-                case 'LOAD':
-                    if (action.videoId && action.videoId !== currentVideoId) {
-                        currentVideoId = action.videoId;
-                        player.loadVideoById(action.videoId, action.currentTime || 0);
-                        document.getElementById('videoUrlInput').value = `https://youtu.be/${action.videoId}`;
-                        updateVideoTitle(action.videoId);
-                        addToHistory(action.videoId);
-                        lastKnownTime = 0;
-                        
-                        // Update background video
-                        updateBackgroundVideo(action.videoId);
-                    }
-                    break;
+            try {
+                switch (action.type) {
+                    case 'LOAD':
+                        handleLoadAction(action);
+                        break;
 
-                case 'PLAY':
-                    const currentTimeOnPlay = player.getCurrentTime();
-                    if (Math.abs(currentTimeOnPlay - (action.currentTime || 0)) > SYNC_TOLERANCE) {
-                        player.seekTo(action.currentTime || 0, true);
-                    }
-                    if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
-                        player.playVideo();
-                    }
-                    break;
+                    case 'PLAY':
+                        handlePlayAction(action);
+                        break;
 
-                case 'PAUSE':
-                    const currentTimeOnPause = player.getCurrentTime();
-                    if (Math.abs(currentTimeOnPause - (action.currentTime || 0)) > SYNC_TOLERANCE) {
-                        player.seekTo(action.currentTime || 0, true);
-                    }
-                    if (player.getPlayerState() !== YT.PlayerState.PAUSED) {
-                        player.pauseVideo();
-                    }
-                    break;
+                    case 'PAUSE':
+                        handlePauseAction(action);
+                        break;
 
-                case 'SEEK':
-                    const ct = player.getCurrentTime();
-                    if (Math.abs(ct - action.currentTime) > SYNC_TOLERANCE) {
-                        player.seekTo(action.currentTime, true);
-                    }
-                    break;
+                    case 'SEEK':
+                        handleSeekAction(action);
+                        break;
+                }
+            } catch (error) {
+                console.error('❌ Error applying remote action:', error);
             }
 
             setTimeout(() => {
                 isApplyingRemoteAction = false;
-                lastKnownTime = player.getCurrentTime();
+                
+                // Update last known time based on current player
+                if (currentVideo.type === "youtube" && player) {
+                    lastKnownTime = player.getCurrentTime();
+                } else if (currentVideo.type === "mp4" && mp4Player) {
+                    lastKnownTime = mp4Player.currentTime;
+                }
             }, 200);
+        }
+        
+        function handleLoadAction(action) {
+            // Update current video object
+            currentVideo = {
+                type: action.videoType,
+                id: action.videoId,
+                src: action.src,
+                title: action.videoTitle || action.title || "Video"
+            };
+            
+            document.getElementById('playerTitle').textContent = currentVideo.title;
+            document.getElementById('playerPlaceholder').style.display = 'none';
+            
+            if (action.videoType === "youtube") {
+                // Load YouTube video
+                if (player) {
+                    player.loadVideoById(action.videoId, action.currentTime || 0);
+                }
+                document.getElementById('videoUrlInput').value = `https://youtu.be/${action.videoId}`;
+                switchToYouTubePlayer();
+                
+                // Update background video
+                updateBackgroundVideo(action.videoId);
+            } 
+            else if (action.videoType === "mp4") {
+                // Load MP4 video
+                if (mp4Player) {
+                    mp4Player.src = action.src;
+                    mp4Player.load();
+                    if (action.currentTime > 0) {
+                        mp4Player.currentTime = action.currentTime;
+                    }
+                }
+                document.getElementById('videoUrlInput').value = '';
+                switchToMP4Player();
+                
+                // Clean up background video for MP4
+                cleanupBackgroundVideo();
+            }
+            
+            addToHistory(action.videoId, currentVideo.title, action.videoType);
+            lastKnownTime = 0;
+        }
+        
+        function handlePlayAction(action) {
+            if (action.videoType === "youtube" && player) {
+                const currentTimeOnPlay = player.getCurrentTime();
+                if (Math.abs(currentTimeOnPlay - (action.currentTime || 0)) > SYNC_TOLERANCE) {
+                    player.seekTo(action.currentTime || 0, true);
+                }
+                if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                    player.playVideo();
+                }
+            } 
+            else if (action.videoType === "mp4" && mp4Player) {
+                const currentTimeOnPlay = mp4Player.currentTime;
+                if (Math.abs(currentTimeOnPlay - (action.currentTime || 0)) > SYNC_TOLERANCE) {
+                    mp4Player.currentTime = action.currentTime || 0;
+                }
+                if (mp4Player.paused) {
+                    mp4Player.play();
+                }
+            }
+        }
+        
+        function handlePauseAction(action) {
+            if (action.videoType === "youtube" && player) {
+                const currentTimeOnPause = player.getCurrentTime();
+                if (Math.abs(currentTimeOnPause - (action.currentTime || 0)) > SYNC_TOLERANCE) {
+                    player.seekTo(action.currentTime || 0, true);
+                }
+                if (player.getPlayerState() !== YT.PlayerState.PAUSED) {
+                    player.pauseVideo();
+                }
+            } 
+            else if (action.videoType === "mp4" && mp4Player) {
+                const currentTimeOnPause = mp4Player.currentTime;
+                if (Math.abs(currentTimeOnPause - (action.currentTime || 0)) > SYNC_TOLERANCE) {
+                    mp4Player.currentTime = action.currentTime || 0;
+                }
+                if (!mp4Player.paused) {
+                    mp4Player.pause();
+                }
+            }
+        }
+        
+        function handleSeekAction(action) {
+            if (action.videoType === "youtube" && player) {
+                const ct = player.getCurrentTime();
+                if (Math.abs(ct - action.currentTime) > SYNC_TOLERANCE) {
+                    player.seekTo(action.currentTime, true);
+                }
+            } 
+            else if (action.videoType === "mp4" && mp4Player) {
+                const ct = mp4Player.currentTime;
+                if (Math.abs(ct - action.currentTime) > SYNC_TOLERANCE) {
+                    mp4Player.currentTime = action.currentTime;
+                }
+            }
         }
 
         // ============================================
@@ -1868,7 +2378,7 @@
         }
 
         // ============================================
-        // VIDEO HISTORY FUNCTIONS - FIXED
+        // VIDEO HISTORY FUNCTIONS - UPDATED
         // ============================================
         async function loadPartyHistory() {
             try {
@@ -1914,24 +2424,11 @@
             const card = document.createElement('div');
             card.className = 'history-card';
             card.dataset.videoId = video.videoId;
+            card.dataset.videoType = video.type || 'youtube';
             
             let videoTitle = video.title || 'Video';
             let addedDate = 'Unknown';
-            
-            // If title is missing, fetch it
-            if (!video.title || video.title === '') {
-                try {
-                    const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${video.videoId}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        videoTitle = data.title || 'Video';
-                    }
-                } catch (e) {
-                    console.error('Error fetching video title:', e);
-                }
-            } else {
-                videoTitle = video.title;
-            }
+            let thumbnail = '';
             
             // Format date
             if (video.addedAt) {
@@ -1943,8 +2440,20 @@
                 });
             }
             
+            // Set thumbnail based on video type
+            if (video.type === 'mp4') {
+                thumbnail = 'https://images.unsplash.com/photo-1536440136628-849c177e76a1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=500&q=80';
+            } else {
+                thumbnail = `https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg`;
+            }
+            
+            const typeBadge = video.type === 'mp4' ? 
+                '<div class="history-type-badge mp4">MP4</div>' : 
+                '<div class="history-type-badge youtube">YouTube</div>';
+            
             card.innerHTML = `
-                <img src="https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg" 
+                ${typeBadge}
+                <img src="${thumbnail}" 
                      alt="${videoTitle}" 
                      class="history-thumb"
                      onerror="this.src='https://via.placeholder.com/320x180/333/fff?text=No+Thumbnail'">
@@ -1952,18 +2461,23 @@
                     <div class="history-video-title">${videoTitle}</div>
                     <div class="history-meta">
                         <span><i class="far fa-calendar"></i> ${addedDate}</span>
+                        <span><i class="fas fa-${video.type === 'mp4' ? 'video' : 'youtube'}"></i> ${video.type === 'mp4' ? 'MP4' : 'YouTube'}</span>
                     </div>
                 </div>
             `;
             
             card.addEventListener('click', () => {
-                loadVideoFromId(video.videoId);
+                if (video.type === 'mp4') {
+                    loadMP4Video(video.videoId, video.src || video.videoId, video.title);
+                } else {
+                    loadVideoFromId(video.videoId);
+                }
             });
             
             historyGrid.appendChild(card);
         }
 
-        async function addToHistory(videoId) {
+        async function addToHistory(videoId, title, type = "youtube", src = null) {
             if (!videoId) return;
             
             try {
@@ -1974,27 +2488,34 @@
                     return;
                 }
                 
-                let videoTitle = '';
-                
-                // Fetch video title
-                try {
-                    const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${videoId}`);
-                    if (response.ok) {
-                        const data = await response.json();
-                        videoTitle = data.title || '';
+                // For YouTube videos, fetch title if not provided
+                if (type === "youtube" && !title) {
+                    try {
+                        const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${videoId}`);
+                        if (response.ok) {
+                            const data = await response.json();
+                            title = data.title || '';
+                        }
+                    } catch (e) {
+                        console.error('Error fetching video info:', e);
                     }
-                } catch (e) {
-                    console.error('Error fetching video info:', e);
+                }
+                
+                // For MP4 videos, use provided title
+                if (type === "mp4" && !title) {
+                    title = "MP4 Video";
                 }
                 
                 // Add to history
                 await roomRef.collection('history').add({
                     videoId: videoId,
-                    title: videoTitle,
+                    type: type,
+                    src: src || videoId,
+                    title: title,
                     addedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                console.log(`✅ Added ${videoId} to history`);
+                console.log(`✅ Added ${videoId} (${type}) to history`);
                 
                 // Update history display
                 loadPartyHistory();
@@ -2030,7 +2551,7 @@
         }
 
         // ============================================
-        // VIDEO LOADING FUNCTIONS
+        // VIDEO LOADING FUNCTIONS - UPDATED
         // ============================================
         function loadVideoFromInput() {
             const url = document.getElementById('videoUrlInput').value.trim();
@@ -2051,13 +2572,22 @@
         function loadVideoFromId(videoId) {
             if (!player) return;
 
-            currentVideoId = videoId;
+            // Update current video object
+            currentVideo = {
+                type: "youtube",
+                id: videoId,
+                src: videoId,
+                title: "Loading..."
+            };
+
             lastLocalActionTime = Date.now();
             lastKnownTime = 0;
 
             sendVideoAction({
                 type: 'LOAD',
+                videoType: 'youtube',
                 videoId: videoId,
+                src: videoId,
                 currentTime: 0,
                 timestamp: Date.now(),
                 updatedBy: currentUser.uid
@@ -2067,10 +2597,12 @@
             document.getElementById('videoUrlInput').value = `https://youtu.be/${videoId}`;
             document.getElementById('playerPlaceholder').style.display = 'none';
             
-            updateVideoTitle(videoId);
-            addToHistory(videoId);
+            switchToYouTubePlayer();
             
-            console.log(`🎥 Loading video: ${videoId}`);
+            updateVideoTitle(videoId);
+            addToHistory(videoId, null, 'youtube');
+            
+            console.log(`🎥 Loading YouTube video: ${videoId}`);
             
             // Update background video
             setTimeout(() => {
@@ -2083,13 +2615,13 @@
                 const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${videoId}`);
                 if (response.ok) {
                     const data = await response.json();
-                    currentVideoTitle = data.title || 'Untitled video';
-                    document.getElementById('playerTitle').textContent = currentVideoTitle;
+                    currentVideo.title = data.title || 'Untitled video';
+                    document.getElementById('playerTitle').textContent = currentVideo.title;
                 }
             } catch (e) {
                 console.error('Error fetching video title:', e);
-                currentVideoTitle = 'Video';
-                document.getElementById('playerTitle').textContent = currentVideoTitle;
+                currentVideo.title = 'Video';
+                document.getElementById('playerTitle').textContent = currentVideo.title;
             }
         }
 
@@ -2098,19 +2630,48 @@
                 const doc = await videoStateRef.get();
                 if (doc.exists && doc.data().videoId) {
                     const data = doc.data();
-                    currentVideoId = data.videoId;
-                    player.loadVideoById(data.videoId, data.currentTime || 0);
-                    document.getElementById('videoUrlInput').value = `https://youtu.be/${data.videoId}`;
+                    
+                    // Update current video object
+                    currentVideo = {
+                        type: data.videoType || "youtube",
+                        id: data.videoId,
+                        src: data.src || data.videoId,
+                        title: data.videoTitle || data.title || "Video"
+                    };
+                    
+                    document.getElementById('playerTitle').textContent = currentVideo.title;
+                    
+                    if (currentVideo.type === "youtube") {
+                        player.loadVideoById(data.videoId, data.currentTime || 0);
+                        document.getElementById('videoUrlInput').value = `https://youtu.be/${data.videoId}`;
+                        switchToYouTubePlayer();
+                        lastKnownTime = data.currentTime || 0;
+                        
+                        updateVideoTitle(data.videoId);
+                        
+                        // Update background video
+                        setTimeout(() => {
+                            updateBackgroundVideo(data.videoId);
+                            updateBackgroundVideoSync();
+                        }, 500);
+                    } 
+                    else if (currentVideo.type === "mp4") {
+                        if (mp4Player) {
+                            mp4Player.src = currentVideo.src;
+                            mp4Player.load();
+                            if (data.currentTime > 0) {
+                                mp4Player.currentTime = data.currentTime;
+                            }
+                        }
+                        document.getElementById('videoUrlInput').value = '';
+                        switchToMP4Player();
+                        lastKnownTime = data.currentTime || 0;
+                        
+                        // Clean up background for MP4
+                        cleanupBackgroundVideo();
+                    }
+                    
                     document.getElementById('playerPlaceholder').style.display = 'none';
-                    lastKnownTime = data.currentTime || 0;
-                    
-                    updateVideoTitle(data.videoId);
-                    
-                    // Update background video
-                    setTimeout(() => {
-                        updateBackgroundVideo(data.videoId);
-                        updateBackgroundVideoSync();
-                    }, 500);
                 }
             } catch (error) {
                 console.error('❌ Error loading last video:', error);
@@ -2133,7 +2694,7 @@
         }
 
         // ============================================
-        // UI CONTROLS & EVENT LISTENERS
+        // UI CONTROLS & EVENT LISTENERS - UPDATED
         // ============================================
         function setupEventListeners() {
             // Load video
@@ -2144,11 +2705,21 @@
             
             // Player controls
             document.getElementById('playPauseBtn').addEventListener('click', () => {
-                if (!player) return;
-                if (player.getPlayerState() === YT.PlayerState.PLAYING) {
-                    player.pauseVideo();
-                } else {
-                    player.playVideo();
+                if (!currentVideo.type) return;
+                
+                if (currentVideo.type === "youtube" && player) {
+                    if (player.getPlayerState() === YT.PlayerState.PLAYING) {
+                        player.pauseVideo();
+                    } else {
+                        player.playVideo();
+                    }
+                } 
+                else if (currentVideo.type === "mp4" && mp4Player) {
+                    if (mp4Player.paused) {
+                        mp4Player.play();
+                    } else {
+                        mp4Player.pause();
+                    }
                 }
                 
                 // Update background video state
@@ -2177,10 +2748,17 @@
         }
 
         function updateTimeDisplay() {
-            if (!player || !player.getCurrentTime) return;
+            let current = 0;
+            let duration = 0;
             
-            const current = player.getCurrentTime();
-            const duration = player.getDuration();
+            if (currentVideo.type === "youtube" && player && player.getCurrentTime) {
+                current = player.getCurrentTime();
+                duration = player.getDuration();
+            } 
+            else if (currentVideo.type === "mp4" && mp4Player) {
+                current = mp4Player.currentTime;
+                duration = mp4Player.duration;
+            }
             
             document.getElementById('currentTime').textContent = formatTime(current);
             document.getElementById('duration').textContent = formatTime(duration);
@@ -2229,6 +2807,11 @@
             
             // Clean up background video
             cleanupBackgroundVideo();
+            
+            // Pause MP4 player
+            if (mp4Player && !mp4Player.paused) {
+                mp4Player.pause();
+            }
             
             console.log("👋 Closing app");
         });
