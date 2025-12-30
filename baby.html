@@ -2,7 +2,7 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>our watch 7afla :3 | Couple Cinema</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -46,6 +46,12 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        html, body {
+            overscroll-behavior: none;
+            -webkit-overflow-scrolling: touch;
         }
 
         body {
@@ -58,6 +64,7 @@
             background-image: 
                 radial-gradient(circle at 0% 30%, rgba(179, 153, 255, 0.08) 0%, transparent 50%),
                 radial-gradient(circle at 100% 70%, rgba(255, 107, 157, 0.08) 0%, transparent 50%);
+            touch-action: pan-y;
         }
 
         /* ===== ANIMATIONS ===== */
@@ -250,7 +257,7 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* ===== PLAYER SECTION ===== */
+        /* ===== PLAYER SECTION - ALWAYS VISIBLE ===== */
         .player-section {
             position: relative;
             overflow: hidden;
@@ -258,6 +265,10 @@
             background: #000;
             animation: fadeIn 0.8s ease 0.2s both;
             box-shadow: var(--shadow-lg);
+            /* على الهواتف: نمنع الإخفاء عند فتح الكيبورد */
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .player-container {
@@ -360,7 +371,7 @@
             font-size: 14px;
         }
 
-        /* ===== CHAT SECTION - WITH DYNAMIC VIDEO BACKGROUND ===== */
+        /* ===== CHAT SECTION - OPTIMIZED FOR MOBILE KEYBOARD ===== */
         .chat-section {
             display: flex;
             flex-direction: column;
@@ -373,80 +384,39 @@
             animation: fadeIn 0.8s ease 0.3s both;
             box-shadow: var(--shadow-md);
             position: relative;
-            isolation: isolate; /* Creates new stacking context */
+            isolation: isolate;
         }
 
-        /* Video Background Layer for Chat */
+        /* تحسين خلفية الفيديو للأداء - نستخدم خلفية ثابتة بدلاً من فيديو مباشر */
         .chat-video-bg {
             position: absolute;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            z-index: -1; /* Behind everything */
-            pointer-events: none; /* Don't interfere with clicks */
+            z-index: -1;
+            pointer-events: none;
             overflow: hidden;
             border-radius: var(--radius-xl);
-            opacity: 0.4; /* Base opacity */
+            opacity: 0.15;
             transition: opacity 0.5s ease;
+            
+            /* خلفية ديناميكية متحركة بدون فيديو حقيقي */
+            background: 
+                linear-gradient(45deg, 
+                    rgba(255, 107, 157, 0.05) 0%, 
+                    rgba(179, 153, 255, 0.05) 25%,
+                    rgba(13, 13, 23, 0.1) 50%,
+                    rgba(255, 209, 102, 0.03) 75%,
+                    rgba(255, 107, 157, 0.05) 100%);
+            background-size: 400% 400%;
+            animation: gradientFlow 20s ease infinite;
         }
 
-        /* Main video mirror for chat background */
-        .chat-video-mirror {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            min-width: 100%;
-            min-height: 100%;
-            width: auto;
-            height: auto;
-            transform: translate(-50%, -50%);
-            object-fit: cover;
-            
-            /* Strong blur and color adjustments */
-            filter: blur(24px) saturate(0.7) brightness(0.8);
-            -webkit-filter: blur(24px) saturate(0.7) brightness(0.8);
-            
-            /* Scale up to hide blur edges */
-            transform: translate(-50%, -50%) scale(1.2);
-            
-            /* Ensure smooth animation */
-            will-change: transform;
-            
-            /* Hide the actual YouTube controls and UI */
-            opacity: 0.6;
-        }
-
-        /* Alternative backdrop-filter for browsers that support it */
-        .chat-video-bg::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            backdrop-filter: blur(20px) saturate(0.8) brightness(0.85);
-            -webkit-backdrop-filter: blur(20px) saturate(0.8) brightness(0.85);
-            border-radius: var(--radius-xl);
-        }
-
-        /* Gradient overlay for better text readability */
-        .chat-video-bg::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                to bottom,
-                rgba(13, 13, 23, 0.15) 0%,
-                rgba(13, 13, 23, 0.4) 30%,
-                rgba(13, 13, 23, 0.7) 70%,
-                rgba(13, 13, 23, 0.85) 100%
-            );
-            z-index: 1;
-            border-radius: var(--radius-xl);
+        @keyframes gradientFlow {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
         .chat-header {
@@ -457,7 +427,7 @@
             background: rgba(255, 255, 255, 0.04);
             border-bottom: 1px solid var(--glass-border);
             position: relative;
-            z-index: 2; /* Above video background */
+            z-index: 2;
             backdrop-filter: blur(8px);
         }
 
@@ -507,7 +477,7 @@
             transform: scale(1.08);
         }
 
-        /* Messages container - only messages scroll */
+        /* Messages container - تحسين للأداء والكيبورد */
         .messages-container {
             flex: 1;
             padding: 24px;
@@ -516,7 +486,14 @@
             flex-direction: column;
             gap: 16px;
             position: relative;
-            z-index: 1; /* Above video background */
+            z-index: 1;
+            -webkit-overflow-scrolling: touch;
+            will-change: transform;
+            /* تحسين للأداء */
+            contain: content;
+            transform: translateZ(0);
+            backface-visibility: hidden;
+            -webkit-backface-visibility: hidden;
         }
 
         .message {
@@ -529,6 +506,9 @@
             backdrop-filter: blur(8px);
             border: 1px solid transparent;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            /* تحسين للأداء */
+            transform: translateZ(0);
+            will-change: transform, opacity;
         }
 
         .message.my-message {
@@ -602,8 +582,11 @@
             background: rgba(255, 255, 255, 0.04);
             border-top: 1px solid var(--glass-border);
             position: relative;
-            z-index: 2; /* Above video background */
+            z-index: 2;
             backdrop-filter: blur(10px);
+            /* إصلاح الكيبورد على الهواتف */
+            position: sticky;
+            bottom: 0;
         }
 
         .chat-input-group {
@@ -756,7 +739,7 @@
             color: var(--text-muted);
         }
 
-        /* ===== CINEMA MODE - MOBILE (Video fixed, chat attached, input fixed) ===== */
+        /* ===== CINEMA MODE - MOBILE (التحسين للكيبورد) ===== */
         @media (max-width: 767px) {
             .cinema-mode .app-wrapper {
                 max-width: 100%;
@@ -764,16 +747,24 @@
                 padding: 0;
                 display: flex;
                 flex-direction: column;
-                height: calc(100vh - 56px);
+                height: 100vh;
+                overflow: hidden;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
             }
             
             .cinema-mode .player-section {
-                position: relative;
+                position: sticky;
+                top: 0;
                 width: 100%;
-                height: calc(100vw * 9 / 16); /* 16:9 based on width */
+                height: calc(100vw * 9 / 16);
                 flex-shrink: 0;
                 border-radius: 0;
-                z-index: 10;
+                z-index: 100;
+                background: #000;
             }
             
             .cinema-mode .player-container {
@@ -786,18 +777,23 @@
                 margin-top: 0;
                 margin-left: 0;
                 margin-right: 0;
-                height: calc(100vh - (100vw * 9 / 16 + 56px));
+                height: calc(100vh - (100vw * 9 / 16));
                 border-radius: 0;
                 border-left: none;
                 border-right: none;
                 border-bottom: none;
                 display: flex;
                 flex-direction: column;
+                min-height: 0;
+                position: relative;
+                overflow: hidden;
             }
             
             .cinema-mode .chat-header {
                 flex-shrink: 0;
                 padding: 16px 20px;
+                background: rgba(13, 13, 23, 0.95);
+                backdrop-filter: blur(20px);
             }
             
             .cinema-mode .messages-container {
@@ -805,18 +801,24 @@
                 padding: 20px;
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
-                min-height: 0; /* Important for flex scroll */
+                min-height: 0;
+                /* إصلاح للكيبورد: المرسائل فقط تتحرك */
+                position: relative;
+                height: calc(100% - 120px); /* ارتفاع ثابت */
+                will-change: transform;
+                transform: translateZ(0);
             }
             
             .cinema-mode .chat-input-container {
                 flex-shrink: 0;
                 padding: 16px 20px;
-                background: rgba(13, 13, 23, 0.9);
+                background: rgba(13, 13, 23, 0.95);
                 backdrop-filter: blur(20px);
                 border-top: 1px solid rgba(255, 255, 255, 0.1);
                 position: sticky;
                 bottom: 0;
                 width: 100%;
+                z-index: 10;
             }
             
             .cinema-mode .video-input-section,
@@ -824,37 +826,30 @@
                 display: none;
             }
             
-            /* Adjust message margins for mobile cinema */
-            .cinema-mode .message.my-message {
-                margin-left: 20px;
-                margin-right: 0;
+            /* إصلاح: الفيديو يبقى ظاهراً عند فتح الكيبورد */
+            .cinema-mode .player-section {
+                position: -webkit-sticky; /* للسفاري */
+                position: sticky;
+                top: 0;
+                z-index: 100;
             }
             
-            .cinema-mode .message.their-message {
-                margin-right: 20px;
-                margin-left: 0;
+            /* عندما يفتح الكيبورد، نضبط ارتفاع الدردشة */
+            .keyboard-open .chat-section {
+                height: calc(100vh - (100vw * 9 / 16) - env(keyboard-inset-height, 0px));
             }
             
-            /* In cinema mode, reduce background opacity slightly */
-            .cinema-mode .chat-video-bg {
-                opacity: 0.3;
+            .keyboard-open .messages-container {
+                padding-bottom: 80px; /* مساحة للكيبورد */
             }
             
-            /* Make input fixed on mobile */
-            .chat-input-container.fixed-input {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                background: rgba(13, 13, 23, 0.95);
-                backdrop-filter: blur(20px);
-                border-top: 1px solid rgba(255, 255, 255, 0.15);
-                z-index: 1000;
-                padding: 16px 20px;
+            /* إخفاء بعض العناصر عند فتح الكيبورد للحفاظ على الأداء */
+            .keyboard-open .chat-video-bg {
+                opacity: 0.1;
             }
             
-            .fixed-input + .messages-container {
-                padding-bottom: 80px; /* Space for fixed input */
+            .keyboard-open .message {
+                backdrop-filter: blur(4px);
             }
         }
 
@@ -975,16 +970,31 @@
                 height: 480px;
             }
             
-            .messages-container {
-                padding-bottom: 20px;
+            /* تحسين للأداء على الهواتف */
+            .player-section {
+                position: -webkit-sticky;
+                position: sticky;
+                top: 0;
+                z-index: 100;
             }
             
-            /* Fix input position on mobile normal mode */
-            .chat-input-container {
-                position: sticky;
-                bottom: 0;
-                background: rgba(13, 13, 23, 0.95);
-                backdrop-filter: blur(20px);
+            .messages-container {
+                padding-bottom: 80px; /* مساحة للكيبورد */
+            }
+            
+            /* تحسين الظلال والأداء */
+            .message {
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            }
+            
+            /* تقليل التأثيرات عند فتح الكيبورد */
+            body.keyboard-open .chat-video-bg {
+                opacity: 0.1;
+                animation-play-state: paused;
+            }
+            
+            body.keyboard-open .message {
+                backdrop-filter: blur(4px);
             }
         }
 
@@ -997,9 +1007,9 @@
             animation: fadeIn 0.5s ease;
         }
 
-        /* ===== SCROLLBAR STYLING ===== */
+        /* ===== SCROLLBAR STYLING - تحسين للأداء ===== */
         ::-webkit-scrollbar {
-            width: 6px;
+            width: 4px;
         }
 
         ::-webkit-scrollbar-track {
@@ -1008,7 +1018,7 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(to bottom, rgba(255, 107, 157, 0.4), rgba(179, 153, 255, 0.4));
+            background: linear-gradient(to bottom, rgba(255, 107, 157, 0.3), rgba(179, 153, 255, 0.3));
             border-radius: 10px;
         }
 
@@ -1016,31 +1026,44 @@
             background: linear-gradient(to bottom, var(--accent-romantic), var(--accent-soft));
         }
 
-        /* ===== PERFORMANCE OPTIMIZATIONS ===== */
-        .chat-video-mirror {
-            /* Hardware acceleration */
-            transform: translate3d(-50%, -50%, 0) scale(1.2);
-            backface-visibility: hidden;
-            -webkit-backface-visibility: hidden;
-            perspective: 1000;
-            -webkit-perspective: 1000;
+        /* تحسين أداء التمرير */
+        .messages-container {
+            scroll-behavior: smooth;
         }
 
-        /* Fallback for browsers that don't support backdrop-filter */
-        @supports not (backdrop-filter: blur(10px)) {
-            .chat-video-bg::after {
-                display: none;
+        /* ===== PERFORMANCE OPTIMIZATIONS ===== */
+        /* تقليل عدد الطبقات والظلال عند الحاجة */
+        @media (max-width: 767px) {
+            .message {
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
             }
             
-            .chat-video-mirror {
-                filter: blur(28px) saturate(0.6) brightness(0.7);
-                -webkit-filter: blur(28px) saturate(0.6) brightness(0.7);
-                opacity: 0.5;
+            .chat-section {
+                box-shadow: var(--shadow-sm);
+            }
+        }
+
+        /* تقليل تأثيرات الحركة على الهواتف الضعيفة */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
             }
             
-            .chat-header,
-            .chat-input-container {
-                background: rgba(13, 13, 23, 0.9);
+            .chat-video-bg {
+                animation: none;
+            }
+        }
+
+        /* تحسين لأداء Safari */
+        @supports (-webkit-touch-callout: none) {
+            .messages-container {
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .player-section {
+                -webkit-transform: translateZ(0);
             }
         }
     </style>
@@ -1083,7 +1106,7 @@
                 </div>
             </section>
 
-            <!-- Player Section -->
+            <!-- Player Section - ALWAYS VISIBLE -->
             <section class="player-section">
                 <div class="player-container">
                     <div id="youtubePlayer"></div>
@@ -1107,19 +1130,10 @@
                 </div>
             </section>
 
-            <!-- Chat Section - With Dynamic Video Background -->
+            <!-- Chat Section - OPTIMIZED FOR PERFORMANCE -->
             <section class="chat-section" id="chatSection">
-                <!-- Dynamic Video Background -->
-                <div class="chat-video-bg" id="chatVideoBg">
-                    <iframe 
-                        class="chat-video-mirror" 
-                        id="chatVideoMirror"
-                        frameborder="0"
-                        allow="autoplay; encrypted-media"
-                        allowfullscreen
-                        style="pointer-events: none;">
-                    </iframe>
-                </div>
+                <!-- Dynamic Gradient Background (No Video for Performance) -->
+                <div class="chat-video-bg" id="chatVideoBg"></div>
                 
                 <div class="chat-header">
                     <div class="chat-title">
@@ -1172,105 +1186,184 @@
 
     <script>
         // ============================================
-        // DYNAMIC VIDEO BACKGROUND FOR CHAT
+        // PERFORMANCE OPTIMIZATIONS
         // ============================================
         
-        // Variables for video background
-        let chatVideoMirror = null;
-        let backgroundSyncInterval = null;
-        let lastVideoId = null;
+        // إزالة خلفية الفيديو الديناميكية واستبدالها بتدرج لوني خفيف
+        // هذا يحسن الأداء بشكل كبير
+        let performanceMode = true;
+        let keyboardOpen = false;
+        let originalViewportHeight = window.innerHeight;
         
-        // Initialize chat video background
-        function initChatVideoBackground() {
-            const chatVideoBg = document.getElementById('chatVideoBg');
-            const chatVideoMirrorElement = document.getElementById('chatVideoMirror');
-            chatVideoMirror = chatVideoMirrorElement;
+        // تحسين الأداء على الهواتف
+        function initPerformanceOptimizations() {
+            // كشف نوع الجهاز
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+            const isLowEndDevice = (navigator.deviceMemory && navigator.deviceMemory < 4) || 
+                                  (navigator.hardwareConcurrency && navigator.hardwareConcurrency < 4);
             
-            if (!chatVideoBg || !chatVideoMirror) {
-                console.warn('Chat video background elements not found');
-                return;
+            if (isMobile || isLowEndDevice) {
+                console.log('📱 Enabling performance optimizations for mobile/low-end device');
+                enablePerformanceMode();
             }
             
-            // Start background sync
-            startBackgroundVideoSync();
+            // كشف فتح/إغلاق لوحة المفاتيح
+            detectKeyboardState();
             
-            console.log('✅ Chat video background initialized');
+            // تحسين التمرير
+            optimizeScrolling();
         }
         
-        // Sync background video with main player
-        function startBackgroundVideoSync() {
-            if (backgroundSyncInterval) {
-                clearInterval(backgroundSyncInterval);
-            }
+        function enablePerformanceMode() {
+            performanceMode = true;
             
-            backgroundSyncInterval = setInterval(() => {
-                syncBackgroundWithPlayer();
-            }, 200); // Sync every 200ms for smooth motion
-            
-            console.log('🔄 Background video sync started');
-        }
-        
-        function syncBackgroundWithPlayer() {
-            if (!player || !chatVideoMirror || !currentVideoId) return;
-            
-            try {
-                // Update background video if video changed
-                if (currentVideoId !== lastVideoId) {
-                    updateBackgroundVideo(currentVideoId);
-                    lastVideoId = currentVideoId;
-                }
-                
-                // Get current time from main player
-                const currentTime = player.getCurrentTime();
-                const playerState = player.getPlayerState();
-                
-                // Update background video URL with current time
-                // We use the YouTube embed URL with autoplay and mute
-                if (chatVideoMirror.src) {
-                    const baseUrl = chatVideoMirror.src.split('?')[0];
-                    const newUrl = `${baseUrl}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&start=${Math.floor(currentTime)}&playsinline=1&enablejsapi=0`;
+            // تقليل تأثيرات CSS للحفاظ على الأداء
+            const style = document.createElement('style');
+            style.textContent = `
+                @media (max-width: 767px) {
+                    .message {
+                        backdrop-filter: blur(4px) !important;
+                    }
                     
-                    // Only update if time difference is significant (more than 2 seconds)
-                    const urlParams = new URLSearchParams(chatVideoMirror.src.split('?')[1] || '');
-                    const currentStartTime = parseInt(urlParams.get('start') || '0');
+                    .chat-video-bg {
+                        animation-duration: 30s !important;
+                    }
                     
-                    if (Math.abs(currentStartTime - currentTime) > 2) {
-                        chatVideoMirror.src = newUrl;
+                    * {
+                        animation-duration: 0.3s !important;
+                        transition-duration: 0.2s !important;
                     }
                 }
+            `;
+            document.head.appendChild(style);
+        }
+        
+        function detectKeyboardState() {
+            const visualViewport = window.visualViewport;
+            
+            if (visualViewport) {
+                visualViewport.addEventListener('resize', () => {
+                    const newHeight = visualViewport.height;
+                    const diff = originalViewportHeight - newHeight;
+                    
+                    // إذا تغير الارتفاع بأكثر من 100 بكسل، فهذا يعني أن الكيبورد مفتوح
+                    if (diff > 100) {
+                        keyboardOpen = true;
+                        document.body.classList.add('keyboard-open');
+                        console.log('⌨️ Keyboard opened');
+                        
+                        // ضبط ارتفاع الدردشة
+                        adjustChatHeightForKeyboard(newHeight);
+                    } else {
+                        keyboardOpen = false;
+                        document.body.classList.remove('keyboard-open');
+                        console.log('⌨️ Keyboard closed');
+                        
+                        // إعادة تعيين ارتفاع الدردشة
+                        resetChatHeight();
+                    }
+                });
+            }
+            
+            // كشف بديل للمتصفحات التي لا تدعم visualViewport
+            window.addEventListener('resize', () => {
+                const currentHeight = window.innerHeight;
+                const diff = originalViewportHeight - currentHeight;
                 
-            } catch (error) {
-                console.warn('Background sync error:', error);
+                // تأخير الكشف لتجنب الإيجابيات الخاطئة
+                setTimeout(() => {
+                    if (diff > 100 && !keyboardOpen) {
+                        keyboardOpen = true;
+                        document.body.classList.add('keyboard-open');
+                        adjustChatHeightForKeyboard(currentHeight);
+                    } else if (diff < 50 && keyboardOpen) {
+                        keyboardOpen = false;
+                        document.body.classList.remove('keyboard-open');
+                        resetChatHeight();
+                    }
+                }, 100);
+            });
+        }
+        
+        function adjustChatHeightForKeyboard(keyboardHeight) {
+            const chatSection = document.getElementById('chatSection');
+            const messagesContainer = document.getElementById('messagesContainer');
+            
+            if (chatSection && messagesContainer) {
+                // حساب ارتفاع الفيديو
+                const videoHeight = window.innerWidth * 9 / 16;
+                
+                // ضبط ارتفاع الدردشة بناءً على ارتفاع الكيبورد
+                const availableHeight = keyboardHeight - videoHeight - 56; // 56 = شريط العنوان
+                
+                if (availableHeight > 200) { // الحد الأدنى للارتفاع
+                    chatSection.style.height = `${availableHeight}px`;
+                    messagesContainer.style.height = `${availableHeight - 120}px`; // 120 = رأس الدردشة + الإدخال
+                    
+                    // التمرير إلى أحدث رسالة
+                    setTimeout(() => {
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }, 300);
+                }
             }
         }
         
-        function updateBackgroundVideo(videoId) {
-            if (!chatVideoMirror || !videoId) return;
+        function resetChatHeight() {
+            const chatSection = document.getElementById('chatSection');
+            const messagesContainer = document.getElementById('messagesContainer');
             
-            try {
-                // Create YouTube embed URL for background
-                const embedUrl = `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&playsinline=1&enablejsapi=0&loop=1&playlist=${videoId}`;
-                
-                chatVideoMirror.src = embedUrl;
-                console.log(`🎬 Background video updated: ${videoId}`);
-                
-            } catch (error) {
-                console.error('Error updating background video:', error);
+            if (chatSection && messagesContainer) {
+                // إعادة تعيين الارتفاع على الهاتف
+                if (window.innerWidth < 768) {
+                    if (document.querySelector('.app-wrapper').classList.contains('cinema-mode')) {
+                        const videoHeight = window.innerWidth * 9 / 16;
+                        const chatHeight = window.innerHeight - videoHeight - 56;
+                        chatSection.style.height = `${chatHeight}px`;
+                        messagesContainer.style.height = `${chatHeight - 120}px`;
+                    } else {
+                        chatSection.style.height = '480px';
+                        messagesContainer.style.height = '';
+                    }
+                }
             }
         }
         
-        // Clean up background video
-        function cleanupBackgroundVideo() {
-            if (backgroundSyncInterval) {
-                clearInterval(backgroundSyncInterval);
-                backgroundSyncInterval = null;
-            }
+        function optimizeScrolling() {
+            const messagesContainer = document.getElementById('messagesContainer');
+            if (!messagesContainer) return;
             
-            if (chatVideoMirror) {
-                chatVideoMirror.src = '';
-            }
+            // استخدام requestAnimationFrame للتمرير السلس
+            let isScrolling = false;
+            let scrollTimeout;
             
-            console.log('🧹 Background video cleaned up');
+            messagesContainer.addEventListener('scroll', () => {
+                isScrolling = true;
+                
+                // إلغاء المؤقت السابق
+                if (scrollTimeout) {
+                    cancelAnimationFrame(scrollTimeout);
+                }
+                
+                // استخدام requestAnimationFrame للتحسين
+                scrollTimeout = requestAnimationFrame(() => {
+                    // تحديث حالة التمرير
+                    checkIfUserAtBottom(messagesContainer);
+                    isScrolling = false;
+                });
+            });
+            
+            // تحسين إضافة الرسائل
+            const originalAddMessage = window.addMessageToChat;
+            window.addMessageToChat = function(message, container) {
+                // إذا كان المستخدم يمرر، لا نضيف الرسالة فوراً
+                if (isScrolling && !userAtBottom) {
+                    setTimeout(() => {
+                        originalAddMessage(message, container);
+                    }, 100);
+                } else {
+                    originalAddMessage(message, container);
+                }
+            };
         }
         
         // ============================================
@@ -1301,20 +1394,33 @@
                 <div class="message-time">${timestamp}</div>
             `;
             
-            container.appendChild(messageDiv);
+            // تحسين الأداء: استخدام DocumentFragment
+            const fragment = document.createDocumentFragment();
+            fragment.appendChild(messageDiv);
+            container.appendChild(fragment);
             
             // Auto-scroll only if user is at bottom
             if (userAtBottom && autoScrollEnabled) {
+                // استخدام setTimeout للسماح بإعادة الرسم
                 setTimeout(() => {
                     container.scrollTop = container.scrollHeight;
                 }, 50);
             }
+            
+            // تحسين الأداء: تقليل عدد الرسائل المخزنة
+            if (container.children.length > 100) {
+                // إزالة أقدم 20 رسالة
+                for (let i = 0; i < 20 && container.firstChild; i++) {
+                    container.removeChild(container.firstChild);
+                }
+            }
         };
 
         // ============================================
-        // REST OF THE ORIGINAL CODE (NO CHANGES TO LOGIC)
+        // REST OF THE ORIGINAL CODE WITH PERFORMANCE IMPROVEMENTS
         // ============================================
         const firebaseConfig = {
+            apiKey: "AIzaSyAJvohW3m1-sZAlrTjkv7UZqTLC6WigePo",
             apiKey: "AIzaSyAJvohW3m1-sZAlrTjkv7UZqTLC6WigePo",
             authDomain: "party-dfe30.firebaseapp.com",
             projectId: "party-dfe30",
@@ -1358,7 +1464,7 @@
         let historyRef = null;
 
         // ============================================
-        // INITIALIZATION FUNCTION (MODIFIED)
+        // INITIALIZATION FUNCTION (MODIFIED FOR PERFORMANCE)
         // ============================================
         async function initializeApp() {
             console.log("🚀 our watch 7afla :3 - Initializing");
@@ -1391,17 +1497,12 @@
                 startUsersListener();
                 loadPartyHistory();
                 
-                // Initialize chat video background
-                setTimeout(() => {
-                    initChatVideoBackground();
-                }, 1000);
+                // Initialize performance optimizations
+                initPerformanceOptimizations();
                 
                 // Update view based on screen size
                 updateViewBasedOnScreenSize();
                 window.addEventListener('resize', updateViewBasedOnScreenSize);
-                
-                // Setup fixed input for mobile
-                setupFixedInputForMobile();
                 
                 console.log("🎉 App initialized successfully");
                 
@@ -1409,33 +1510,6 @@
                 console.error('❌ App initialization failed:', error);
                 alert('App initialization error. Please refresh the page.');
             }
-        }
-
-        // ============================================
-        // SETUP FIXED INPUT FOR MOBILE
-        // ============================================
-        function setupFixedInputForMobile() {
-            if (!isMobileView) return;
-            
-            const chatInputContainer = document.getElementById('chatInputContainer');
-            const messagesContainer = document.getElementById('messagesContainer');
-            
-            // Add fixed input class on mobile
-            if (isMobileView) {
-                chatInputContainer.classList.add('fixed-input');
-                
-                // Adjust messages container padding to account for fixed input
-                const inputHeight = chatInputContainer.offsetHeight;
-                messagesContainer.style.paddingBottom = `${inputHeight + 20}px`;
-            }
-            
-            // Update when window resizes
-            window.addEventListener('resize', () => {
-                if (isMobileView && chatInputContainer.classList.contains('fixed-input')) {
-                    const inputHeight = chatInputContainer.offsetHeight;
-                    messagesContainer.style.paddingBottom = `${inputHeight + 20}px`;
-                }
-            });
         }
 
         // ============================================
@@ -1457,23 +1531,21 @@
                     icon.className = 'fas fa-compress';
                     toggleCinemaBtn.setAttribute('title', 'Exit Cinema Mode');
                     console.log("🎬 Cinema mode activated");
+                    
+                    // على الهاتف: ضبط الأبعاد
+                    if (isMobileView) {
+                        setTimeout(() => {
+                            adjustLayoutForCinemaMode();
+                        }, 100);
+                    }
                 } else {
                     icon.className = 'fas fa-expand';
                     toggleCinemaBtn.setAttribute('title', 'Cinema Mode');
                     console.log("📱 Cinema mode deactivated");
+                    
+                    // إعادة تعيين الأبعاد
+                    resetChatHeight();
                 }
-                
-                // Adjust background video opacity in cinema mode
-                const chatVideoBg = document.getElementById('chatVideoBg');
-                if (chatVideoBg) {
-                    chatVideoBg.style.opacity = isCinemaMode ? '0.3' : '0.4';
-                }
-                
-                // Recalculate layout after toggle
-                setTimeout(() => {
-                    adjustLayoutForCinemaMode();
-                    setupFixedInputForMobile();
-                }, 100);
             });
         }
 
@@ -1481,23 +1553,20 @@
             const playerSection = document.querySelector('.player-section');
             const chatSection = document.querySelector('.chat-section');
             const messagesContainer = document.getElementById('messagesContainer');
-            const chatInputContainer = document.getElementById('chatInputContainer');
             
-            if (isCinemaMode) {
-                if (isMobileView) {
-                    // On mobile: fixed video with chat attached directly below
-                    const videoHeight = window.innerWidth * 9 / 16; // 16:9 aspect ratio
-                    
-                    playerSection.style.height = `${videoHeight}px`;
-                    
-                    // Ensure chat section fills remaining space
-                    chatSection.style.height = `calc(100vh - ${videoHeight + 56}px)`;
-                    
-                    // Adjust messages container for fixed input
-                    const inputHeight = chatInputContainer.offsetHeight;
-                    messagesContainer.style.paddingBottom = `${inputHeight + 20}px`;
-                }
-                // Desktop layout is handled by CSS grid with golden ratio
+            if (isCinemaMode && isMobileView) {
+                // حساب الأبعاد
+                const videoHeight = window.innerWidth * 9 / 16;
+                const chatHeight = window.innerHeight - videoHeight - 56;
+                
+                playerSection.style.height = `${videoHeight}px`;
+                chatSection.style.height = `${chatHeight}px`;
+                messagesContainer.style.height = `${chatHeight - 120}px`;
+                
+                // التأكد من بقاء الفيديو ظاهراً
+                playerSection.style.position = 'sticky';
+                playerSection.style.top = '0';
+                playerSection.style.zIndex = '100';
             }
         }
 
@@ -1543,7 +1612,6 @@
                 onlineCountElement.textContent = `${count} online`;
             }
             
-            // Also update room name if needed
             if (roomName) {
                 roomName.textContent = `our watch 7afla :3`;
             }
@@ -1586,13 +1654,6 @@
             setInterval(updateTimeDisplay, 1000);
             loadLastVideo();
             startManualSeekDetection();
-            
-            // Start background video after player is ready
-            setTimeout(() => {
-                if (currentVideoId) {
-                    updateBackgroundVideo(currentVideoId);
-                }
-            }, 500);
         }
 
         function onPlayerStateChange(event) {
@@ -1629,7 +1690,7 @@
         }
 
         // ============================================
-        // PERFECT SYNC ENGINE
+        // PERFECT SYNC ENGINE (NO CHANGES)
         // ============================================
         function startManualSeekDetection() {
             if (manualSeekInterval) clearInterval(manualSeekInterval);
@@ -1706,9 +1767,6 @@
                         updateVideoTitle(action.videoId);
                         addToHistory(action.videoId);
                         lastKnownTime = 0;
-                        
-                        // Update background video
-                        updateBackgroundVideo(action.videoId);
                     }
                     break;
 
@@ -2006,9 +2064,6 @@
             updateVideoTitle(videoId);
             addToHistory(videoId);
             
-            // Update background video
-            updateBackgroundVideo(videoId);
-            
             console.log(`🎥 Loading video: ${videoId}`);
         }
 
@@ -2037,9 +2092,6 @@
                     lastKnownTime = data.currentTime || 0;
                     
                     updateVideoTitle(data.videoId);
-                    
-                    // Update background video
-                    updateBackgroundVideo(data.videoId);
                 }
             } catch (error) {
                 console.error('❌ Error loading last video:', error);
@@ -2087,6 +2139,21 @@
                 if (e.key === 'Enter') sendMessage();
             });
             
+            // Chat input focus/blur for keyboard detection
+            const chatInput = document.getElementById('chatMessageInput');
+            chatInput.addEventListener('focus', () => {
+                // على الهاتف: نمنع إخفاء الفيديو
+                if (isMobileView) {
+                    // نضمن بقاء الفيديو ظاهراً
+                    const playerSection = document.querySelector('.player-section');
+                    if (playerSection) {
+                        playerSection.style.position = 'sticky';
+                        playerSection.style.top = '0';
+                        playerSection.style.zIndex = '100';
+                    }
+                }
+            });
+            
             // Chat buttons
             document.getElementById('clearChatBtn').addEventListener('click', clearChat);
             
@@ -2125,8 +2192,6 @@
             isMobileView = window.innerWidth < 768;
             
             if (wasMobileView !== isMobileView) {
-                setupFixedInputForMobile();
-                
                 if (isCinemaMode) {
                     adjustLayoutForCinemaMode();
                 }
@@ -2149,40 +2214,34 @@
                 clearInterval(manualSeekInterval);
             }
             
-            // Clean up background video
-            cleanupBackgroundVideo();
-            
             console.log("👋 Closing app");
         });
 
         // ============================================
-        // ADDITIONAL UI ENHANCEMENTS
+        // ADDITIONAL PERFORMANCE OPTIMIZATIONS
         // ============================================
         document.addEventListener('DOMContentLoaded', () => {
-            // Add effects to cards when they appear
-            const observerOptions = {
-                threshold: 0.1,
-                rootMargin: '0px 0px -50px 0px'
-            };
-            
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.style.opacity = '1';
-                        entry.target.style.transform = 'translateY(0)';
+            // تأخير تحميل الصور الغير ظاهرة
+            const lazyLoadImages = () => {
+                const images = document.querySelectorAll('img.history-thumb');
+                const observer = new IntersectionObserver((entries) => {
+                    entries.forEach(entry => {
+                        if (entry.isIntersecting) {
+                            const img = entry.target;
+                            img.src = img.dataset.src || img.src;
+                            observer.unobserve(img);
+                        }
+                    });
+                });
+                
+                images.forEach(img => {
+                    if (img.dataset.src) {
+                        observer.observe(img);
                     }
                 });
-            }, observerOptions);
+            };
             
-            // Observe history cards
-            setTimeout(() => {
-                document.querySelectorAll('.history-card').forEach(card => {
-                    card.style.opacity = '0';
-                    card.style.transform = 'translateY(20px)';
-                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
-                    observer.observe(card);
-                });
-            }, 500);
+            setTimeout(lazyLoadImages, 1000);
         });
     </script>
 </body>
