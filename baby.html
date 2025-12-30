@@ -3,165 +3,151 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cosmic Watch ♥</title>
+    <title>✨ Watch Party | مشاهدة جماعية</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
     <style>
-        /* ==================== CSS RESET & GLOBAL ==================== */
+        /* ===== CSS RESET & GLOBAL ===== */
+        :root {
+            /* نظام ألوان حديث وهادئ */
+            --primary-dark: #0f0b1e;
+            --secondary-dark: #1a152e;
+            --accent-purple: #8a2be2;
+            --accent-pink: #ff2e8b;
+            --accent-cyan: #00e0ff;
+            --text-primary: #f0f0ff;
+            --text-secondary: #b0b0d0;
+            --text-muted: #8888aa;
+            --glass-bg: rgba(30, 25, 50, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --card-bg: rgba(20, 15, 40, 0.6);
+            --success: #00ff9d;
+            --warning: #ffcc00;
+            --danger: #ff4757;
+            --radius-sm: 8px;
+            --radius-md: 12px;
+            --radius-lg: 20px;
+            --radius-xl: 30px;
+            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.2);
+            --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.3);
+            --transition-fast: 0.2s ease;
+            --transition-normal: 0.3s ease;
+            --transition-slow: 0.5s ease;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
-        }
-
-        :root {
-            /* نظام ألوان كوني حديث */
-            --primary: #0a0a14;
-            --primary-dark: #050510;
-            --secondary: #16162a;
-            --accent-purple: #9d4edd;
-            --accent-pink: #ff4b8a;
-            --accent-cyan: #4bd2ff;
-            --text-primary: #f0f0ff;
-            --text-secondary: #a8a8cc;
-            --glass-bg: rgba(20, 20, 40, 0.4);
-            --glass-border: rgba(255, 255, 255, 0.1);
-            --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            --border-radius: 16px;
-            --border-radius-sm: 12px;
-            --border-radius-lg: 24px;
         }
 
         body {
-            background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+            font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+            background-color: var(--primary-dark);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
+            line-height: 1.6;
+            background-image: 
+                radial-gradient(circle at 20% 30%, rgba(138, 43, 226, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 80% 70%, rgba(255, 46, 139, 0.1) 0%, transparent 50%);
         }
 
-        /* ==================== خلفية النجوم المتحركة ==================== */
-        .cosmic-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -10;
-            overflow: hidden;
+        /* ===== ANIMATIONS ===== */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        .star {
-            position: absolute;
-            background: white;
-            border-radius: 50%;
-            animation: twinkle var(--duration) infinite alternate;
+        @keyframes slideInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        .star.small {
-            width: 1px;
-            height: 1px;
-            opacity: 0.6;
+        @keyframes slideInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
         }
 
-        .star.medium {
-            width: 2px;
-            height: 2px;
-            opacity: 0.8;
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
-        .star.large {
-            width: 3px;
-            height: 3px;
-            opacity: 1;
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        @keyframes twinkle {
-            0% { opacity: 0.3; transform: scale(1); }
-            100% { opacity: 1; transform: scale(1.1); }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
 
-        /* ==================== هيكل التطبيق الرئيسي ==================== */
-        .app-container {
+        /* ===== LAYOUT STRUCTURE ===== */
+        .app-wrapper {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
             max-width: 1800px;
             margin: 0 auto;
-            padding: 24px;
-            display: grid;
-            grid-template-columns: 1fr;
-            grid-template-rows: auto auto 1fr auto;
-            gap: 24px;
-            min-height: 100vh;
+            animation: fadeIn 0.8s ease;
         }
 
-        /* ==================== HEADER أنيق ==================== */
-        .app-header {
+        /* ===== HEADER ===== */
+        .main-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px;
-            background: var(--glass-bg);
+            padding: 20px 0;
+            margin-bottom: 30px;
+            border-bottom: 1px solid var(--glass-border);
+            position: sticky;
+            top: 0;
+            background: rgba(15, 11, 30, 0.9);
             backdrop-filter: blur(20px);
-            border-radius: var(--border-radius-lg);
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            animation: slideDown 0.6s ease-out;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-20px); }
-            to { opacity: 1; transform: translateY(0); }
+            z-index: 100;
         }
 
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 15px;
+            animation: slideInLeft 0.6s ease;
         }
 
-        .logo {
-            width: 56px;
-            height: 56px;
+        .logo-icon {
+            width: 50px;
+            height: 50px;
             background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-            border-radius: 18px;
+            border-radius: var(--radius-lg);
             display: flex;
             align-items: center;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
+            font-size: 22px;
+            box-shadow: var(--shadow-md);
+            transition: transform var(--transition-normal);
         }
 
-        .logo::after {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: linear-gradient(
-                to bottom right,
-                rgba(255,255,255,0.3) 0%,
-                rgba(255,255,255,0) 60%
-            );
-            transform: rotate(30deg);
-        }
-
-        .logo i {
-            font-size: 24px;
-            color: white;
-            z-index: 1;
+        .logo-icon:hover {
+            transform: scale(1.05) rotate(5deg);
         }
 
         .logo-text h1 {
             font-size: 28px;
             font-weight: 800;
-            background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink), var(--accent-cyan));
+            background-size: 200% auto;
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
+            animation: gradientShift 3s ease infinite;
         }
 
         .logo-text p {
@@ -170,158 +156,135 @@
             margin-top: 4px;
         }
 
-        /* ==================== شريط الحالة ==================== */
-        .status-bar {
+        .header-controls {
             display: flex;
             align-items: center;
             gap: 20px;
+            animation: slideInRight 0.6s ease;
         }
 
-        .online-indicator {
+        .online-status {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px 24px;
-            background: rgba(20, 180, 100, 0.15);
-            border-radius: 100px;
-            border: 1px solid rgba(20, 180, 100, 0.3);
+            gap: 10px;
+            padding: 10px 20px;
+            background: var(--glass-bg);
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
         }
 
         .online-dot {
             width: 10px;
             height: 10px;
-            background: #14b464;
+            background: var(--success);
             border-radius: 50%;
-            position: relative;
             animation: pulse 2s infinite;
         }
 
-        .online-dot::after {
-            content: '';
-            position: absolute;
-            top: -4px;
-            left: -4px;
-            right: -4px;
-            bottom: -4px;
-            background: #14b464;
-            border-radius: 50%;
-            opacity: 0.3;
-        }
-
-        @keyframes pulse {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-        }
-
-        .user-count {
+        .cinema-mode-toggle {
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border: none;
+            color: white;
+            padding: 12px 24px;
+            border-radius: var(--radius-xl);
             font-weight: 600;
-            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all var(--transition-fast);
+            box-shadow: var(--shadow-sm);
         }
 
-        /* ==================== مدخل الفيديو ==================== */
+        .cinema-mode-toggle:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-md);
+        }
+
+        /* ===== VIDEO INPUT SECTION ===== */
         .video-input-section {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-radius: var(--border-radius-lg);
-            padding: 28px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--glass-shadow);
-            animation: fadeIn 0.5s ease-out 0.2s both;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            margin-bottom: 30px;
+            animation: fadeIn 0.8s ease 0.2s both;
         }
 
         .input-group {
             display: flex;
-            gap: 16px;
-            align-items: center;
-        }
-
-        .url-input-container {
-            flex: 1;
-            position: relative;
-        }
-
-        .url-input-container i {
-            position: absolute;
-            right: 20px;
-            top: 50%;
-            transform: translateY(-50%);
-            color: var(--accent-purple);
+            gap: 15px;
+            max-width: 800px;
+            margin: 0 auto;
         }
 
         #videoUrlInput {
-            width: 100%;
-            padding: 20px 60px 20px 24px;
-            background: rgba(10, 10, 20, 0.7);
-            border: 2px solid rgba(157, 78, 221, 0.2);
-            border-radius: var(--border-radius);
+            flex: 1;
+            padding: 18px 24px;
+            background: var(--glass-bg);
+            border: 2px solid transparent;
+            border-radius: var(--radius-lg);
             color: var(--text-primary);
             font-size: 16px;
-            transition: var(--transition);
+            transition: all var(--transition-fast);
+            backdrop-filter: blur(10px);
         }
 
         #videoUrlInput:focus {
             outline: none;
             border-color: var(--accent-purple);
-            box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
         }
 
-        #videoUrlInput::placeholder {
-            color: var(--text-secondary);
-        }
-
-        .load-video-btn {
-            padding: 20px 36px;
+        #loadVideoBtn {
+            padding: 0 30px;
             background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
             border: none;
-            border-radius: var(--border-radius);
+            border-radius: var(--radius-lg);
             color: white;
             font-weight: 600;
             font-size: 16px;
             cursor: pointer;
-            transition: var(--transition);
+            transition: all var(--transition-fast);
             display: flex;
             align-items: center;
-            gap: 12px;
-            white-space: nowrap;
+            gap: 10px;
+            min-width: 120px;
+            justify-content: center;
         }
 
-        .load-video-btn:hover {
+        #loadVideoBtn:hover {
             transform: translateY(-3px);
-            box-shadow: 0 10px 25px rgba(157, 78, 221, 0.4);
+            box-shadow: var(--shadow-md);
         }
 
-        .load-video-btn:active {
-            transform: translateY(-1px);
+        /* ===== MAIN CONTENT AREA ===== */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 30px;
+            flex: 1;
         }
 
-        /* ==================== مشغل الفيديو - الوضع العادي ==================== */
+        /* ===== PLAYER SECTION ===== */
         .player-section {
             position: relative;
             overflow: hidden;
-            border-radius: var(--border-radius-lg);
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.4);
-            animation: scaleIn 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        @keyframes scaleIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow-lg);
+            background: #000;
+            animation: fadeIn 0.8s ease 0.3s both;
+            transition: all var(--transition-normal);
         }
 
         .player-container {
             position: relative;
-            background: #000;
-            border-radius: var(--border-radius-lg);
-            overflow: hidden;
-            aspect-ratio: 16/9;
+            width: 100%;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
         }
 
         #youtubePlayer {
+            position: absolute;
+            top: 0;
+            right: 0;
             width: 100%;
             height: 100%;
             border: none;
@@ -330,136 +293,89 @@
         .player-placeholder {
             position: absolute;
             top: 0;
-            left: 0;
+            right: 0;
             width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            background: linear-gradient(135deg, var(--primary-dark), var(--secondary-dark));
             color: var(--text-secondary);
             gap: 20px;
+            z-index: 5;
         }
 
         .placeholder-icon {
-            font-size: 64px;
+            font-size: 70px;
             opacity: 0.5;
+            animation: float 3s ease-in-out infinite;
         }
 
-        .placeholder-text {
-            font-size: 18px;
-            text-align: center;
-            max-width: 400px;
-            line-height: 1.6;
-        }
-
-        .player-overlay {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: linear-gradient(to top, rgba(0,0,0,0.8), transparent);
-            padding: 24px;
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .player-container:hover .player-overlay {
-            opacity: 1;
-        }
-
-        /* ==================== عناصر التحكم بالمشغل ==================== */
-        .player-controls {
+        .player-controls-bar {
             display: flex;
             align-items: center;
-            justify-content: space-between;
-            background: rgba(10, 10, 20, 0.8);
-            backdrop-filter: blur(20px);
-            border-radius: var(--border-radius);
-            padding: 16px 24px;
-            margin-top: 16px;
-            border: 1px solid var(--glass-border);
-        }
-
-        .control-left, .control-right {
-            display: flex;
-            align-items: center;
-            gap: 16px;
+            gap: 15px;
+            padding: 20px;
+            background: var(--glass-bg);
+            border-top: 1px solid var(--glass-border);
+            backdrop-filter: blur(10px);
         }
 
         .control-btn {
-            width: 48px;
-            height: 48px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
-            background: rgba(255, 255, 255, 0.1);
-            border: none;
+            background: rgba(40, 35, 70, 0.8);
+            border: 1px solid var(--glass-border);
             color: var(--text-primary);
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .control-btn::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .control-btn:hover::after {
-            opacity: 1;
+            transition: all var(--transition-fast);
+            font-size: 18px;
         }
 
         .control-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(157, 78, 221, 0.3);
-        }
-
-        .control-btn i {
-            position: relative;
-            z-index: 1;
-        }
-
-        .cinema-mode-btn {
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-        }
-
-        .cinema-mode-btn::after {
-            display: none;
+            background: var(--accent-purple);
+            transform: scale(1.1);
+            box-shadow: 0 0 15px rgba(138, 43, 226, 0.5);
         }
 
         .time-display {
-            display: flex;
-            align-items: center;
-            gap: 8px;
             font-family: 'Courier New', monospace;
-            font-size: 16px;
-            padding: 12px 20px;
+            font-size: 18px;
+            padding: 10px 20px;
             background: rgba(0, 0, 0, 0.4);
-            border-radius: var(--border-radius-sm);
-            min-width: 180px;
-            justify-content: center;
+            border-radius: var(--radius-md);
+            min-width: 150px;
+            text-align: center;
+            letter-spacing: 1px;
         }
 
-        .time-separator {
-            color: var(--accent-cyan);
+        .player-title {
+            flex: 1;
+            text-align: center;
+            font-weight: 500;
+            color: var(--text-secondary);
+            padding: 0 15px;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
         }
 
-        /* ==================== قسم الدردشة (الوضع العادي) ==================== */
+        /* ===== CHAT SECTION ===== */
         .chat-section {
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            height: 500px;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow-md);
+            animation: fadeIn 0.8s ease 0.4s both;
         }
 
         .chat-header {
@@ -468,136 +384,110 @@
             align-items: center;
             padding: 20px;
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-radius: var(--border-radius-lg) var(--border-radius-lg) 0 0;
-            border: 1px solid var(--glass-border);
-            border-bottom: none;
+            border-bottom: 1px solid var(--glass-border);
         }
 
         .chat-title {
             display: flex;
             align-items: center;
             gap: 12px;
-        }
-
-        .chat-title i {
-            color: var(--accent-purple);
             font-size: 20px;
+            font-weight: 600;
         }
 
         .chat-actions {
             display: flex;
-            gap: 8px;
+            gap: 10px;
         }
 
         .chat-action-btn {
-            width: 36px;
-            height: 36px;
+            width: 40px;
+            height: 40px;
             border-radius: 50%;
             background: rgba(255, 255, 255, 0.1);
             border: none;
             color: var(--text-primary);
             cursor: pointer;
-            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all var(--transition-fast);
         }
 
         .chat-action-btn:hover {
             background: var(--accent-purple);
-            transform: rotate(90deg);
+            transform: rotate(15deg);
         }
 
         .messages-container {
             flex: 1;
-            padding: 24px;
-            background: rgba(10, 10, 20, 0.6);
-            backdrop-filter: blur(10px);
-            border-radius: 0 0 var(--border-radius-lg) var(--border-radius-lg);
-            border: 1px solid var(--glass-border);
-            border-top: none;
+            padding: 20px;
             overflow-y: auto;
-            max-height: 500px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
+            gap: 15px;
         }
 
         .message {
             max-width: 85%;
-            padding: 16px 20px;
-            border-radius: 20px;
-            animation: messageSlide 0.3s ease-out;
+            padding: 15px 20px;
+            border-radius: var(--radius-lg);
+            animation: fadeIn 0.3s ease;
             position: relative;
             word-break: break-word;
-            line-height: 1.5;
-        }
-
-        @keyframes messageSlide {
-            from {
-                opacity: 0;
-                transform: translateY(10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
         }
 
         .message.my-message {
             align-self: flex-end;
-            background: linear-gradient(135deg, var(--accent-purple), #7b2cbf);
-            border-bottom-right-radius: 4px;
-            color: white;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            border-bottom-left-radius: var(--radius-sm);
         }
 
         .message.their-message {
             align-self: flex-start;
-            background: rgba(255, 255, 255, 0.1);
-            border-bottom-left-radius: 4px;
-            backdrop-filter: blur(10px);
+            background: var(--glass-bg);
+            border-bottom-right-radius: var(--radius-sm);
+            border: 1px solid var(--glass-border);
         }
 
-        .message-timestamp {
-            font-size: 11px;
-            opacity: 0.7;
-            margin-top: 4px;
-            display: block;
-            text-align: right;
+        .message-sender {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 5px;
+            font-weight: 500;
         }
 
         .chat-input-container {
             padding: 20px;
             background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-radius: var(--border-radius);
-            border: 1px solid var(--glass-border);
+            border-top: 1px solid var(--glass-border);
         }
 
         .chat-input-group {
             display: flex;
-            gap: 12px;
-            align-items: center;
+            gap: 15px;
         }
 
         #chatMessageInput {
             flex: 1;
-            padding: 16px 24px;
+            padding: 15px 20px;
             background: rgba(255, 255, 255, 0.07);
-            border: 2px solid transparent;
-            border-radius: 100px;
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-xl);
             color: var(--text-primary);
-            font-size: 15px;
-            transition: var(--transition);
+            font-size: 16px;
+            transition: all var(--transition-fast);
         }
 
         #chatMessageInput:focus {
             outline: none;
             border-color: var(--accent-purple);
-            background: rgba(255, 255, 255, 0.1);
+            box-shadow: 0 0 0 3px rgba(138, 43, 226, 0.2);
         }
 
         #sendMessageBtn {
-            width: 52px;
-            height: 52px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
             border: none;
@@ -606,82 +496,84 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: var(--transition);
+            font-size: 18px;
+            transition: all var(--transition-fast);
         }
 
         #sendMessageBtn:hover {
             transform: scale(1.1) rotate(15deg);
-            box-shadow: 0 5px 20px rgba(157, 78, 221, 0.4);
+            box-shadow: 0 0 20px rgba(138, 43, 226, 0.5);
         }
 
-        /* ==================== قسم التاريخ ==================== */
+        /* ===== HISTORY SECTION ===== */
         .history-section {
-            animation: fadeIn 0.5s ease-out 0.4s both;
+            margin-top: 40px;
+            animation: fadeIn 0.8s ease 0.5s both;
         }
 
         .section-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            margin-bottom: 25px;
         }
 
         .section-title {
             display: flex;
             align-items: center;
-            gap: 12px;
-            font-size: 22px;
-            font-weight: 600;
+            gap: 15px;
+            font-size: 24px;
+            font-weight: 700;
         }
 
-        .section-title i {
-            color: var(--accent-cyan);
+        .clear-history-btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            color: var(--text-secondary);
+            padding: 10px 20px;
+            border-radius: var(--radius-xl);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all var(--transition-fast);
+        }
+
+        .clear-history-btn:hover {
+            background: rgba(255, 71, 87, 0.1);
+            color: var(--danger);
+            border-color: var(--danger);
         }
 
         .history-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
+            gap: 25px;
         }
 
         .history-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border-radius: var(--border-radius);
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
             overflow: hidden;
-            border: 1px solid var(--glass-border);
             cursor: pointer;
-            transition: var(--transition);
-            position: relative;
+            transition: all var(--transition-normal);
+            border: 1px solid var(--glass-border);
+            height: 100%;
+            display: flex;
+            flex-direction: column;
         }
 
         .history-card:hover {
-            transform: translateY(-8px);
+            transform: translateY(-10px) scale(1.02);
             border-color: var(--accent-purple);
-            box-shadow: 0 15px 40px rgba(157, 78, 221, 0.2);
-        }
-
-        .history-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(135deg, rgba(157, 78, 221, 0.1), transparent);
-            opacity: 0;
-            transition: var(--transition);
-        }
-
-        .history-card:hover::before {
-            opacity: 1;
+            box-shadow: var(--shadow-lg);
         }
 
         .history-thumb {
             width: 100%;
             height: 160px;
             object-fit: cover;
-            transition: var(--transition);
+            transition: transform var(--transition-normal);
         }
 
         .history-card:hover .history-thumb {
@@ -690,101 +582,99 @@
 
         .history-info {
             padding: 20px;
-            position: relative;
-            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
         }
 
         .history-video-title {
             font-size: 16px;
             font-weight: 600;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
+            line-height: 1.4;
             display: -webkit-box;
             -webkit-line-clamp: 2;
             -webkit-box-orient: vertical;
             overflow: hidden;
         }
 
-        .history-date {
-            font-size: 13px;
-            color: var(--text-secondary);
+        .history-meta {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            justify-content: space-between;
+            margin-top: auto;
+            font-size: 14px;
+            color: var(--text-muted);
         }
 
-        /* ==================== وضع السينما ==================== */
-        .cinema-mode .app-container {
+        /* ===== CINEMA MODE STYLES ===== */
+        .app-wrapper.cinema-mode {
             padding: 0;
-            max-width: 100%;
+            background: #000;
         }
 
-        .cinema-mode .app-header,
+        .cinema-mode .main-header,
         .cinema-mode .video-input-section,
-        .cinema-mode .player-controls,
-        .cinema-mode .chat-section,
-        .cinema-mode .history-section {
+        .cinema-mode .history-section,
+        .cinema-mode .player-controls-bar {
             display: none;
         }
 
         .cinema-mode .player-section {
-            border-radius: 0;
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 100vw;
             height: 100vh;
-            margin: 0;
-            box-shadow: none;
+            border-radius: 0;
+            z-index: 1000;
         }
 
         .cinema-mode .player-container {
-            border-radius: 0;
             height: 100vh;
-            aspect-ratio: auto;
+            padding-bottom: 0;
         }
 
-        /* الدردشة العائمة في وضع السينما */
-        .floating-chat {
+        .cinema-mode .chat-section {
             position: fixed;
-            bottom: 30px;
-            left: 50%;
-            transform: translateX(-50%);
-            max-width: 600px;
-            width: 90%;
-            z-index: 1000;
-            display: none;
+            bottom: 20px;
+            right: 20px;
+            width: 400px;
+            height: 300px;
+            z-index: 1001;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.15);
         }
 
-        .cinema-mode .floating-chat {
-            display: block;
-        }
-
-        .floating-message {
-            background: rgba(10, 10, 20, 0.85);
+        /* ===== CINEMA MODE CHAT BUBBLES ===== */
+        .cinema-chat-bubble {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--glass-bg);
             backdrop-filter: blur(20px);
-            padding: 16px 24px;
-            border-radius: 100px;
-            margin-bottom: 12px;
             border: 1px solid var(--glass-border);
-            animation: floatIn 0.5s ease-out;
-            max-width: 80%;
-            word-break: break-word;
+            border-radius: var(--radius-xl);
+            padding: 15px 20px;
+            max-width: 300px;
+            z-index: 1001;
+            animation: fadeIn 0.5s ease;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+            transition: all var(--transition-normal);
         }
 
-        @keyframes floatIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .cinema-chat-bubble .message {
+            max-width: 100%;
+            margin-bottom: 10px;
         }
 
-        .floating-message.my-message {
-            margin-left: auto;
-            background: linear-gradient(135deg, rgba(157, 78, 221, 0.9), rgba(123, 44, 191, 0.9));
+        .cinema-chat-bubble.hidden {
+            opacity: 0;
+            transform: translateY(20px);
+            pointer-events: none;
         }
 
-        /* ==================== أيقونة الدردشة المصغرة ==================== */
-        .mini-chat-icon {
+        /* ===== MINI CHAT TOGGLE ===== */
+        .mini-chat-toggle {
             position: fixed;
             bottom: 30px;
             left: 30px;
@@ -797,112 +687,109 @@
             justify-content: center;
             cursor: pointer;
             z-index: 999;
-            box-shadow: 0 8px 30px rgba(157, 78, 221, 0.4);
-            transition: var(--transition);
-            animation: float 3s ease-in-out infinite;
+            box-shadow: var(--shadow-lg);
+            font-size: 22px;
+            transition: all var(--transition-normal);
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
-        }
-
-        .mini-chat-icon:hover {
+        .mini-chat-toggle:hover {
             transform: scale(1.1);
-            box-shadow: 0 12px 40px rgba(157, 78, 221, 0.6);
         }
 
-        .mini-chat-icon.hidden {
-            display: none;
-        }
-
-        .notification-badge {
-            position: absolute;
-            top: -5px;
-            right: -5px;
-            background: #ff4757;
-            color: white;
-            font-size: 12px;
-            width: 22px;
-            height: 22px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .mini-chat-toggle.has-notification {
             animation: pulse 1.5s infinite;
+            box-shadow: 0 0 30px rgba(138, 43, 226, 0.7);
         }
 
-        /* ==================== تصميم متجاوب ==================== */
+        /* ===== RESPONSIVE DESIGN ===== */
+        /* Desktop Layout */
         @media (min-width: 1024px) {
-            .app-container {
-                grid-template-columns: 1fr 400px;
-                grid-template-rows: auto auto 1fr auto;
-                gap: 24px;
+            .main-content {
+                flex-direction: row;
+                height: 70vh;
             }
             
             .player-section {
-                grid-column: 1;
-                grid-row: 2;
+                flex: 2;
             }
             
             .chat-section {
-                grid-column: 2;
-                grid-row: 2 / span 2;
-                height: calc(100vh - 200px);
-            }
-            
-            .history-section {
-                grid-column: 1;
-                grid-row: 3;
+                flex: 1;
+                min-width: 350px;
+                max-width: 450px;
             }
         }
 
-        @media (max-width: 768px) {
-            .app-container {
-                padding: 16px;
-                gap: 16px;
+        /* Tablet Layout */
+        @media (max-width: 1023px) and (min-width: 768px) {
+            .history-grid {
+                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            }
+        }
+
+        /* Mobile Layout */
+        @media (max-width: 767px) {
+            .app-wrapper {
+                padding: 15px;
             }
             
-            .app-header {
+            .main-header {
                 flex-direction: column;
-                gap: 16px;
-                text-align: center;
-                padding: 16px;
+                gap: 20px;
+                align-items: stretch;
+            }
+            
+            .header-controls {
+                justify-content: space-between;
             }
             
             .input-group {
                 flex-direction: column;
             }
             
-            .load-video-btn {
+            #loadVideoBtn {
                 width: 100%;
-                justify-content: center;
-            }
-            
-            .player-controls {
-                flex-wrap: wrap;
-                justify-content: center;
-                gap: 12px;
+                padding: 18px;
             }
             
             .history-grid {
-                grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+                grid-template-columns: 1fr;
             }
             
-            .floating-chat {
-                width: 95%;
-                bottom: 20px;
+            .cinema-mode .chat-section {
+                width: calc(100% - 40px);
+                right: 20px;
             }
             
-            .mini-chat-icon {
+            .mini-chat-toggle {
                 bottom: 20px;
                 left: 20px;
                 width: 50px;
                 height: 50px;
             }
+            
+            .cinema-chat-bubble {
+                width: calc(100% - 40px);
+                right: 20px;
+            }
         }
 
-        /* ==================== شريط التمرير المخصص ==================== */
+        /* ===== UTILITY CLASSES ===== */
+        .hidden {
+            display: none !important;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
+        }
+
+        /* ===== SCROLLBAR STYLING ===== */
         ::-webkit-scrollbar {
             width: 10px;
         }
@@ -913,173 +800,181 @@
         }
 
         ::-webkit-scrollbar-thumb {
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
+            background: linear-gradient(to bottom, var(--accent-purple), var(--accent-pink));
             border-radius: 10px;
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
+            background: linear-gradient(to bottom, var(--accent-pink), var(--accent-cyan));
         }
 
-        /* ==================== تأثيرات إضافية ==================== */
-        .glow-effect {
+        /* ===== CINEMA MODE VIDEO LAYOUT ADJUSTMENTS ===== */
+        .cinema-mode.desktop-layout .player-section {
+            width: 75vw;
+            right: 0;
+        }
+        
+        .cinema-mode.desktop-layout .chat-section {
+            left: 20px;
+            right: auto;
+        }
+
+        /* ===== LOADING STATES ===== */
+        .loading {
             position: relative;
+            overflow: hidden;
         }
 
-        .glow-effect::before {
+        .loading::after {
             content: '';
             position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(45deg, var(--accent-purple), var(--accent-pink), var(--accent-cyan));
-            border-radius: inherit;
-            z-index: -1;
-            opacity: 0;
-            transition: var(--transition);
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            animation: loading 1.5s infinite;
         }
 
-        .glow-effect:hover::before {
-            opacity: 0.6;
-            filter: blur(10px);
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
         }
     </style>
 </head>
 <body>
-    <!-- خلفية النجوم المتحركة -->
-    <div class="cosmic-background" id="starsContainer"></div>
-
-    <!-- التطبيق الرئيسي -->
-    <div class="app-container">
-        <!-- Header -->
-        <header class="app-header">
+    <div class="app-wrapper" id="appWrapper">
+        <!-- Header Section -->
+        <header class="main-header">
             <div class="logo-container">
-                <div class="logo">
+                <div class="logo-icon">
                     <i class="fas fa-film"></i>
                 </div>
                 <div class="logo-text">
-                    <h1>Cosmic Watch</h1>
-                    <p>شاهد الفيديو مع الأصدقاء في وقت واحد</p>
+                    <h1>Watch Party</h1>
+                    <p>مشاهدة جماعية في وقت واحد</p>
                 </div>
             </div>
             
-            <div class="status-bar">
-                <div class="online-indicator">
+            <div class="header-controls">
+                <div class="online-status">
                     <div class="online-dot"></div>
-                    <span>متصلون الآن:</span>
-                    <span class="user-count" id="onlineCount">1</span>
+                    <span>المتصلون:</span>
+                    <span id="onlineCount">1</span>
                 </div>
+                
+                <button class="cinema-mode-toggle" id="cinemaModeBtn">
+                    <i class="fas fa-expand"></i>
+                    وضع السينما
+                </button>
             </div>
         </header>
 
-        <!-- Video Input -->
+        <!-- Video Input Section -->
         <section class="video-input-section">
             <div class="input-group">
-                <div class="url-input-container">
-                    <input type="text" id="videoUrlInput" placeholder="https://www.youtube.com/watch?v=..." dir="ltr">
-                    <i class="fas fa-link"></i>
-                </div>
-                <button class="load-video-btn" id="loadVideoBtn">
-                    <i class="fas fa-play"></i>
-                    شغل الفيديو
+                <input type="text" id="videoUrlInput" placeholder="الصق رابط فيديو YouTube هنا...">
+                <button id="loadVideoBtn">
+                    <i class="fas fa-play-circle"></i>
+                    تشغيل الفيديو
                 </button>
             </div>
         </section>
 
-        <!-- Video Player Section -->
-        <section class="player-section">
-            <div class="player-container">
-                <div id="youtubePlayer"></div>
-                <div class="player-placeholder" id="playerPlaceholder">
-                    <i class="fas fa-video placeholder-icon"></i>
-                    <p class="placeholder-text">ضع رابط فيديو يوتيوب لتبدأ الحفلة مع أصدقائك</p>
+        <!-- Main Content Area -->
+        <div class="main-content">
+            <!-- Player Section -->
+            <section class="player-section">
+                <div class="player-container">
+                    <div id="youtubePlayer"></div>
+                    <div class="player-placeholder" id="playerPlaceholder">
+                        <i class="fas fa-video placeholder-icon"></i>
+                        <h2>مرحبًا في Watch Party</h2>
+                        <p>ضع رابط فيديو YouTube لتبدأ الحفلة</p>
+                    </div>
                 </div>
-                <div class="player-overlay">
-                    <!-- يمكن إضافة عناصر التحكم هنا -->
-                </div>
-            </div>
-            
-            <!-- Player Controls -->
-            <div class="player-controls">
-                <div class="control-left">
+                
+                <div class="player-controls-bar">
                     <button class="control-btn" id="playPauseBtn" title="تشغيل / إيقاف">
                         <i class="fas fa-play"></i>
                     </button>
+                    
                     <div class="time-display">
-                        <span id="currentTime">00:00</span>
-                        <span class="time-separator">/</span>
-                        <span id="duration">00:00</span>
+                        <span id="currentTime">00:00</span> / <span id="duration">00:00</span>
+                    </div>
+                    
+                    <div class="player-title" id="playerTitle">لم يتم تحميل فيديو</div>
+                </div>
+            </section>
+
+            <!-- Chat Section -->
+            <section class="chat-section" id="chatSection">
+                <div class="chat-header">
+                    <div class="chat-title">
+                        <i class="fas fa-comments"></i>
+                        <span>دردشة المجموعة</span>
+                    </div>
+                    
+                    <div class="chat-actions">
+                        <button class="chat-action-btn" id="clearChatBtn" title="مسح الدردشة">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                        <button class="chat-action-btn" id="minimizeChatBtn" title="تصغير">
+                            <i class="fas fa-minus"></i>
+                        </button>
                     </div>
                 </div>
-                <div class="control-right">
-                    <button class="control-btn cinema-mode-btn" id="cinemaModeBtn" title="وضع السينما">
-                        <i class="fas fa-expand"></i>
-                    </button>
-                    <button class="control-btn" id="exitCinemaBtn" title="خروج من وضع السينما" style="display: none;">
-                        <i class="fas fa-compress"></i>
-                    </button>
+                
+                <div class="messages-container" id="messagesContainer">
+                    <!-- Messages will appear here -->
                 </div>
-            </div>
-        </section>
-
-        <!-- Chat Section -->
-        <section class="chat-section">
-            <div class="chat-header">
-                <div class="chat-title">
-                    <i class="fas fa-comments"></i>
-                    <h3>الدردشة</h3>
+                
+                <div class="chat-input-container">
+                    <div class="chat-input-group">
+                        <input type="text" id="chatMessageInput" placeholder="اكتب رسالتك هنا...">
+                        <button id="sendMessageBtn">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
                 </div>
-                <div class="chat-actions">
-                    <button class="chat-action-btn" id="clearChatBtn" title="مسح الدردشة">
-                        <i class="fas fa-trash-alt"></i>
-                    </button>
-                </div>
-            </div>
-            
-            <div class="messages-container" id="messagesContainer">
-                <!-- الرسائل ستظهر هنا -->
-            </div>
-            
-            <div class="chat-input-container">
-                <div class="chat-input-group">
-                    <input type="text" id="chatMessageInput" placeholder="اكتب رسالتك هنا...">
-                    <button id="sendMessageBtn">
-                        <i class="fas fa-paper-plane"></i>
-                    </button>
-                </div>
-            </div>
-        </section>
+            </section>
+        </div>
 
         <!-- History Section -->
         <section class="history-section">
             <div class="section-header">
                 <div class="section-title">
                     <i class="fas fa-history"></i>
-                    <h3>الفيديوهات السابقة</h3>
+                    <span>سجل المشاهدة</span>
                 </div>
+                
+                <button class="clear-history-btn" id="clearHistoryBtn">
+                    <i class="fas fa-broom"></i>
+                    مسح السجل
+                </button>
             </div>
             
             <div class="history-grid" id="historyGrid">
-                <!-- البطاقات ستظهر هنا -->
+                <!-- History cards will be loaded here -->
             </div>
         </section>
+
+        <!-- Mini Chat Toggle -->
+        <div class="mini-chat-toggle hidden" id="miniChatToggle">
+            <i class="fas fa-comment"></i>
+        </div>
     </div>
 
-    <!-- الدردشة العائمة في وضع السينما -->
-    <div class="floating-chat" id="floatingChat">
-        <!-- الرسائل العائمة ستظهر هنا -->
-    </div>
-
-    <!-- أيقونة الدردشة المصغرة -->
-    <div class="mini-chat-icon hidden" id="miniChatIcon">
-        <i class="fas fa-comment-dots"></i>
-        <div class="notification-badge hidden" id="notificationBadge">0</div>
+    <!-- Cinema Mode Chat Bubbles -->
+    <div class="cinema-chat-bubble hidden" id="cinemaChatBubble">
+        <div id="cinemaMessagesContainer">
+            <!-- Cinema mode messages will appear here -->
+        </div>
     </div>
 
     <script>
         // ============================================
-        // 1. تهيئة Firebase (نفس المنطق الأصلي)
+        // 1. FIREBASE CONFIGURATION (NO CHANGES)
         // ============================================
         const firebaseConfig = {
             apiKey: "AIzaSyAJvohW3m1-sZAlrTjkv7UZqTLC6WigePo",
@@ -1095,27 +990,29 @@
         const auth = firebase.auth();
 
         // ============================================
-        // 2. حالة التطبيق (نفس المنطق الأصلي)
+        // 2. APPLICATION STATE & VARIABLES
         // ============================================
         let player = null;
         let currentUser = null;
         const ROOM_ID = "cosmic_room_v1";
         let currentVideoId = null;
-        let isCinemaMode = false;
-
-        // محرك المزامنة (نفس المنطق الأصلي)
+        let currentVideoTitle = "لم يتم تحميل فيديو";
+        
+        // Sync Engine Variables
         let isApplyingRemoteAction = false;
         let lastLocalActionTime = 0;
         let lastKnownTime = 0;
         let manualSeekInterval = null;
         const SYNC_TOLERANCE = 0.8;
         const SEEK_DETECT_THRESHOLD = 1.0;
-
-        // حالة الدردشة
+        
+        // UI State Variables
+        let isCinemaMode = false;
+        let isMobileView = window.innerWidth < 768;
         let chatUnreadCount = 0;
-        let isDraggingChat = false;
-
-        // مراجع Firebase
+        let cinemaChatTimeout = null;
+        
+        // Firebase References
         let roomRef = null;
         let videoStateRef = null;
         let chatRef = null;
@@ -1123,17 +1020,18 @@
         let historyRef = null;
 
         // ============================================
-        // 3. التهيئة (مع تحسينات الواجهة)
+        // 3. INITIALIZATION FUNCTION
         // ============================================
         async function initializeApp() {
-            createStarsBackground();
+            console.log("🚀 Watch Party - تهيئة التطبيق");
             
             try {
                 // تسجيل الدخول المجهول
                 await auth.signInAnonymously();
                 currentUser = auth.currentUser;
+                console.log("✅ تم تسجيل الدخول كمستخدم مجهول:", currentUser.uid);
                 
-                // إعداد مراجع Firebase
+                // تهيئة مراجع Firebase
                 roomRef = db.collection('rooms').doc(ROOM_ID);
                 videoStateRef = roomRef.collection('state').doc('video');
                 chatRef = roomRef.collection('messages').orderBy('timestamp', 'asc').limit(50);
@@ -1147,48 +1045,28 @@
                     lastSeen: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
                 
-                // بدء المستمعين
+                // تهيئة المكونات
+                loadYouTubePlayer();
+                setupEventListeners();
                 startVideoSyncListener();
                 startChatListener();
                 startUsersListener();
                 loadPartyHistory();
-                loadYouTubePlayer();
-                setupEventListeners();
                 
-                console.log('Cosmic Watch - التطبيق جاهز');
+                // تحديث حالة العرض
+                updateViewBasedOnScreenSize();
+                window.addEventListener('resize', updateViewBasedOnScreenSize);
+                
+                console.log("🎉 تم تهيئة التطبيق بنجاح");
                 
             } catch (error) {
-                console.error('فشل التهيئة:', error);
+                console.error('❌ فشل تهيئة التطبيق:', error);
+                alert('حدث خطأ في تهيئة التطبيق. يرجى تحديث الصفحة.');
             }
         }
 
         // ============================================
-        // 4. خلفية النجوم المتحركة
-        // ============================================
-        function createStarsBackground() {
-            const container = document.getElementById('starsContainer');
-            const starCount = 150;
-            
-            for (let i = 0; i < starCount; i++) {
-                const star = document.createElement('div');
-                const size = Math.random() * 3;
-                const duration = Math.random() * 3 + 2;
-                
-                star.className = `star ${size < 1 ? 'small' : size < 2 ? 'medium' : 'large'}`;
-                star.style.left = Math.random() * 100 + 'vw';
-                star.style.top = Math.random() * 100 + 'vh';
-                star.style.width = size + 'px';
-                star.style.height = size + 'px';
-                star.style.opacity = Math.random() * 0.5 + 0.3;
-                star.style.animationDuration = duration + 's';
-                star.style.animationDelay = Math.random() * 2 + 's';
-                
-                container.appendChild(star);
-            }
-        }
-
-        // ============================================
-        // 5. مشغل يوتيوب (نفس المنطق مع تحسينات)
+        // 4. YOUTUBE PLAYER FUNCTIONS
         // ============================================
         function loadYouTubePlayer() {
             if (window.YT && window.YT.Player) {
@@ -1212,19 +1090,18 @@
                 },
                 events: {
                     'onReady': onPlayerReady,
-                    'onStateChange': onPlayerStateChange
+                    'onStateChange': onPlayerStateChange,
+                    'onError': onPlayerError
                 }
             });
         }
 
         function onPlayerReady() {
+            console.log("✅ مشغل YouTube جاهز");
             document.getElementById('playerPlaceholder').style.display = 'none';
             setInterval(updateTimeDisplay, 1000);
             loadLastVideo();
             startManualSeekDetection();
-            
-            // إضافة تأثير عند جاهزية المشغل
-            document.querySelector('.player-container').classList.add('glow-effect');
         }
 
         function onPlayerStateChange(event) {
@@ -1249,6 +1126,11 @@
             }
         }
 
+        function onPlayerError(error) {
+            console.error('❌ خطأ في مشغل YouTube:', error);
+            alert('حدث خطأ في تحميل الفيديو. يرجى التحقق من الرابط والمحاولة مرة أخرى.');
+        }
+
         function updatePlayPauseButton(state) {
             const btn = document.getElementById('playPauseBtn');
             const icon = btn.querySelector('i');
@@ -1256,62 +1138,7 @@
         }
 
         // ============================================
-        // 6. التحكم بوضع السينما
-        // ============================================
-        function toggleCinemaMode() {
-            isCinemaMode = !isCinemaMode;
-            const appContainer = document.querySelector('.app-container');
-            const cinemaBtn = document.getElementById('cinemaModeBtn');
-            const exitCinemaBtn = document.getElementById('exitCinemaBtn');
-            
-            if (isCinemaMode) {
-                appContainer.classList.add('cinema-mode');
-                cinemaBtn.style.display = 'none';
-                exitCinemaBtn.style.display = 'flex';
-                
-                // إخفاء أيقونة الدردشة المصغرة
-                document.getElementById('miniChatIcon').classList.add('hidden');
-                
-                // عرض رسالة ترحيبية
-                showFloatingMessage('أنت الآن في وضع السينما. استمتع بالمشاهدة!', 'system');
-            } else {
-                appContainer.classList.remove('cinema-mode');
-                cinemaBtn.style.display = 'flex';
-                exitCinemaBtn.style.display = 'none';
-                
-                // إظهار أيقونة الدردشة المصغرة إذا كان هناك رسائل غير مقروءة
-                if (chatUnreadCount > 0) {
-                    document.getElementById('miniChatIcon').classList.remove('hidden');
-                }
-            }
-        }
-
-        function showFloatingMessage(text, type = 'their-message') {
-            if (!isCinemaMode) return;
-            
-            const floatingChat = document.getElementById('floatingChat');
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `floating-message ${type}`;
-            messageDiv.textContent = text;
-            
-            floatingChat.appendChild(messageDiv);
-            
-            // إزالة الرسالة بعد 5 ثواني
-            setTimeout(() => {
-                if (messageDiv.parentNode) {
-                    messageDiv.style.opacity = '0';
-                    messageDiv.style.transform = 'translateY(20px)';
-                    setTimeout(() => {
-                        if (messageDiv.parentNode) {
-                            messageDiv.parentNode.removeChild(messageDiv);
-                        }
-                    }, 300);
-                }
-            }, 5000);
-        }
-
-        // ============================================
-        // 7. محرك المزامنة (نفس المنطق الأصلي)
+        // 5. PERFECT SYNC ENGINE (NO CHANGES)
         // ============================================
         function startManualSeekDetection() {
             if (manualSeekInterval) clearInterval(manualSeekInterval);
@@ -1385,13 +1212,9 @@
                         currentVideoId = action.videoId;
                         player.loadVideoById(action.videoId, action.currentTime || 0);
                         document.getElementById('videoUrlInput').value = `https://youtu.be/${action.videoId}`;
+                        updateVideoTitle(action.videoId);
                         addToHistory(action.videoId);
                         lastKnownTime = 0;
-                        
-                        // إشعار في وضع السينما
-                        if (isCinemaMode) {
-                            showFloatingMessage('تم تغيير الفيديو', 'system');
-                        }
                     }
                     break;
 
@@ -1430,56 +1253,75 @@
         }
 
         // ============================================
-        // 8. نظام الدردشة المحسن
+        // 6. CHAT SYSTEM FUNCTIONS
         // ============================================
         function startChatListener() {
             chatRef.onSnapshot((snapshot) => {
                 const container = document.getElementById('messagesContainer');
-                container.innerHTML = '';
+                const cinemaContainer = document.getElementById('cinemaMessagesContainer');
                 
+                // مسح المحتوى القديم
+                container.innerHTML = '';
+                cinemaContainer.innerHTML = '';
+                
+                // عرض الرسائل في الوضع العادي
                 snapshot.forEach((doc) => {
                     const msg = doc.data();
-                    addMessageToChat(msg);
+                    addMessageToChat(msg, container);
+                    
+                    // في وضع السينما، نعرض فقط آخر 3 رسائل
+                    if (isCinemaMode) {
+                        addMessageToCinemaChat(msg, cinemaContainer);
+                    }
                 });
                 
+                // التمرير إلى الأسفل
                 setTimeout(() => {
                     container.scrollTop = container.scrollHeight;
+                    cinemaContainer.scrollTop = cinemaContainer.scrollHeight;
                 }, 100);
                 
-                // التحقق من الرسائل غير المقروءة
-                if (document.getElementById('chatWidget')?.classList.contains('hidden') || 
-                    !document.querySelector('.chat-section').offsetParent) {
+                // إشعارات الرسائل غير المقروءة
+                if (document.getElementById('chatSection').classList.contains('hidden') || isCinemaMode) {
                     const lastMsg = snapshot.docs[snapshot.docs.length - 1]?.data();
                     if (lastMsg && lastMsg.userId !== currentUser.uid) {
                         chatUnreadCount++;
                         updateChatNotification();
                         
-                        // عرض الرسالة في وضع السينما
+                        // في وضع السينما، نظهر فقاعة الدردشة مؤقتًا
                         if (isCinemaMode) {
-                            showFloatingMessage(lastMsg.text, 'their-message');
+                            showCinemaChatBubble();
                         }
                     }
                 }
             });
         }
 
-        function addMessageToChat(message) {
-            const container = document.getElementById('messagesContainer');
+        function addMessageToChat(message, container) {
             const isMyMessage = message.userId === currentUser.uid;
             
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${isMyMessage ? 'my-message' : 'their-message'}`;
             
-            const timestamp = message.timestamp?.toDate() || new Date();
-            const timeStr = timestamp.toLocaleTimeString('ar-EG', { 
-                hour: '2-digit', 
-                minute: '2-digit' 
-            });
-            
             messageDiv.innerHTML = `
+                ${!isMyMessage ? `<div class="message-sender">مستخدم</div>` : ''}
                 <div class="message-text">${message.text}</div>
-                <span class="message-timestamp">${timeStr}</span>
             `;
+            
+            container.appendChild(messageDiv);
+        }
+
+        function addMessageToCinemaChat(message, container) {
+            const isMyMessage = message.userId === currentUser.uid;
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isMyMessage ? 'my-message' : 'their-message'}`;
+            messageDiv.textContent = message.text;
+            
+            // إضافة فقط آخر 3 رسائل
+            if (container.children.length >= 3) {
+                container.removeChild(container.firstChild);
+            }
             
             container.appendChild(messageDiv);
         }
@@ -1488,7 +1330,10 @@
             const input = document.getElementById('chatMessageInput');
             const text = input.value.trim();
             
-            if (!text || !currentUser) return;
+            if (!text || !currentUser) {
+                input.focus();
+                return;
+            }
             
             try {
                 await roomRef.collection('messages').add({
@@ -1500,31 +1345,129 @@
                 input.value = '';
                 input.focus();
                 
-                // عرض الرسالة في وضع السينما
-                if (isCinemaMode) {
-                    showFloatingMessage(text, 'my-message');
-                }
+            } catch (error) {
+                console.error('❌ خطأ في إرسال الرسالة:', error);
+                alert('حدث خطأ في إرسال الرسالة. يرجى المحاولة مرة أخرى.');
+            }
+        }
+
+        async function clearChat() {
+            if (!confirm('هل أنت متأكد من رغبتك في مسح جميع الرسائل؟')) {
+                return;
+            }
+            
+            try {
+                const messages = await chatRef.get();
+                const batch = db.batch();
+                
+                messages.docs.forEach((doc) => {
+                    batch.delete(doc.ref);
+                });
+                
+                await batch.commit();
+                console.log('✅ تم مسح الدردشة');
                 
             } catch (error) {
-                console.error('خطأ في إرسال الرسالة:', error);
+                console.error('❌ خطأ في مسح الدردشة:', error);
+                alert('حدث خطأ في مسح الدردشة.');
             }
         }
 
         function updateChatNotification() {
-            const miniIcon = document.getElementById('miniChatIcon');
-            const badge = document.getElementById('notificationBadge');
-            
+            const miniToggle = document.getElementById('miniChatToggle');
             if (chatUnreadCount > 0) {
-                badge.textContent = chatUnreadCount;
-                badge.classList.remove('hidden');
-                miniIcon.classList.remove('hidden');
+                miniToggle.classList.add('has-notification');
+                miniToggle.innerHTML = `<i class="fas fa-comment"></i><span class="notification-badge">${chatUnreadCount}</span>`;
             } else {
-                badge.classList.add('hidden');
+                miniToggle.classList.remove('has-notification');
+                miniToggle.innerHTML = `<i class="fas fa-comment"></i>`;
             }
         }
 
         // ============================================
-        // 9. نظام الحضور (نفس المنطق)
+        // 7. CINEMA MODE FUNCTIONS
+        // ============================================
+        function toggleCinemaMode() {
+            const appWrapper = document.getElementById('appWrapper');
+            const chatSection = document.getElementById('chatSection');
+            const miniToggle = document.getElementById('miniChatToggle');
+            const cinemaBubble = document.getElementById('cinemaChatBubble');
+            
+            isCinemaMode = !isCinemaMode;
+            
+            if (isCinemaMode) {
+                // تفعيل وضع السينما
+                appWrapper.classList.add('cinema-mode');
+                chatSection.classList.add('hidden');
+                miniToggle.classList.remove('hidden');
+                
+                // إضافة كلاس للتصميم بناءً على نوع الجهاز
+                if (!isMobileView) {
+                    appWrapper.classList.add('desktop-layout');
+                }
+                
+                // تحديث زر التبديل
+                document.getElementById('cinemaModeBtn').innerHTML = `
+                    <i class="fas fa-compress"></i>
+                    الخروج من وضع السينما
+                `;
+                
+                console.log("🎬 تم تفعيل وضع السينما");
+            } else {
+                // تعطيل وضع السينما
+                appWrapper.classList.remove('cinema-mode');
+                appWrapper.classList.remove('desktop-layout');
+                chatSection.classList.remove('hidden');
+                miniToggle.classList.add('hidden');
+                cinemaBubble.classList.add('hidden');
+                
+                // تحديث زر التبديل
+                document.getElementById('cinemaModeBtn').innerHTML = `
+                    <i class="fas fa-expand"></i>
+                    وضع السينما
+                `;
+                
+                console.log("📱 تم الخروج من وضع السينما");
+            }
+        }
+
+        function showCinemaChatBubble() {
+            const cinemaBubble = document.getElementById('cinemaChatBubble');
+            cinemaBubble.classList.remove('hidden');
+            
+            // إخفاء الفقاعة بعد 10 ثوانٍ
+            if (cinemaChatTimeout) {
+                clearTimeout(cinemaChatTimeout);
+            }
+            
+            cinemaChatTimeout = setTimeout(() => {
+                cinemaBubble.classList.add('hidden');
+            }, 10000);
+        }
+
+        function toggleMiniChat() {
+            const chatSection = document.getElementById('chatSection');
+            const miniToggle = document.getElementById('miniChatToggle');
+            
+            if (isCinemaMode) {
+                // في وضع السينما، نعرض فقاعة الدردشة مؤقتًا
+                showCinemaChatBubble();
+            } else {
+                // في الوضع العادي، نعرض/نخفي قسم الدردشة
+                chatSection.classList.toggle('hidden');
+                
+                if (chatSection.classList.contains('hidden')) {
+                    miniToggle.classList.remove('hidden');
+                } else {
+                    miniToggle.classList.add('hidden');
+                    chatUnreadCount = 0;
+                    updateChatNotification();
+                }
+            }
+        }
+
+        // ============================================
+        // 8. ONLINE PRESENCE FUNCTIONS
         // ============================================
         function startUsersListener() {
             roomRef.collection('users')
@@ -1546,6 +1489,7 @@
                     document.getElementById('onlineCount').textContent = onlineCount;
                 });
             
+            // تحديث حالة المستخدم كل 30 ثانية
             setInterval(() => {
                 if (usersRef) {
                     usersRef.update({
@@ -1556,30 +1500,31 @@
         }
 
         // ============================================
-        // 10. تاريخ الفيديوهات المحسن
+        // 9. VIDEO HISTORY FUNCTIONS
         // ============================================
         async function loadPartyHistory() {
             try {
                 const snapshot = await historyRef.get();
                 const historyGrid = document.getElementById('historyGrid');
-                historyGrid.innerHTML = '';
                 
                 if (snapshot.empty) {
                     historyGrid.innerHTML = `
-                        <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: var(--text-secondary)">
-                            <i class="fas fa-history" style="font-size: 48px; margin-bottom: 16px; opacity: 0.5"></i>
-                            <p>لا توجد فيديوهات سابقة</p>
+                        <div style="text-align:center; padding: 3rem; color: var(--text-muted); grid-column: 1/-1;">
+                            <i class="fas fa-history" style="font-size: 3rem; margin-bottom: 1rem; opacity: 0.5;"></i>
+                            <p>لا توجد فيديوهات سابقة في السجل</p>
                         </div>
                     `;
                     return;
                 }
+                
+                historyGrid.innerHTML = '';
                 
                 snapshot.forEach(async (doc) => {
                     await addVideoToHistory(doc.data());
                 });
                 
             } catch (error) {
-                console.error('خطأ في تحميل التاريخ:', error);
+                console.error('❌ خطأ في تحميل السجل:', error);
             }
         }
 
@@ -1591,7 +1536,7 @@
             card.dataset.videoId = video.videoId;
             
             let videoTitle = video.title || 'فيديو';
-            let videoDate = 'قريباً';
+            let addedDate = 'غير معروف';
             
             if (!video.title) {
                 try {
@@ -1604,38 +1549,24 @@
             }
             
             if (video.addedAt) {
-                const date = video.addedAt.toDate();
-                videoDate = date.toLocaleDateString('ar-EG', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                });
+                addedDate = new Date(video.addedAt.toDate()).toLocaleDateString('ar-SA');
             }
             
             card.innerHTML = `
                 <img src="https://img.youtube.com/vi/${video.videoId}/hqdefault.jpg" 
                      alt="${videoTitle}" 
-                     class="history-thumb"
-                     loading="lazy">
+                     class="history-thumb">
                 <div class="history-info">
                     <div class="history-video-title">${videoTitle}</div>
-                    <div class="history-date">
-                        <i class="far fa-calendar"></i>
-                        ${videoDate}
+                    <div class="history-meta">
+                        <span><i class="far fa-calendar"></i> ${addedDate}</span>
+                        <span><i class="far fa-clock"></i> ${video.duration || '--:--'}</span>
                     </div>
                 </div>
             `;
             
             card.addEventListener('click', () => {
                 loadVideoFromId(video.videoId);
-                
-                // إضافة تأثير للبطاقة المختارة
-                document.querySelectorAll('.history-card').forEach(c => {
-                    c.style.transform = 'scale(1)';
-                    c.style.borderColor = 'var(--glass-border)';
-                });
-                card.style.transform = 'scale(1.02)';
-                card.style.borderColor = 'var(--accent-purple)';
             });
             
             historyGrid.appendChild(card);
@@ -1645,41 +1576,74 @@
             if (!videoId) return;
             
             try {
+                // التحقق مما إذا كان الفيديو موجودًا بالفعل في السجل
                 const existing = await historyRef.where('videoId', '==', videoId).get();
                 if (!existing.empty) return;
                 
                 let videoTitle = '';
+                let videoDuration = '';
+                
                 try {
                     const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${videoId}`);
                     const data = await response.json();
                     videoTitle = data.title || '';
                 } catch (e) {
-                    console.error('خطأ في جلب عنوان الفيديو:', e);
+                    console.error('خطأ في جلب معلومات الفيديو:', e);
                 }
                 
                 await roomRef.collection('history').add({
                     videoId: videoId,
                     title: videoTitle,
+                    duration: videoDuration,
                     addedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
+                // تحديث عرض السجل
                 loadPartyHistory();
                 
             } catch (error) {
-                console.error('خطأ في إضافة الفيديو إلى التاريخ:', error);
+                console.error('❌ خطأ في إضافة الفيديو إلى السجل:', error);
+            }
+        }
+
+        async function clearHistory() {
+            if (!confirm('هل أنت متأكد من رغبتك في مسح سجل المشاهدة بالكامل؟ لا يمكن التراجع عن هذا الإجراء.')) {
+                return;
+            }
+            
+            try {
+                const history = await historyRef.get();
+                const batch = db.batch();
+                
+                history.docs.forEach((doc) => {
+                    batch.delete(doc.ref);
+                });
+                
+                await batch.commit();
+                console.log('✅ تم مسح سجل المشاهدة');
+                
+                // تحديث الواجهة
+                loadPartyHistory();
+                
+            } catch (error) {
+                console.error('❌ خطأ في مسح السجل:', error);
+                alert('حدث خطأ في مسح سجل المشاهدة.');
             }
         }
 
         // ============================================
-        // 11. تحميل الفيديو
+        // 10. VIDEO LOADING FUNCTIONS
         // ============================================
         function loadVideoFromInput() {
             const url = document.getElementById('videoUrlInput').value.trim();
-            if (!url) return;
+            if (!url) {
+                document.getElementById('videoUrlInput').focus();
+                return;
+            }
             
             const videoId = extractYouTubeId(url);
             if (!videoId) {
-                alert('رابط YouTube غير صالح');
+                alert('⚠️ رابط YouTube غير صالح. يرجى التحقق من الرابط والمحاولة مرة أخرى.');
                 return;
             }
             
@@ -1704,7 +1668,24 @@
             player.loadVideoById(videoId);
             document.getElementById('videoUrlInput').value = `https://youtu.be/${videoId}`;
             document.getElementById('playerPlaceholder').style.display = 'none';
+            
+            updateVideoTitle(videoId);
             addToHistory(videoId);
+            
+            console.log(`🎥 تحميل الفيديو: ${videoId}`);
+        }
+
+        async function updateVideoTitle(videoId) {
+            try {
+                const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${videoId}`);
+                const data = await response.json();
+                currentVideoTitle = data.title || 'فيديو بدون عنوان';
+                document.getElementById('playerTitle').textContent = currentVideoTitle;
+            } catch (e) {
+                console.error('خطأ في جلب عنوان الفيديو:', e);
+                currentVideoTitle = 'فيديو';
+                document.getElementById('playerTitle').textContent = currentVideoTitle;
+            }
         }
 
         async function loadLastVideo() {
@@ -1717,16 +1698,19 @@
                     document.getElementById('videoUrlInput').value = `https://youtu.be/${data.videoId}`;
                     document.getElementById('playerPlaceholder').style.display = 'none';
                     lastKnownTime = data.currentTime || 0;
+                    
+                    updateVideoTitle(data.videoId);
                 }
             } catch (error) {
-                console.error('خطأ في تحميل آخر فيديو:', error);
+                console.error('❌ خطأ في تحميل آخر فيديو:', error);
             }
         }
 
         function extractYouTubeId(url) {
             const patterns = [
                 /(?:youtube\.com\/watch\?v=|youtu\.be\/)([a-zA-Z0-9_-]{11})/,
-                /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/
+                /youtube\.com\/embed\/([a-zA-Z0-9_-]{11})/,
+                /youtube\.com\/v\/([a-zA-Z0-9_-]{11})/
             ];
             
             for (const pattern of patterns) {
@@ -1738,16 +1722,16 @@
         }
 
         // ============================================
-        // 12. إعداد مستمعي الأحداث
+        // 11. UI CONTROLS & EVENT LISTENERS
         // ============================================
         function setupEventListeners() {
-            // زر تحميل الفيديو
+            // تحميل الفيديو
             document.getElementById('loadVideoBtn').addEventListener('click', loadVideoFromInput);
             document.getElementById('videoUrlInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') loadVideoFromInput();
             });
             
-            // عناصر التحكم بالمشغل
+            // تحكمات المشغل
             document.getElementById('playPauseBtn').addEventListener('click', () => {
                 if (!player) return;
                 if (player.getPlayerState() === YT.PlayerState.PLAYING) {
@@ -1757,33 +1741,31 @@
                 }
             });
             
-            // وضع السينما
-            document.getElementById('cinemaModeBtn').addEventListener('click', toggleCinemaMode);
-            document.getElementById('exitCinemaBtn').addEventListener('click', toggleCinemaMode);
-            
             // الدردشة
             document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
             document.getElementById('chatMessageInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') sendMessage();
             });
             
-            document.getElementById('clearChatBtn').addEventListener('click', () => {
-                if (confirm('هل تريد مسح جميع الرسائل؟')) {
-                    // يمكن إضافة منطق مسح الرسائل هنا
-                    alert('هذه الميزة تحت التطوير');
-                }
+            // أزرار الدردشة
+            document.getElementById('clearChatBtn').addEventListener('click', clearChat);
+            document.getElementById('minimizeChatBtn').addEventListener('click', () => {
+                document.getElementById('chatSection').classList.add('hidden');
+                document.getElementById('miniChatToggle').classList.remove('hidden');
             });
             
-            // أيقونة الدردشة المصغرة
-            document.getElementById('miniChatIcon').addEventListener('click', () => {
-                chatUnreadCount = 0;
-                updateChatNotification();
-                document.getElementById('miniChatIcon').classList.add('hidden');
-                
-                // تمرير إلى قسم الدردشة
-                document.querySelector('.chat-section').scrollIntoView({ 
-                    behavior: 'smooth' 
-                });
+            // زر الدردشة المصغرة
+            document.getElementById('miniChatToggle').addEventListener('click', toggleMiniChat);
+            
+            // وضع السينما
+            document.getElementById('cinemaModeBtn').addEventListener('click', toggleCinemaMode);
+            
+            // سجل المشاهدة
+            document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
+            
+            // إغلاق فقاعة الدردشة في وضع السينما
+            document.getElementById('cinemaChatBubble').addEventListener('click', () => {
+                document.getElementById('cinemaChatBubble').classList.add('hidden');
             });
         }
 
@@ -1804,18 +1786,77 @@
             return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
         }
 
+        function updateViewBasedOnScreenSize() {
+            const wasMobileView = isMobileView;
+            isMobileView = window.innerWidth < 768;
+            
+            if (wasMobileView !== isMobileView) {
+                console.log(`🔄 تغيير العرض: ${isMobileView ? 'جوال' : 'كمبيوتر'}`);
+                
+                // إذا كنا في وضع السينما، نعدل التصميم بناءً على حجم الشاشة
+                if (isCinemaMode) {
+                    const appWrapper = document.getElementById('appWrapper');
+                    if (isMobileView) {
+                        appWrapper.classList.remove('desktop-layout');
+                    } else {
+                        appWrapper.classList.add('desktop-layout');
+                    }
+                }
+            }
+        }
+
         // ============================================
-        // 13. بدء التطبيق
+        // 12. START APPLICATION & CLEANUP
         // ============================================
         window.addEventListener('load', initializeApp);
 
         window.addEventListener('beforeunload', () => {
+            // تحديث حالة المستخدم إلى غير متصل
             if (usersRef) {
                 usersRef.update({ online: false });
             }
+            
+            // تنظيف المؤقتات
             if (manualSeekInterval) {
                 clearInterval(manualSeekInterval);
             }
+            
+            if (cinemaChatTimeout) {
+                clearTimeout(cinemaChatTimeout);
+            }
+            
+            console.log("👋 إغلاق التطبيق");
+        });
+
+        // ============================================
+        // 13. ADDITIONAL UI ENHANCEMENTS
+        // ============================================
+        // إضافة تأثيرات عند تحميل العناصر
+        document.addEventListener('DOMContentLoaded', () => {
+            // إضافة تأثيرات للبطاقات عند الظهور
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+            
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.style.opacity = '1';
+                        entry.target.style.transform = 'translateY(0)';
+                    }
+                });
+            }, observerOptions);
+            
+            // مراقبة بطاقات التاريخ
+            setTimeout(() => {
+                document.querySelectorAll('.history-card').forEach(card => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+                    observer.observe(card);
+                });
+            }, 500);
         });
     </script>
 </body>
