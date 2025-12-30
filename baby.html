@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🎬 our watch 7afla :3</title>
+    <title>our watch 7afla :3 🎬</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.youtube.com/iframe_api"></script>
     <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
@@ -12,33 +12,33 @@
     <style>
         /* ===== CSS RESET & GLOBAL ===== */
         :root {
-            /* Romantic color scheme */
-            --primary-dark: #0f0b16;
-            --secondary-dark: #1a1525;
-            --accent-purple: #9d4edd;
-            --accent-pink: #ff4b8a;
-            --accent-cyan: #4cc9f0;
-            --accent-blue: #4361ee;
-            --text-primary: #f8f9fa;
-            --text-secondary: #e0e0ff;
-            --text-muted: #a0a0c0;
-            --glass-bg: rgba(40, 30, 60, 0.3);
+            /* نظام ألوان رومانسي ناعم */
+            --primary-dark: #0f0b1a;
+            --secondary-dark: #1a1528;
+            --accent-purple: #a855f7;
+            --accent-pink: #ec4899;
+            --accent-rose: #f472b6;
+            --accent-lavender: #c084fc;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --text-muted: #94a3b8;
+            --glass-bg: rgba(30, 15, 60, 0.3);
             --glass-border: rgba(255, 255, 255, 0.1);
             --card-bg: rgba(25, 20, 45, 0.5);
-            --my-message-bg: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-            --their-message-bg: linear-gradient(135deg, var(--accent-blue), #5a2fca);
-            --radius-sm: 8px;
+            --me-bubble: linear-gradient(135deg, #a855f7, #ec4899);
+            --omri-bubble: linear-gradient(135deg, #7e22ce, #db2777);
+            --radius-sm: 10px;
             --radius-md: 16px;
-            --radius-lg: 24px;
-            --radius-xl: 26px;
-            --shadow-sm: 0 4px 12px rgba(0, 0, 0, 0.2);
-            --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.3);
+            --radius-lg: 26px;
+            --radius-xl: 30px;
+            --shadow-sm: 0 4px 20px rgba(0, 0, 0, 0.2);
+            --shadow-md: 0 8px 32px rgba(0, 0, 0, 0.3);
             --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.4);
             --transition-fast: 0.2s ease;
             --transition-normal: 0.3s ease;
             --transition-slow: 0.5s ease;
             
-            /* Golden ratio for cinema mode */
+            /* النسب الذهبية */
             --golden-ratio: 61.8%;
             --golden-complement: 38.2%;
         }
@@ -50,31 +50,52 @@
         }
 
         body {
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
             background-color: var(--primary-dark);
             color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
             line-height: 1.6;
             background-image: 
-                radial-gradient(circle at 10% 20%, rgba(157, 78, 221, 0.15) 0%, transparent 40%),
-                radial-gradient(circle at 90% 80%, rgba(255, 75, 138, 0.15) 0%, transparent 40%);
+                radial-gradient(circle at 0% 0%, rgba(168, 85, 247, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 100% 100%, rgba(236, 72, 153, 0.15) 0%, transparent 50%);
         }
 
         /* ===== ANIMATIONS ===== */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+            from { opacity: 0; transform: translateY(8px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes messageAppear {
-            from { opacity: 0; transform: translateY(8px) scale(0.98); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(20px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         @keyframes float {
             0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-5px); }
+            50% { transform: translateY(-4px); }
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        @keyframes messageAppear {
+            from { opacity: 0; transform: translateY(6px) scale(0.98); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         /* ===== TOP BAR ===== */
@@ -84,13 +105,13 @@
             right: 0;
             left: 0;
             height: 56px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(12px) saturate(180%);
-            border-bottom: 1px solid var(--glass-border);
+            background: rgba(15, 11, 26, 0.8);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
             z-index: 1000;
             display: flex;
             align-items: center;
-            padding: 0 24px;
+            padding: 0 20px;
         }
 
         .top-bar-content {
@@ -98,17 +119,16 @@
             align-items: center;
             justify-content: space-between;
             width: 100%;
-            max-width: 980px;
             margin: 0 auto;
         }
 
-        .room-info {
+        .logo-container {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
         }
 
-        .room-icon {
+        .logo-icon {
             width: 36px;
             height: 36px;
             background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
@@ -120,14 +140,22 @@
             animation: float 3s ease-in-out infinite;
         }
 
-        .room-name {
+        .logo-text {
             font-weight: 600;
-            font-size: 18px;
+            font-size: 16px;
             color: var(--text-primary);
             letter-spacing: 0.5px;
         }
 
-        .room-actions {
+        .logo-text .highlight {
+            background: linear-gradient(90deg, var(--accent-purple), var(--accent-pink));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 700;
+        }
+
+        .top-bar-actions {
             display: flex;
             align-items: center;
             gap: 8px;
@@ -136,9 +164,9 @@
         .action-btn {
             width: 40px;
             height: 40px;
-            border-radius: 50%;
-            background: rgba(255, 255, 255, 0.07);
-            border: 1px solid var(--glass-border);
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             color: var(--text-primary);
             display: flex;
             align-items: center;
@@ -149,8 +177,8 @@
         }
 
         .action-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            transform: scale(1.08);
+            background: rgba(255, 255, 255, 0.1);
+            transform: scale(1.06);
         }
 
         #toggleCinemaBtn {
@@ -161,15 +189,15 @@
         /* ===== APP WRAPPER ===== */
         .app-wrapper {
             max-width: 980px;
-            margin: 72px auto 24px;
-            padding: 0 24px;
+            margin: 76px auto 20px;
+            padding: 0 20px;
             animation: fadeIn 0.8s ease;
         }
 
         /* ===== VIDEO INPUT ===== */
         .video-input-section {
             animation: fadeIn 0.8s ease 0.1s both;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .input-group {
@@ -192,7 +220,7 @@
         #videoUrlInput:focus {
             outline: none;
             border-color: var(--accent-purple);
-            box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
         }
 
         #loadVideoBtn {
@@ -207,8 +235,9 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            min-width: 120px;
+            min-width: 100px;
             justify-content: center;
+            font-size: 15px;
         }
 
         #loadVideoBtn:hover {
@@ -216,7 +245,14 @@
             box-shadow: var(--shadow-md);
         }
 
-        /* ===== VIDEO PLAYER ===== */
+        /* ===== MAIN CONTENT - MOBILE ===== */
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+        }
+
+        /* ===== PLAYER SECTION ===== */
         .player-section {
             position: relative;
             overflow: hidden;
@@ -224,7 +260,8 @@
             box-shadow: var(--shadow-lg);
             background: #000;
             animation: fadeIn 0.8s ease 0.2s both;
-            transition: all var(--transition-normal);
+            margin-bottom: 0;
+            z-index: 10;
         }
 
         .player-container {
@@ -241,6 +278,7 @@
             width: 100%;
             height: 100%;
             border: none;
+            border-radius: var(--radius-xl);
         }
 
         .player-placeholder {
@@ -262,7 +300,7 @@
 
         .placeholder-icon {
             font-size: 64px;
-            opacity: 0.6;
+            opacity: 0.5;
             animation: float 3s ease-in-out infinite;
         }
 
@@ -270,18 +308,19 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 16px 24px;
-            background: rgba(15, 11, 22, 0.7);
-            border-top: 1px solid var(--glass-border);
-            backdrop-filter: blur(10px);
+            padding: 14px 20px;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(8px);
+            border-bottom-left-radius: var(--radius-xl);
+            border-bottom-right-radius: var(--radius-xl);
         }
 
         .control-btn {
-            width: 44px;
-            height: 44px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            background: rgba(60, 50, 90, 0.8);
-            border: 1px solid var(--glass-border);
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: var(--text-primary);
             display: flex;
             align-items: center;
@@ -294,16 +333,16 @@
         .control-btn:hover {
             background: var(--accent-purple);
             transform: scale(1.08);
-            box-shadow: 0 0 15px rgba(157, 78, 221, 0.4);
+            box-shadow: 0 0 15px rgba(168, 85, 247, 0.4);
         }
 
         .time-display {
             font-family: 'Courier New', monospace;
             font-size: 14px;
-            padding: 8px 16px;
+            padding: 8px 14px;
             background: rgba(0, 0, 0, 0.4);
             border-radius: var(--radius-md);
-            min-width: 130px;
+            min-width: 120px;
             text-align: center;
             letter-spacing: 1px;
         }
@@ -320,110 +359,82 @@
             font-size: 14px;
         }
 
-        /* ===== CHAT SECTION ===== */
+        /* ===== CHAT SECTION - MOBILE ===== */
         .chat-section {
-            display: flex;
-            flex-direction: column;
-            background: rgba(30, 25, 50, 0.25);
-            border-radius: var(--radius-xl);
+            position: relative;
+            margin-top: -20px;
+            padding-top: 30px;
+            border-top-left-radius: var(--radius-xl);
+            border-top-right-radius: var(--radius-xl);
+            background: linear-gradient(to bottom, transparent, var(--glass-bg) 10%);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: none;
+            z-index: 9;
             overflow: hidden;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow-lg);
-            backdrop-filter: blur(14px) saturate(180%);
+            height: calc(100vh - (56.25vw + 56px + 60px));
             animation: fadeIn 0.8s ease 0.3s both;
         }
 
         .chat-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 18px 24px;
-            background: rgba(40, 30, 60, 0.4);
-            border-bottom: 1px solid var(--glass-border);
+            padding: 16px 20px 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .chat-title {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             font-size: 18px;
             font-weight: 600;
         }
 
         .chat-title i {
             color: var(--accent-pink);
+            animation: heartBeat 2s ease-in-out infinite;
         }
 
         .messages-container {
             flex: 1;
-            padding: 20px;
+            padding: 16px 20px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            min-height: 200px;
+            gap: 12px;
+            max-height: calc(100% - 140px);
         }
 
+        /* ===== MESSAGE STYLES ===== */
         .message {
             max-width: 85%;
-            padding: 14px 18px;
+            padding: 12px 16px;
             border-radius: 22px;
             animation: messageAppear 0.3s ease;
             position: relative;
             word-break: break-word;
-            backdrop-filter: blur(5px);
             box-shadow: var(--shadow-sm);
         }
 
-        .message.my-message {
+        .message.me {
             align-self: flex-end;
-            background: var(--my-message-bg);
+            background: var(--me-bubble);
             border-bottom-left-radius: 8px;
             color: white;
         }
 
-        .message.their-message {
+        .message.omri {
             align-self: flex-start;
-            background: var(--their-message-bg);
+            background: var(--omri-bubble);
             border-bottom-right-radius: 8px;
             color: white;
-        }
-
-        .message-avatar {
-            position: absolute;
-            top: -10px;
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 13px;
-            font-weight: 700;
-            box-shadow: var(--shadow-sm);
-        }
-
-        .my-message .message-avatar {
-            left: -16px;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
-        }
-
-        .their-message .message-avatar {
-            right: -16px;
-            background: linear-gradient(135deg, var(--accent-blue), #5a2fca);
-        }
-
-        .message-content {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
         }
 
         .message-sender {
             font-size: 12px;
             font-weight: 700;
+            margin-bottom: 4px;
             opacity: 0.9;
-            margin-bottom: 2px;
+            letter-spacing: 0.5px;
         }
 
         .message-text {
@@ -440,9 +451,14 @@
         }
 
         .chat-input-container {
-            padding: 18px 24px;
-            background: rgba(40, 30, 60, 0.4);
-            border-top: 1px solid var(--glass-border);
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 16px 20px;
+            background: rgba(15, 11, 26, 0.8);
+            backdrop-filter: blur(12px);
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
         }
 
         .chat-input-group {
@@ -452,9 +468,9 @@
 
         #chatMessageInput {
             flex: 1;
-            padding: 16px 20px;
+            padding: 14px 18px;
             background: rgba(255, 255, 255, 0.07);
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             border-radius: var(--radius-xl);
             color: var(--text-primary);
             font-size: 15px;
@@ -464,12 +480,12 @@
         #chatMessageInput:focus {
             outline: none;
             border-color: var(--accent-purple);
-            box-shadow: 0 0 0 3px rgba(157, 78, 221, 0.2);
+            box-shadow: 0 0 0 3px rgba(168, 85, 247, 0.2);
         }
 
         #sendMessageBtn {
-            width: 52px;
-            height: 52px;
+            width: 50px;
+            height: 50px;
             border-radius: 50%;
             background: linear-gradient(135deg, var(--accent-purple), var(--accent-pink));
             border: none;
@@ -484,12 +500,12 @@
 
         #sendMessageBtn:hover {
             transform: scale(1.08) rotate(5deg);
-            box-shadow: 0 0 20px rgba(157, 78, 221, 0.4);
+            box-shadow: 0 0 20px rgba(168, 85, 247, 0.4);
         }
 
         /* ===== HISTORY SECTION ===== */
         .history-section {
-            margin-top: 32px;
+            margin-top: 30px;
             animation: fadeIn 0.8s ease 0.4s both;
         }
 
@@ -504,28 +520,28 @@
             display: flex;
             align-items: center;
             gap: 12px;
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 18px;
+            font-weight: 600;
         }
 
         .clear-history-btn {
             background: transparent;
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             color: var(--text-secondary);
-            padding: 10px 18px;
+            padding: 8px 16px;
             border-radius: var(--radius-xl);
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 6px;
             transition: all var(--transition-fast);
             font-size: 14px;
         }
 
         .clear-history-btn:hover {
-            background: rgba(255, 71, 87, 0.1);
-            color: #ff4757;
-            border-color: #ff4757;
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            border-color: #f87171;
         }
 
         .history-grid {
@@ -540,7 +556,7 @@
             overflow: hidden;
             cursor: pointer;
             transition: all var(--transition-normal);
-            border: 1px solid var(--glass-border);
+            border: 1px solid rgba(255, 255, 255, 0.08);
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -571,7 +587,7 @@
         }
 
         .history-video-title {
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 600;
             margin-bottom: 8px;
             line-height: 1.4;
@@ -585,78 +601,62 @@
             display: flex;
             justify-content: space-between;
             margin-top: auto;
-            font-size: 13px;
+            font-size: 12px;
             color: var(--text-muted);
         }
 
-        /* ===== CINEMA MODE - MOBILE ===== */
-        @media (max-width: 767px) {
-            .cinema-mode .video-input-section,
-            .cinema-mode .history-section {
-                display: none;
-            }
-            
-            .cinema-mode .app-wrapper {
-                max-width: 100%;
-                margin: 56px 0 0;
-                padding: 0;
-            }
-            
-            .cinema-mode .player-section {
-                position: fixed;
-                top: 56px;
-                right: 0;
-                width: 100%;
-                max-width: 100%;
-                height: calc(56.25vw);
-                z-index: 900;
-                border-radius: 0;
-            }
-            
-            .cinema-mode .player-container {
-                padding-bottom: 0;
-                height: 100%;
-            }
-            
-            .cinema-mode .chat-section {
-                position: fixed;
-                top: calc(56px + 56.25vw);
-                right: 0;
-                width: 100%;
-                height: calc(100vh - (56px + 56.25vw));
-                z-index: 900;
-                border-radius: 0;
-                margin: 0;
-                border-top: 1px solid var(--glass-border);
-            }
-            
-            .cinema-mode .chat-section .messages-container {
-                height: calc(100% - 130px);
-            }
+        /* ===== CINEMA MODE STYLES ===== */
+        .cinema-mode .video-input-section,
+        .cinema-mode .history-section {
+            display: none;
         }
 
-        /* ===== CINEMA MODE - DESKTOP ===== */
+        /* موبايل: وضع السينما */
+        .cinema-mode .app-wrapper {
+            max-width: 100%;
+            margin: 56px 0 0;
+            padding: 0;
+        }
+        
+        .cinema-mode .player-section {
+            position: relative;
+            width: 100%;
+            max-width: 100%;
+            height: auto;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        
+        .cinema-mode .player-container {
+            padding-bottom: 56.25%;
+        }
+        
+        .cinema-mode .chat-section {
+            margin-top: 0;
+            border-radius: 0;
+            height: calc(100vh - (56.25vw + 56px));
+            position: relative;
+        }
+
+        /* ديسكتوب: وضع السينما */
         @media (min-width: 768px) {
-            .cinema-mode .video-input-section,
-            .cinema-mode .history-section {
-                display: none;
-            }
-            
             .cinema-mode .app-wrapper {
                 max-width: 100%;
-                padding: 0 24px;
+                margin: 72px auto 0;
+                padding: 0 20px;
                 display: grid;
                 grid-template-columns: var(--golden-ratio) var(--golden-complement);
-                gap: 24px;
+                gap: 20px;
                 align-items: start;
-                margin-top: 72px;
+                height: calc(100vh - 92px);
             }
             
             .cinema-mode .player-section {
                 position: sticky;
-                top: 72px;
-                height: calc(100vh - 96px);
-                z-index: 900;
+                top: 20px;
+                height: calc(100vh - 112px);
+                border-radius: var(--radius-xl);
+                margin-bottom: 0;
             }
             
             .cinema-mode .player-container {
@@ -665,29 +665,76 @@
             }
             
             .cinema-mode .chat-section {
-                height: calc(100vh - 96px);
-                background: rgba(30, 25, 50, 0.15);
-                backdrop-filter: blur(16px) saturate(200%);
+                margin-top: 0;
+                height: calc(100vh - 112px);
+                border-radius: var(--radius-xl);
+                background: linear-gradient(135deg, rgba(30, 15, 60, 0.4), rgba(45, 20, 70, 0.3));
+                backdrop-filter: blur(14px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                display: flex;
+                flex-direction: column;
             }
             
             .cinema-mode .messages-container {
-                height: calc(100% - 130px);
+                flex: 1;
+                padding: 20px;
+                max-height: none;
+            }
+            
+            .cinema-mode .chat-input-container {
+                position: relative;
+                padding: 20px;
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
             }
         }
 
         /* ===== RESPONSIVE DESIGN ===== */
+        /* Desktop Layout */
+        @media (min-width: 768px) {
+            .app-wrapper {
+                max-width: 980px;
+            }
+            
+            .main-content {
+                flex-direction: row;
+                gap: 20px;
+            }
+            
+            .player-section {
+                flex: var(--golden-ratio);
+            }
+            
+            .chat-section {
+                flex: var(--golden-complement);
+                margin-top: 0;
+                height: 600px;
+                border-radius: var(--radius-xl);
+                background: linear-gradient(135deg, var(--glass-bg), rgba(40, 25, 70, 0.4));
+                backdrop-filter: blur(14px);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+                display: flex;
+                flex-direction: column;
+            }
+            
+            .messages-container {
+                flex: 1;
+                max-height: none;
+            }
+            
+            .chat-input-container {
+                position: relative;
+            }
+            
+            .history-grid {
+                grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            }
+        }
+
+        /* Mobile Layout */
         @media (max-width: 767px) {
             .app-wrapper {
-                padding: 0 16px;
-                margin: 60px auto 16px;
-            }
-            
-            .top-bar {
-                padding: 0 16px;
-            }
-            
-            .room-name {
-                font-size: 16px;
+                padding: 0 15px;
+                margin: 68px auto 15px;
             }
             
             .input-group {
@@ -703,30 +750,28 @@
                 grid-template-columns: 1fr;
             }
             
-            .chat-section {
-                height: 400px;
-            }
-        }
-
-        @media (min-width: 768px) and (max-width: 1023px) {
-            .app-wrapper {
-                max-width: 900px;
+            .top-bar {
+                padding: 0 15px;
             }
             
-            .main-content {
-                display: grid;
-                grid-template-columns: 1fr;
-                gap: 24px;
-            }
-            
-            .chat-section {
-                height: 450px;
+            .logo-text {
+                font-size: 14px;
             }
         }
 
         /* ===== UTILITY CLASSES ===== */
         .hidden {
             display: none !important;
+        }
+
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+
+        .glass-effect {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
         }
 
         /* ===== SCROLLBAR STYLING ===== */
@@ -745,7 +790,35 @@
         }
 
         ::-webkit-scrollbar-thumb:hover {
-            background: linear-gradient(to bottom, var(--accent-pink), var(--accent-cyan));
+            background: linear-gradient(to bottom, var(--accent-pink), var(--accent-lavender));
+        }
+
+        /* ===== LOADING STATES ===== */
+        .loading {
+            position: relative;
+            overflow: hidden;
+        }
+
+        .loading::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.05), transparent);
+            animation: loading 1.5s infinite;
+        }
+
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+        
+        /* ===== ROMANTIC ELEMENTS ===== */
+        .heart-emoji {
+            animation: heartBeat 2s infinite;
+            display: inline-block;
         }
     </style>
 </head>
@@ -753,15 +826,15 @@
     <!-- Top Bar -->
     <div class="top-bar">
         <div class="top-bar-content">
-            <div class="room-info">
-                <div class="room-icon">
-                    <i class="fas fa-heart"></i>
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-film"></i>
                 </div>
-                <span class="room-name">our watch 7afla :3</span>
+                <span class="logo-text">our watch <span class="highlight">7afla :3</span></span>
             </div>
             
-            <div class="room-actions">
-                <button class="action-btn" id="toggleCinemaBtn" title="Cinema mode">
+            <div class="top-bar-actions">
+                <button class="action-btn" id="toggleCinemaBtn" title="Cinema Mode">
                     <i class="fas fa-expand"></i>
                 </button>
             </div>
@@ -775,7 +848,7 @@
             <!-- Video Input Section -->
             <section class="video-input-section">
                 <div class="input-group">
-                    <input type="text" id="videoUrlInput" placeholder="Paste a YouTube video link...">
+                    <input type="text" id="videoUrlInput" placeholder="Paste a YouTube video URL...">
                     <button id="loadVideoBtn">
                         <i class="fas fa-play-circle"></i>
                         Play
@@ -789,8 +862,8 @@
                     <div id="youtubePlayer"></div>
                     <div class="player-placeholder" id="playerPlaceholder">
                         <i class="fas fa-heart placeholder-icon"></i>
-                        <h2>Welcome to our watch party</h2>
-                        <p>Paste a video link to start watching together</p>
+                        <h2>Welcome to our watch party <span class="heart-emoji">❤️</span></h2>
+                        <p>Add a video URL to start watching together</p>
                     </div>
                 </div>
                 
@@ -811,13 +884,24 @@
             <section class="chat-section" id="chatSection">
                 <div class="chat-header">
                     <div class="chat-title">
-                        <i class="fas fa-comment-heart"></i>
+                        <i class="fas fa-heart"></i>
                         <span>Our chat</span>
                     </div>
                 </div>
                 
                 <div class="messages-container" id="messagesContainer">
                     <!-- Messages will appear here -->
+                    <div class="message me">
+                        <div class="message-sender">Me</div>
+                        <div class="message-text">Hey 3omri! Ready to watch something? ❤️</div>
+                        <div class="message-time">Just now</div>
+                    </div>
+                    
+                    <div class="message omri">
+                        <div class="message-sender">3omri</div>
+                        <div class="message-text">Always! What should we watch today? 😊</div>
+                        <div class="message-time">Just now</div>
+                    </div>
                 </div>
                 
                 <div class="chat-input-container">
@@ -873,7 +957,7 @@
         // ============================================
         let player = null;
         let currentUser = null;
-        const ROOM_ID = "cosmic_room_v1";
+        const ROOM_ID = "our_watch_7afla";
         let currentVideoId = null;
         let currentVideoTitle = "No video loaded";
         
@@ -888,6 +972,8 @@
         // UI State Variables
         let isCinemaMode = false;
         let isMobileView = window.innerWidth < 768;
+        let autoScrollEnabled = true;
+        let userAtBottom = true;
         
         // Firebase References
         let roomRef = null;
@@ -895,12 +981,19 @@
         let chatRef = null;
         let usersRef = null;
         let historyRef = null;
+        
+        // Dual user setup
+        const USER_NAMES = {
+            'me': 'Me',
+            'omri': '3omri'
+        };
+        let myRole = 'me'; // Default, will be determined by connection order
 
         // ============================================
         // 3. INITIALIZATION FUNCTION
         // ============================================
         async function initializeApp() {
-            console.log("🚀 our watch 7afla :3 - Initializing app");
+            console.log("🚀 our watch 7afla - Initializing app");
             
             try {
                 // Anonymous login
@@ -908,18 +1001,25 @@
                 currentUser = auth.currentUser;
                 console.log("✅ Logged in as anonymous user:", currentUser.uid);
                 
+                // Determine user role based on connection order
+                const usersSnapshot = await db.collection('rooms').doc(ROOM_ID).collection('users').get();
+                myRole = usersSnapshot.empty ? 'me' : 'omri';
+                console.log(`🎭 Assigned role: ${myRole} (${USER_NAMES[myRole]})`);
+                
                 // Initialize Firebase references
                 roomRef = db.collection('rooms').doc(ROOM_ID);
                 videoStateRef = roomRef.collection('state').doc('video');
-                chatRef = roomRef.collection('messages').orderBy('timestamp', 'asc').limit(100);
+                chatRef = roomRef.collection('messages').orderBy('timestamp', 'asc').limit(50);
                 usersRef = roomRef.collection('users').doc(currentUser.uid);
                 historyRef = roomRef.collection('history').orderBy('addedAt', 'desc').limit(20);
                 
                 // Update user status
                 await usersRef.set({
                     uid: currentUser.uid,
+                    name: USER_NAMES[myRole],
                     online: true,
-                    lastSeen: firebase.firestore.FieldValue.serverTimestamp()
+                    lastSeen: firebase.firestore.FieldValue.serverTimestamp(),
+                    role: myRole
                 }, { merge: true });
                 
                 // Initialize components
@@ -938,7 +1038,7 @@
                 
             } catch (error) {
                 console.error('❌ Failed to initialize app:', error);
-                alert('An error occurred while initializing the app. Please refresh the page.');
+                alert('Failed to initialize app. Please refresh the page.');
             }
         }
 
@@ -955,18 +1055,19 @@
                 
                 // Change icon and tooltip
                 const icon = toggleCinemaBtn.querySelector('i');
+                const title = toggleCinemaBtn.getAttribute('title');
                 
                 if (isCinemaMode) {
                     icon.className = 'fas fa-compress';
-                    toggleCinemaBtn.setAttribute('title', 'Exit cinema mode');
-                    console.log("🎬 Cinema mode enabled");
+                    toggleCinemaBtn.setAttribute('title', 'Exit Cinema Mode');
+                    console.log("🎬 Cinema mode activated");
                 } else {
                     icon.className = 'fas fa-expand';
-                    toggleCinemaBtn.setAttribute('title', 'Cinema mode');
-                    console.log("📱 Cinema mode disabled");
+                    toggleCinemaBtn.setAttribute('title', 'Cinema Mode');
+                    console.log("📱 Cinema mode deactivated");
                 }
                 
-                // Adjust layout after toggle
+                // Adjust layout after switching
                 setTimeout(() => {
                     adjustLayoutForCinemaMode();
                 }, 100);
@@ -974,15 +1075,22 @@
         }
 
         function adjustLayoutForCinemaMode() {
+            const playerSection = document.querySelector('.player-section');
+            const chatSection = document.querySelector('.chat-section');
+            
             if (isCinemaMode) {
                 if (isMobileView) {
-                    // On mobile: video is fixed at top, chat is fixed below
+                    // On mobile: calculate video height based on 16:9 ratio
                     const videoHeight = window.innerWidth * 0.5625;
                     const topBarHeight = 56;
                     
-                    document.querySelector('.player-section').style.height = `${videoHeight}px`;
+                    playerSection.style.height = `${videoHeight}px`;
+                    chatSection.style.height = `calc(100vh - ${videoHeight + topBarHeight}px)`;
+                } else {
+                    // On desktop: adjust height based on window height
+                    playerSection.style.height = `calc(100vh - 112px)`;
+                    chatSection.style.height = `calc(100vh - 112px)`;
                 }
-                // On desktop: already handled by CSS grid
             }
         }
 
@@ -1049,7 +1157,7 @@
 
         function onPlayerError(error) {
             console.error('❌ YouTube player error:', error);
-            alert('Error loading video. Please check the link and try again.');
+            alert('Failed to load video. Please check the URL and try again.');
         }
 
         function updatePlayPauseButton(state) {
@@ -1174,11 +1282,16 @@
         }
 
         // ============================================
-        // 7. PERSONALIZED CHAT FOR TWO USERS
+        // 7. CHAT SYSTEM FUNCTIONS WITH AUTO-SCROLL
         // ============================================
         function startChatListener() {
             chatRef.onSnapshot((snapshot) => {
                 const container = document.getElementById('messagesContainer');
+                
+                // Check if user is at bottom of chat
+                checkIfUserAtBottom(container);
+                
+                // Show only new messages (to avoid reloading all)
                 const currentMessageCount = container.children.length;
                 
                 snapshot.docChanges().forEach((change) => {
@@ -1188,16 +1301,27 @@
                     }
                 });
                 
-                // Auto-scroll to bottom
-                setTimeout(() => {
-                    container.scrollTop = container.scrollHeight;
-                }, 100);
+                // Auto-scroll only if user is at bottom
+                if (userAtBottom && autoScrollEnabled) {
+                    setTimeout(() => {
+                        container.scrollTop = container.scrollHeight;
+                    }, 100);
+                }
             });
+        }
+
+        function checkIfUserAtBottom(container) {
+            const scrollTop = container.scrollTop;
+            const scrollHeight = container.scrollHeight;
+            const clientHeight = container.clientHeight;
+            
+            // User is at bottom if within 50px from end
+            userAtBottom = (scrollHeight - scrollTop - clientHeight) <= 50;
         }
 
         function addMessageToChat(message, container) {
             const isMyMessage = message.userId === currentUser.uid;
-            const senderName = isMyMessage ? "Me" : "3omri";
+            const senderName = isMyMessage ? USER_NAMES[myRole] : (message.name || USER_NAMES[myRole === 'me' ? 'omri' : 'me']);
             const timestamp = message.timestamp ? 
                 new Date(message.timestamp.toDate()).toLocaleTimeString('en-US', { 
                     hour: '2-digit', 
@@ -1205,20 +1329,20 @@
                 }) : 'Just now';
             
             const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isMyMessage ? 'my-message' : 'their-message'}`;
+            messageDiv.className = `message ${isMyMessage ? 'me' : 'omri'}`;
             
             messageDiv.innerHTML = `
-                <div class="message-avatar">
-                    ${senderName.charAt(0)}
-                </div>
-                <div class="message-content">
-                    <div class="message-sender">${senderName}</div>
-                    <div class="message-text">${message.text}</div>
-                    <div class="message-time">${timestamp}</div>
-                </div>
+                <div class="message-sender">${senderName}</div>
+                <div class="message-text">${message.text}</div>
+                <div class="message-time">${timestamp}</div>
             `;
             
             container.appendChild(messageDiv);
+            
+            // Add subtle animation
+            setTimeout(() => {
+                messageDiv.style.animation = 'messageAppear 0.3s ease';
+            }, 10);
         }
 
         async function sendMessage() {
@@ -1234,15 +1358,22 @@
                 await roomRef.collection('messages').add({
                     text: text,
                     userId: currentUser.uid,
+                    name: USER_NAMES[myRole],
                     timestamp: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
                 input.value = '';
                 input.focus();
                 
+                // Scroll to bottom after sending message
+                setTimeout(() => {
+                    const container = document.getElementById('messagesContainer');
+                    container.scrollTop = container.scrollHeight;
+                }, 50);
+                
             } catch (error) {
                 console.error('❌ Error sending message:', error);
-                alert('Error sending message. Please try again.');
+                alert('Failed to send message. Please try again.');
             }
         }
 
@@ -1265,6 +1396,15 @@
                             }
                         }
                     });
+                    
+                    // Update online count in top bar
+                    const logoText = document.querySelector('.logo-text');
+                    if (logoText && onlineCount > 0) {
+                        // Show subtle indicator (heart) when both are online
+                        if (onlineCount === 2) {
+                            document.querySelector('.logo-icon i').className = 'fas fa-heart';
+                        }
+                    }
                 });
             
             // Update user status every 30 seconds
@@ -1289,7 +1429,7 @@
                     historyGrid.innerHTML = `
                         <div style="text-align:center; padding: 2rem; color: var(--text-muted); grid-column: 1/-1;">
                             <i class="fas fa-history" style="font-size: 2.5rem; margin-bottom: 1rem; opacity: 0.5;"></i>
-                            <p>No videos in history yet</p>
+                            <p>No videos in watch history</p>
                         </div>
                     `;
                     return;
@@ -1314,7 +1454,7 @@
             card.dataset.videoId = video.videoId;
             
             let videoTitle = video.title || 'Video';
-            let addedDate = 'Unknown date';
+            let addedDate = 'Unknown';
             
             if (!video.title) {
                 try {
@@ -1327,7 +1467,7 @@
             }
             
             if (video.addedAt) {
-                addedDate = new Date(video.addedAt.toDate()).toLocaleDateString('en-US');
+                addedDate = new Date(video.addedAt.toDate()).toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
             }
             
             card.innerHTML = `
@@ -1373,7 +1513,7 @@
                     addedAt: firebase.firestore.FieldValue.serverTimestamp()
                 });
                 
-                // Refresh history display
+                // Update history display
                 loadPartyHistory();
                 
             } catch (error) {
@@ -1402,7 +1542,7 @@
                 
             } catch (error) {
                 console.error('❌ Error clearing history:', error);
-                alert('Error clearing watch history.');
+                alert('Failed to clear watch history.');
             }
         }
 
@@ -1525,7 +1665,13 @@
             // History
             document.getElementById('clearHistoryBtn').addEventListener('click', clearHistory);
             
-            // Cinema mode toggle
+            // Monitor chat scrolling
+            const messagesContainer = document.getElementById('messagesContainer');
+            messagesContainer.addEventListener('scroll', () => {
+                checkIfUserAtBottom(messagesContainer);
+            });
+            
+            // Setup cinema mode
             setupCinemaModeToggle();
         }
 
