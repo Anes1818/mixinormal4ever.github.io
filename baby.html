@@ -602,7 +602,6 @@
             appId: "1:783983668260:web:e353a1220e7621bbf53cb1"
         };
 
-        // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
         const db = firebase.firestore();
         const auth = firebase.auth();
@@ -613,17 +612,21 @@
         let player = null;
         let currentUser = null;
         const ROOM_ID = "cosmic_room_v1";
-        
-        // Sync control
-        let isSyncing = false;
-        let lastSyncTime = 0;
         let currentVideoId = null;
-        
+
+        // ===== PERFECT SYNC ENGINE =====
+        let isApplyingRemoteAction = false;
+        let lastLocalActionTime = 0;
+        let lastKnownTime = 0;
+        let manualSeekInterval = null;
+        const SYNC_TOLERANCE = 0.8;
+        const SEEK_DETECT_THRESHOLD = 1.0;
+
         // Chat state
         let chatUnreadCount = 0;
         let isDraggingChat = false;
         let dragOffsetX = 0, dragOffsetY = 0;
-        
+
         // Firebase references
         let roomRef = null;
         let videoStateRef = null;
@@ -638,34 +641,26 @@
             createStars();
             
             try {
-                // Anonymous sign in
                 await auth.signInAnonymously();
                 currentUser = auth.currentUser;
                 
-                // Setup Firebase references
                 roomRef = db.collection('rooms').doc(ROOM_ID);
                 videoStateRef = roomRef.collection('state').doc('video');
                 chatRef = roomRef.collection('messages').orderBy('timestamp', 'asc').limit(50);
                 usersRef = roomRef.collection('users').doc(currentUser.uid);
                 historyRef = roomRef.collection('history').orderBy('addedAt', 'desc').limit(20);
                 
-                // Set user presence
                 await usersRef.set({
                     uid: currentUser.uid,
                     online: true,
                     lastSeen: firebase.firestore.FieldValue.serverTimestamp()
                 }, { merge: true });
                 
-                // Start listeners
                 startVideoSyncListener();
                 startChatListener();
                 startUsersListener();
                 loadPartyHistory();
-                
-                // Setup YouTube player
                 loadYouTubePlayer();
-                
-                // Setup UI events
                 setupEventListeners();
                 
                 console.log('Cosmic Watch initialized');
@@ -728,28 +723,28 @@
             document.getElementById('playerPlaceholder').style.display = 'none';
             setInterval(updateTimeDisplay, 1000);
             loadLastVideo();
+            startManualSeekDetection();
         }
 
         function onPlayerStateChange(event) {
-            if (!player || isSyncing) return;
-            
+            if (!player || isApplyingRemoteAction) return;
+
             const state = event.data;
-            const currentTime = player.getCurrentTime();
-            
-            // Update UI button
-            updatePlayPauseButton(state);
-            
-            // Sync with debounce
             const now = Date.now();
-            if (now - lastSyncTime > 500) {
-                updateVideoState({
-                    state: state,
-                    currentTime: currentTime,
-                    timestamp: now,
+
+            updatePlayPauseButton(state);
+
+            if (now - lastLocalActionTime < 300) return;
+
+            if (state === YT.PlayerState.PLAYING || state === YT.PlayerState.PAUSED) {
+                lastLocalActionTime = now;
+                sendVideoAction({
+                    type: state === YT.PlayerState.PLAYING ? 'PLAY' : 'PAUSE',
                     videoId: currentVideoId,
-                    updatedBy: currentUser.uid
+                    timestamp: now,
+                    updatedBy: currentUser.uid,
+                    currentTime: player.getCurrentTime()
                 });
-                lastSyncTime = now;
             }
         }
 
@@ -760,52 +755,117 @@
         }
 
         // ============================================
-        // 6. VIDEO SYNC ENGINE
+        // 6. PERFECT SYNC ENGINE
         // ============================================
+        function startManualSeekDetection() {
+            if (manualSeekInterval) clearInterval(manualSeekInterval);
+
+            let previousTime = 0;
+            let previousState = -1;
+            
+            manualSeekInterval = setInterval(() => {
+                if (!player || isApplyingRemoteAction) return;
+
+                const currentState = player.getPlayerState();
+                const currentTime = player.getCurrentTime();
+                const now = Date.now();
+
+                if (currentState === YT.PlayerState.PLAYING) {
+                    previousTime = currentTime;
+                    previousState = currentState;
+                    return;
+                }
+
+                const timeDiff = Math.abs(currentTime - previousTime);
+                const isManualSeek = timeDiff > SEEK_DETECT_THRESHOLD && 
+                                    currentState !== YT.PlayerState.BUFFERING &&
+                                    currentState !== YT.PlayerState.CUED &&
+                                    now - lastLocalActionTime > 300;
+
+                if (isManualSeek && currentState === previousState) {
+                    lastLocalActionTime = now;
+                    sendVideoAction({
+                        type: 'SEEK',
+                        videoId: currentVideoId,
+                        currentTime: currentTime,
+                        timestamp: now,
+                        updatedBy: currentUser.uid
+                    });
+                }
+
+                previousTime = currentTime;
+                previousState = currentState;
+            }, 400);
+        }
+
+        function sendVideoAction(action) {
+            if (!videoStateRef) return;
+
+            videoStateRef.set({
+                ...action,
+                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
+            }, { merge: true });
+        }
+
         function startVideoSyncListener() {
             videoStateRef.onSnapshot((doc) => {
-                if (!doc.exists || !player || isSyncing) return;
-                
+                if (!doc.exists || !player || isApplyingRemoteAction) return;
+
                 const data = doc.data();
                 if (!data || data.updatedBy === currentUser.uid) return;
-                
-                // Apply sync
-                applyVideoSync(data);
+
+                if (Date.now() - data.timestamp > 5000) return;
+
+                applyRemoteAction(data);
             });
         }
 
-        function applyVideoSync(state) {
-            isSyncing = true;
-            
-            // Change video if needed
-            if (state.videoId && state.videoId !== currentVideoId) {
-                currentVideoId = state.videoId;
-                player.loadVideoById(state.videoId);
-                document.getElementById('videoUrlInput').value = `https://youtu.be/${state.videoId}`;
-            }
-            
-            // Sync time if difference > 1 second
-            const currentTime = player.getCurrentTime();
-            if (Math.abs(currentTime - (state.currentTime || 0)) > 1) {
-                player.seekTo(state.currentTime, true);
-            }
-            
-            // Sync play/pause
-            if (state.state === YT.PlayerState.PLAYING && player.getPlayerState() !== YT.PlayerState.PLAYING) {
-                player.playVideo();
-            } else if (state.state === YT.PlayerState.PAUSED && player.getPlayerState() !== YT.PlayerState.PAUSED) {
-                player.pauseVideo();
-            }
-            
-            setTimeout(() => { isSyncing = false; }, 300);
-        }
+        function applyRemoteAction(action) {
+            isApplyingRemoteAction = true;
 
-        function updateVideoState(updates) {
-            if (!videoStateRef) return;
-            videoStateRef.set({
-                ...updates,
-                lastUpdated: firebase.firestore.FieldValue.serverTimestamp()
-            }, { merge: true });
+            switch (action.type) {
+                case 'LOAD':
+                    if (action.videoId && action.videoId !== currentVideoId) {
+                        currentVideoId = action.videoId;
+                        player.loadVideoById(action.videoId, action.currentTime || 0);
+                        document.getElementById('videoUrlInput').value = `https://youtu.be/${action.videoId}`;
+                        addToHistory(action.videoId);
+                        lastKnownTime = 0;
+                    }
+                    break;
+
+                case 'PLAY':
+                    const currentTimeOnPlay = player.getCurrentTime();
+                    if (Math.abs(currentTimeOnPlay - (action.currentTime || 0)) > SYNC_TOLERANCE) {
+                        player.seekTo(action.currentTime || 0, true);
+                    }
+                    if (player.getPlayerState() !== YT.PlayerState.PLAYING) {
+                        player.playVideo();
+                    }
+                    break;
+
+                case 'PAUSE':
+                    const currentTimeOnPause = player.getCurrentTime();
+                    if (Math.abs(currentTimeOnPause - (action.currentTime || 0)) > SYNC_TOLERANCE) {
+                        player.seekTo(action.currentTime || 0, true);
+                    }
+                    if (player.getPlayerState() !== YT.PlayerState.PAUSED) {
+                        player.pauseVideo();
+                    }
+                    break;
+
+                case 'SEEK':
+                    const ct = player.getCurrentTime();
+                    if (Math.abs(ct - action.currentTime) > SYNC_TOLERANCE) {
+                        player.seekTo(action.currentTime, true);
+                    }
+                    break;
+            }
+
+            setTimeout(() => {
+                isApplyingRemoteAction = false;
+                lastKnownTime = player.getCurrentTime();
+            }, 200);
         }
 
         // ============================================
@@ -821,12 +881,10 @@
                     addMessageToChat(msg);
                 });
                 
-                // Scroll to bottom
                 setTimeout(() => {
                     container.scrollTop = container.scrollHeight;
                 }, 100);
                 
-                // Show notification if chat is minimized
                 if (document.getElementById('chatWidget').classList.contains('hidden')) {
                     const lastMsg = snapshot.docs[snapshot.docs.length - 1]?.data();
                     if (lastMsg && lastMsg.userId !== currentUser.uid) {
@@ -930,7 +988,7 @@
                         const user = doc.data();
                         if (user.lastSeen) {
                             const lastSeen = user.lastSeen.toDate().getTime();
-                            if (now - lastSeen < 120000) { // 2 minutes
+                            if (now - lastSeen < 120000) {
                                 onlineCount++;
                             }
                         }
@@ -939,7 +997,6 @@
                     document.getElementById('onlineCount').textContent = onlineCount;
                 });
             
-            // Update presence every 30 seconds
             setInterval(() => {
                 if (usersRef) {
                     usersRef.update({
@@ -979,7 +1036,6 @@
             card.className = 'history-card';
             card.dataset.videoId = video.videoId;
             
-            // Get video title if not already saved
             let videoTitle = video.title || 'فيديو';
             if (!video.title) {
                 try {
@@ -1011,11 +1067,9 @@
             if (!videoId) return;
             
             try {
-                // Check if already in history
                 const existing = await historyRef.where('videoId', '==', videoId).get();
                 if (!existing.empty) return;
                 
-                // Get video title
                 let videoTitle = '';
                 try {
                     const response = await fetch(`https://noembed.com/embed?url=https://youtube.com/watch?v=${videoId}`);
@@ -1025,7 +1079,6 @@
                     console.error('Error fetching video title:', e);
                 }
                 
-                // Add to history
                 await roomRef.collection('history').add({
                     videoId: videoId,
                     title: videoTitle,
@@ -1056,34 +1109,40 @@
         }
 
         function loadVideoFromId(videoId) {
-            if (!player || !player.loadVideoById) return;
-            
+            if (!player) return;
+
             currentVideoId = videoId;
-            player.loadVideoById(videoId);
-            
-            // Update sync state
-            updateVideoState({
+            lastLocalActionTime = Date.now();
+            lastKnownTime = 0;
+
+            sendVideoAction({
+                type: 'LOAD',
                 videoId: videoId,
                 currentTime: 0,
-                state: YT.PlayerState.PAUSED,
                 timestamp: Date.now(),
                 updatedBy: currentUser.uid
             });
-            
-            // Update UI
+
+            player.loadVideoById(videoId);
             document.getElementById('videoUrlInput').value = `https://youtu.be/${videoId}`;
             document.getElementById('playerPlaceholder').style.display = 'none';
-            
-            // Add to history
             addToHistory(videoId);
         }
 
-        function loadLastVideo() {
-            videoStateRef.get().then((doc) => {
+        async function loadLastVideo() {
+            try {
+                const doc = await videoStateRef.get();
                 if (doc.exists && doc.data().videoId) {
-                    loadVideoFromId(doc.data().videoId);
+                    const data = doc.data();
+                    currentVideoId = data.videoId;
+                    player.loadVideoById(data.videoId, data.currentTime || 0);
+                    document.getElementById('videoUrlInput').value = `https://youtu.be/${data.videoId}`;
+                    document.getElementById('playerPlaceholder').style.display = 'none';
+                    lastKnownTime = data.currentTime || 0;
                 }
-            });
+            } catch (error) {
+                console.error('Error loading last video:', error);
+            }
         }
 
         function extractYouTubeId(url) {
@@ -1104,7 +1163,6 @@
         // 12. UI CONTROLS
         // ============================================
         function setupEventListeners() {
-            // Video controls
             document.getElementById('loadVideoBtn').addEventListener('click', loadVideoFromInput);
             document.getElementById('videoUrlInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') loadVideoFromInput();
@@ -1119,7 +1177,6 @@
                 }
             });
             
-            // Chat controls
             document.getElementById('sendMessageBtn').addEventListener('click', sendMessage);
             document.getElementById('chatMessageInput').addEventListener('keypress', (e) => {
                 if (e.key === 'Enter') sendMessage();
@@ -1137,7 +1194,6 @@
                 document.getElementById('miniChatIcon').classList.remove('hidden');
             });
             
-            // Make chat draggable
             makeChatDraggable();
         }
 
@@ -1162,11 +1218,13 @@
         // 13. START APPLICATION
         // ============================================
         window.addEventListener('load', initializeApp);
-        
-        // Clean up on exit
+
         window.addEventListener('beforeunload', () => {
             if (usersRef) {
                 usersRef.update({ online: false });
+            }
+            if (manualSeekInterval) {
+                clearInterval(manualSeekInterval);
             }
         });
     </script>
