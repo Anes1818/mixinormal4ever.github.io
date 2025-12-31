@@ -1540,39 +1540,6 @@
             console.log('🧹 Background video cleaned up');
         }
 
-        // ============================================
-        // MOBILE KEYBOARD HANDLER
-        // ============================================
-        let keyboardHeight = 0;
-        let isKeyboardOpen = false;
-        let isCinemaMode = false;
-        let isMobileView = window.innerWidth < 768;
-        
-        function setupMobileKeyboardHandler() {
-            if (!isMobileView) return;
-            
-            const chatInput = document.getElementById('chatMessageInput');
-            const chatContainer = document.getElementById('chatInputContainer');
-            const messagesContainer = document.getElementById('messagesContainer');
-            
-            if (!chatInput || !chatContainer) return;
-            
-            // Focus event - لما يكتب
-           chatInput.addEventListener('focus', function() {
-    isKeyboardOpen = true;
-    
-    if (isCinemaMode) {
-      // بفضل CSS الجديد، لا نحتاج transform
-      chatContainer.classList.add('keyboard-open');
-      messagesContainer.classList.add('keyboard-padding');
-      
-      // فقط أضف padding للرسائل
-      setTimeout(() => {
-        messagesContainer.style.paddingBottom = '80px';
-        messagesContainer.scrollTop = messagesContainer.scrollHeight;
-      }, 100);
-    }
-  });
   
   chatInput.addEventListener('blur', function() {
     isKeyboardOpen = false;
@@ -1670,7 +1637,7 @@
     }, 100);
   }
 }
-        }
+        
 
         // ============================================
         // CINEMA MODE TOGGLE (MOBILE ONLY)
