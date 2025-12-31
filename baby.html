@@ -248,104 +248,7 @@
             border: none;
             animation: glow 3s ease-in-out infinite;
         }
-@media (max-width: 767px) {
-    /* استخدام dvh بدلاً من vh لحل مشكلة الكيبورد */
-    html, body {
-        height: 100dvh; /* استخدام dvh بدلاً من vh */
-        margin: 0;
-        padding: 0;
-        overscroll-behavior: none; /* منع التمرير الزائد */
-    }
-    
-    .app-wrapper {
-        height: 100dvh; /* استخدام dvh بدلاً من vh */
-        display: flex;
-        flex-direction: column;
-        position: relative;
-    }
-    
-    .cinema-mode .app-wrapper {
-        max-width: 100%;
-        margin: 56px 0 0;
-        padding: 0;
-        height: 100dvh; /* استخدام dvh بدلاً من vh */
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-    }
-    
-    .cinema-mode .player-section {
-        position: relative; /* تغيير من fixed إلى relative */
-        width: 100%;
-        height: calc(100vw * 9 / 16); /* احتفظ بنسبة العرض إلى الارتفاع */
-        flex-shrink: 0; /* منع التقلص */
-        z-index: 100;
-        border-radius: 0;
-        background: #000;
-    }
-    
-    .cinema-mode .player-container {
-        padding-bottom: 0;
-        height: 100%;
-        width: 100%;
-    }
-    
-    /* Chat-section: جعله flexible يأخذ المساحة المتبقية */
-    .cinema-mode .chat-section {
-        flex: 1; /* يأخذ المساحة المتبقية */
-        position: relative;
-        width: 100%;
-        overflow: hidden;
-        display: flex;
-        flex-direction: column;
-        background: rgba(10, 1, 31, 0.95);
-        border-radius: 0;
-        border: none;
-        backdrop-filter: blur(20px);
-        z-index: 99;
-    }
-    
-    /* جعل Messages container قابلاً للتمرير فقط */
-    .cinema-mode .messages-container {
-        flex: 1;
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-        padding: 20px;
-        min-height: 0; /* مهم لـ flexbox على iOS */
-        position: relative;
-    }
-    
-    /* جعل Input يظل في الأسفل دائمًا */
-    .cinema-mode .chat-input-container {
-        flex-shrink: 0; /* منع التقلص */
-        width: 100%;
-        padding: 16px 20px;
-        background: rgba(10, 1, 31, 0.95);
-        backdrop-filter: blur(20px);
-        border-top: 1px solid var(--glass-border);
-        position: relative; /* تغيير من fixed إلى relative */
-        z-index: 101;
-        /* إزالة transform لأنه يسبب مشاكل مع الكيبورد */
-    }
-    
-    /* إزالة الأنماط القديمة التي تسبب المشاكل */
-    .cinema-mode .chat-input-container.keyboard-open,
-    .cinema-mode .messages-container.keyboard-padding {
-        /* تمت إزالة هذه الأنماط لأنها تسبب مشاكل */
-    }
-    
-    .cinema-mode .chat-header {
-        flex-shrink: 0;
-        padding: 16px 20px;
-        border-bottom: 1px solid var(--glass-border);
-    }
-    
-    .cinema-mode .video-input-section,
-    .cinema-mode .our-movies-section,
-    .cinema-mode .history-section {
-        display: none;
-    }
-}
+
         /* Hide cinema button on desktop */
         @media (min-width: 768px) {
             #toggleCinemaBtn {
@@ -1054,6 +957,95 @@
             margin-top: auto;
             font-size: 13px;
             color: var(--accent-gold);
+        }
+
+        /* ===== MOBILE CINEMA MODE ONLY ===== */
+        @media (max-width: 767px) {
+            .cinema-mode .app-wrapper {
+                max-width: 100%;
+                margin: 56px 0 0;
+                padding: 0;
+                height: 100vh;
+                overflow: hidden;
+            }
+            
+            .cinema-mode .player-section {
+                position: fixed;
+                top: 56px;
+                left: 0;
+                right: 0;
+                height: calc(100vw * 9 / 16);
+                z-index: 100;
+                border-radius: 0;
+                background: #000;
+            }
+            
+            .cinema-mode .player-container {
+                padding-bottom: 0;
+                height: 100%;
+            }
+            
+            .cinema-mode .chat-section {
+                position: fixed;
+                top: calc(55px + (100vw * 9 / 16));
+                left: 0;
+                right: 0;
+                bottom: 0;
+                height: calc(100vh - (56px + (100vw * 9 / 16)));
+                border-radius: 0;
+                border: none;
+                display: flex;
+                flex-direction: column;
+                background: rgba(10, 1, 31, 0.95);
+                z-index: 99;
+                backdrop-filter: blur(20px);
+            }
+            
+            .cinema-mode .chat-header {
+                flex-shrink: 0;
+                padding: 16px 20px;
+                border-bottom: 1px solid var(--glass-border);
+            }
+            
+            .cinema-mode .messages-container {
+                flex: 1;
+                padding: 20px;
+                overflow-y: auto;
+                -webkit-overflow-scrolling: touch;
+                min-height: 0;
+            }
+            
+            .cinema-mode .chat-input-container {
+                flex-shrink: 0;
+                margin-bottom: 20px;
+                padding: 16px 20px;
+                background: rgba(10, 1, 31, 0.95);
+                backdrop-filter: blur(20px);
+                border-top: 1px solid var(--glass-border);
+                position: relative;
+                z-index: 101;
+                transition: transform 0.3s ease;
+            }
+            
+            .cinema-mode .chat-input-container.keyboard-open {
+                position: fixed;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                z-index: 10000;
+                transform: translateY(0);
+                box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+            }
+            
+            .cinema-mode .messages-container.keyboard-padding {
+                padding-bottom: 100px;
+            }
+            
+            .cinema-mode .video-input-section,
+            .cinema-mode .our-movies-section,
+            .cinema-mode .history-section {
+                display: none;
+            }
         }
 
         /* ===== RESPONSIVE DESIGN ===== */
