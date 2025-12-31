@@ -45,12 +45,19 @@
             --transition-fast: 0.2s ease;
             --transition-normal: 0.3s ease;
             --transition-slow: 0.5s ease;
+            
+            /* جديد: دعم safe-area لـ iOS */
+            --safe-area-inset-top: env(safe-area-inset-top, 0px);
+            --safe-area-inset-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-area-inset-left: env(safe-area-inset-left, 0px);
+            --safe-area-inset-right: env(safe-area-inset-right, 0px);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* إزالة التحديد الأزرق على الموبايل */
         }
 
         body {
@@ -58,7 +65,8 @@
             background: var(--main-bg);
             color: var(--text-color);
             overflow-x: hidden;
-            min-height: 100vh;
+            /* التعديل المهم: استخدم dvh بدل vh */
+            min-height: 100dvh;
             position: relative;
             background-image: radial-gradient(circle at 20% 30%, rgba(157,78,221,.15) 0, transparent 30%),
                               radial-gradient(circle at 80% 70%, rgba(255,75,138,.15) 0, transparent 30%);
@@ -156,6 +164,9 @@
             align-items: center;
             justify-content: center;
             padding: 0 20px;
+            /* دعم safe-area لـ iOS */
+            padding-top: var(--safe-area-inset-top);
+            height: calc(56px + var(--safe-area-inset-top));
         }
 
         .top-bar-content {
@@ -676,6 +687,8 @@
             z-index: 2;
             backdrop-filter: blur(10px);
             transition: transform 0.3s ease;
+            /* دعم safe-area للكيبورد */
+            padding-bottom: calc(20px + var(--safe-area-inset-bottom, 0px));
         }
 
         .chat-input-group {
@@ -694,6 +707,8 @@
             transition: var(--transition-fast);
             backdrop-filter: blur(5px);
             font-family: Amiri, serif;
+            /* منع zoom تلقائي على iOS */
+            font-size: 16px;
         }
 
         #chatMessageInput:focus {
@@ -959,103 +974,130 @@
             color: var(--accent-gold);
         }
 
-        /* ===== MOBILE CINEMA MODE ONLY ===== */
+        /* ===== التعديلات الجذرية لـ CINEMA MODE ===== */
+        
+        /* حالة Cinema Mode على body */
+        body.cinema-mode {
+            overflow: hidden !important;
+            height: 100dvh !important;
+            position: fixed !important;
+            width: 100% !important;
+            background: var(--main-bg);
+        }
+        
+        /* Cinema Mode - Mobile Only */
         @media (max-width: 767px) {
             .cinema-mode .app-wrapper {
-                max-width: 100%;
-                margin: 56px 0 0;
-                padding: 0;
-                height: 100%;
-                overflow: hidden;
-            }
-            
-            .cinema-mode .player-section {
+                max-width: 100% !important;
+                margin: 0 !important;
+                padding: 0 !important;
+                height: 100dvh !important;
+                display: flex;
+                flex-direction: column;
                 position: fixed;
-                top: 56px;
-                left: 0;
-                right: 0;
-               height: calc((100vw * 9) / 16);
-  max-height: calc(100vh - 120px); /* لمنع التجاوز */
-                z-index: 100;
-                border-radius: 0;
-                background: #000;
-            }
-            
-            .cinema-mode .player-container {
-                padding-bottom: 0;
-                height: 100%;
-            }
-            
-            .cinema-mode .chat-section {
-                position: fixed;
-                top: calc(55px + (100vw * 9 / 16));
+                top: 0;
                 left: 0;
                 right: 0;
                 bottom: 0;
-                 height: calc(100% - (56px + ((100vw * 9) / 16)));
-  max-height: calc(100vh - 56px); /* حد أقصى */
-                border-radius: 0;
-                border: none;
+                overflow: hidden;
+                background: var(--main-bg);
+                z-index: 10000;
+            }
+            
+            /* إخفاء الأقسام غير الضرورية في وضع السينما */
+            .cinema-mode .video-input-section,
+            .cinema-mode .our-movies-section,
+            .cinema-mode .history-section {
+                display: none !important;
+            }
+            
+            /* الفيديو ثابت في الأعلى */
+            .cinema-mode .player-section {
+                position: relative;
+                flex-shrink: 0;
+                width: 100%;
+                height: calc((100vw * 9) / 16); /* نسبة 16:9 */
+                max-height: 60vh;
+                border-radius: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+                margin: 0;
+                background: #000;
+                z-index: 10;
+            }
+            
+            .cinema-mode .player-container {
+                padding-bottom: 0 !important;
+                height: 100% !important;
+            }
+            
+            .cinema-mode #youtubePlayer,
+            .cinema-mode #mp4Player {
+                border-radius: 0 !important;
+            }
+            
+            .cinema-mode .player-controls-bar {
+                position: absolute;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                background: rgba(0, 0, 0, 0.7);
+                border-top: none;
+                backdrop-filter: blur(20px);
+                z-index: 11;
+            }
+            
+            /* الشات يأخذ المساحة المتبقية */
+            .cinema-mode .chat-section {
+                flex: 1;
+                min-height: 0; /* مهم للـ flexbox */
+                height: auto;
+                border-radius: 0 !important;
+                border: none !important;
+                margin: 0;
                 display: flex;
                 flex-direction: column;
                 background: rgba(10, 1, 31, 0.95);
-                z-index: 99;
                 backdrop-filter: blur(20px);
-            }
-            
-            .cinema-mode .chat-header {
-                flex-shrink: 0;
-                padding: 16px 20px;
-                border-bottom: 1px solid var(--glass-border);
+                z-index: 9;
             }
             
             .cinema-mode .messages-container {
                 flex: 1;
-                padding: 20px;
-                overflow-y: auto;
-                -webkit-overflow-scrolling: touch;
                 min-height: 0;
+                overflow-y: auto;
+                padding: 16px 16px 100px 16px; /* مساحة للـ input */
+                -webkit-overflow-scrolling: touch;
+                scroll-behavior: smooth;
             }
             
+            /* الـ input يبقى في الأسفل */
             .cinema-mode .chat-input-container {
-                flex-shrink: 0;
-                margin-bottom: 20px;
-                padding: 16px 20px;
+                position: sticky;
+                bottom: 0;
+                left: 0;
+                right: 0;
                 background: rgba(10, 1, 31, 0.95);
-                backdrop-filter: blur(20px);
                 border-top: 1px solid var(--glass-border);
-                position: relative;
-                z-index: 101;
+                padding: 12px 16px;
+                padding-bottom: calc(12px + var(--safe-area-inset-bottom, 0px));
+                backdrop-filter: blur(20px);
+                z-index: 12;
+                margin-top: auto;
+                transform: translateY(0) !important;
                 transition: transform 0.3s ease;
             }
             
-            .cinema-mode .chat-input-container.keyboard-open {
-                position: sticky;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  z-index: 10000;
-  background: rgba(10, 1, 31, 0.95);
-  backdrop-filter: blur(20px);
-  border-top: 1px solid var(--glass-border);
+            /* عند فتح الكيبورد نضيف padding إضافي للرسائل */
+            .cinema-mode.keyboard-open .messages-container {
+                padding-bottom: 300px;
             }
             
-            .cinema-mode .messages-container.keyboard-padding {
-                padding-bottom: 100px;
+            .cinema-mode .chat-video-bg {
+                border-radius: 0 !important;
             }
-            
-            .cinema-mode .video-input-section,
-            .cinema-mode .our-movies-section,
-            .cinema-mode .history-section {
-                display: none;
-            }
-        }.cinema-mode .player-section {
-    position: sticky;
-    top: 56px;
-    z-index: 99;
-  }
-
-        /* ===== RESPONSIVE DESIGN ===== */
+        }
+        
         /* Desktop Layout - Normal Mode */
         @media (min-width: 1024px) {
             .main-content {
@@ -1108,7 +1150,7 @@
         @media (max-width: 767px) {
             .app-wrapper {
                 padding: 0 16px;
-                margin: 68px auto 20px;
+                margin: calc(68px + var(--safe-area-inset-top, 0px)) auto 20px;
             }
             
             .input-group {
@@ -1172,11 +1214,25 @@
 
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(to bottom, var(--accent-pink), var(--accent-purple));
-        } 
-  .app-wrapper {
-    height: 100%;
-    overflow: hidden;
-  } 
+        }
+        
+        /* تحسينات للأداء على الموبايل */
+        * {
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* تحسينات لـ iOS لمنع التأثيرات غير المرغوبة */
+        @supports (-webkit-touch-callout: none) {
+            input, textarea {
+                font-size: 16px !important; /* منع zoom تلقائي */
+            }
+        }
+        
+        /* دعم overscroll behavior */
+        .messages-container {
+            overscroll-behavior: contain;
+        }
     </style>
 </head>
 <body>
@@ -1350,9 +1406,254 @@
     </div>
 
     <script>
-       // Replace the entire script section (from line <script> to </script>
+        // ============================================
+        // النظام الجديد لكشف الكيبورد ومعالجته
+        // ============================================
+        let isKeyboardOpen = false;
+        let keyboardHeight = 0;
+        let originalViewportHeight = window.innerHeight;
+        let isMobileView = window.innerWidth < 768;
+        let isCinemaMode = false;
+        let keyboardDetectionActive = true;
+        
+        // دالة لكشف تغيير حجم viewport (للكيبورد)
+        function setupKeyboardDetection() {
+            // حل متقدم: استخدام visualViewport إذا متاح (للمتصفحات الحديثة)
+            if (window.visualViewport) {
+                const visualViewport = window.visualViewport;
+                originalViewportHeight = visualViewport.height;
+                
+                visualViewport.addEventListener('resize', function() {
+                    if (!keyboardDetectionActive || !isMobileView) return;
+                    
+                    const newHeight = visualViewport.height;
+                    const heightDiff = Math.abs(originalViewportHeight - newHeight);
+                    
+                    // إذا تغير الارتفاع بشكل كبير (أكثر من 150px) - يعني كيبورد
+                    if (heightDiff > 150) {
+                        if (newHeight < originalViewportHeight) {
+                            // الكيبورد فتح
+                            handleKeyboardOpen(heightDiff);
+                        } else {
+                            // الكيبورد أغلق
+                            handleKeyboardClose();
+                        }
+                        
+                        originalViewportHeight = newHeight;
+                    }
+                });
+            } else {
+                // حل بديل للمتصفحات القديمة
+                window.addEventListener('resize', function() {
+                    if (!keyboardDetectionActive || !isMobileView) return;
+                    
+                    const newHeight = window.innerHeight;
+                    const heightDiff = Math.abs(originalViewportHeight - newHeight);
+                    
+                    // إذا تغير الارتفاع بشكل كبير
+                    if (heightDiff > 150) {
+                        if (newHeight < originalViewportHeight) {
+                            handleKeyboardOpen(heightDiff);
+                        } else {
+                            handleKeyboardClose();
+                        }
+                        
+                        originalViewportHeight = newHeight;
+                    }
+                });
+            }
+            
+            // كشف focus/blur على حقل الإدخال
+            const chatInput = document.getElementById('chatMessageInput');
+            if (chatInput) {
+                chatInput.addEventListener('focus', function() {
+                    if (isMobileView && isCinemaMode) {
+                        // تأخير للتأكد من أن الكيبورد فتح
+                        setTimeout(() => {
+                            handleKeyboardOpen(300);
+                            scrollToLatestMessage();
+                        }, 300);
+                    }
+                });
+                
+                chatInput.addEventListener('blur', function() {
+                    if (isMobileView && isCinemaMode) {
+                        setTimeout(() => {
+                            handleKeyboardClose();
+                        }, 200);
+                    }
+                });
+            }
+            
+            // منع scroll على body عندما يكون الكيبورد مفتوحاً
+            document.addEventListener('touchmove', function(e) {
+                if (isMobileView && isCinemaMode && isKeyboardOpen) {
+                    if (e.target === document.body || e.target === document.documentElement) {
+                        e.preventDefault();
+                    }
+                }
+            }, { passive: false });
+        }
+        
+        function handleKeyboardOpen(height) {
+            if (!isMobileView || !isCinemaMode) return;
+            
+            isKeyboardOpen = true;
+            keyboardHeight = height;
+            
+            // إضافة class للـ body
+            document.body.classList.add('keyboard-open');
+            
+            // تحديث padding للرسائل
+            const messagesContainer = document.getElementById('messagesContainer');
+            if (messagesContainer) {
+                messagesContainer.style.paddingBottom = '300px';
+            }
+            
+            // تأكد من أن الـ input مرئي
+            const chatInput = document.getElementById('chatMessageInput');
+            if (chatInput) {
+                setTimeout(() => {
+                    chatInput.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'center' 
+                    });
+                }, 100);
+            }
+            
+            console.log('📱 Keyboard opened, estimated height:', height);
+        }
+        
+        function handleKeyboardClose() {
+            if (!isMobileView || !isCinemaMode) return;
+            
+            isKeyboardOpen = false;
+            keyboardHeight = 0;
+            
+            // إزالة class من الـ body
+            document.body.classList.remove('keyboard-open');
+            
+            // إعادة padding للرسائل
+            const messagesContainer = document.getElementById('messagesContainer');
+            if (messagesContainer) {
+                messagesContainer.style.paddingBottom = '100px';
+            }
+            
+            // scroll للرسائل الجديدة
+            setTimeout(scrollToLatestMessage, 100);
+            
+            console.log('📱 Keyboard closed');
+        }
+        
+        function scrollToLatestMessage() {
+            const messagesContainer = document.getElementById('messagesContainer');
+            if (messagesContainer) {
+                messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            }
+        }
+        
+        // ============================================
+        // تعديل دالة Cinema Mode
+        // ============================================
+        function setupCinemaModeToggle() {
+            if (!isMobileView) {
+                const toggleCinemaBtn = document.getElementById('toggleCinemaBtn');
+                if (toggleCinemaBtn) {
+                    toggleCinemaBtn.style.display = 'none';
+                }
+                return;
+            }
+            
+            const toggleCinemaBtn = document.getElementById('toggleCinemaBtn');
+            const appWrapper = document.getElementById('appWrapper');
 
-<script>
+            if (!toggleCinemaBtn) return;
+
+            toggleCinemaBtn.addEventListener('click', function() {
+                const body = document.body;
+                const isEnteringCinema = !body.classList.contains('cinema-mode');
+                
+                // تبديل وضع السينما
+                body.classList.toggle('cinema-mode');
+                appWrapper.classList.toggle('cinema-mode');
+                isCinemaMode = body.classList.contains('cinema-mode');
+                
+                // تغيير الأيقونة
+                const icon = toggleCinemaBtn.querySelector('i');
+                
+                if (isCinemaMode) {
+                    icon.className = 'fas fa-compress';
+                    toggleCinemaBtn.setAttribute('title', 'Exit Cinema Mode');
+                    console.log("🎬 Cinema mode activated");
+                    
+                    // تعطيل scroll على body
+                    document.documentElement.style.overflow = 'hidden';
+                    
+                    // منع pull-to-refresh على الموبايل
+                    document.body.style.overscrollBehavior = 'none';
+                    
+                    // إخفاء address bar على الموبايل
+                    setTimeout(() => {
+                        window.scrollTo(0, 0);
+                    }, 100);
+                    
+                    // تنظيف background video
+                    cleanupBackgroundVideo();
+                    
+                    // إعادة حساب الأبعاد
+                    setTimeout(adjustCinemaLayout, 150);
+                    
+                    // تفعيل كشف الكيبورد
+                    keyboardDetectionActive = true;
+                } else {
+                    icon.className = 'fas fa-expand';
+                    toggleCinemaBtn.setAttribute('title', 'Cinema Mode');
+                    console.log("📱 Cinema mode deactivated");
+                    
+                    // إعادة تمكين scroll
+                    document.documentElement.style.overflow = '';
+                    document.body.style.overscrollBehavior = '';
+                    
+                    // تحديث background video
+                    setTimeout(() => {
+                        updateBackgroundVideoSync();
+                    }, 200);
+                    
+                    // إغلاق الكيبورد إذا كان مفتوحاً
+                    if (isKeyboardOpen) {
+                        const chatInput = document.getElementById('chatMessageInput');
+                        if (chatInput) chatInput.blur();
+                        handleKeyboardClose();
+                    }
+                    
+                    // تعطيل كشف الكيبورد مؤقتاً
+                    keyboardDetectionActive = false;
+                }
+                
+                // إعادة إنشاء الخلفية الكونية
+                setTimeout(createCosmicBackground, 200);
+            });
+        }
+        
+        function adjustCinemaLayout() {
+            if (!isMobileView || !isCinemaMode) return;
+            
+            const playerSection = document.querySelector('.cinema-mode .player-section');
+            const chatSection = document.querySelector('.cinema-mode .chat-section');
+            
+            if (playerSection && chatSection) {
+                // حساب ارتفاع الفيديو بنسبة 16:9
+                const playerHeight = Math.min(
+                    (window.innerWidth * 9) / 16,
+                    window.innerHeight * 0.6
+                );
+                
+                playerSection.style.height = `${playerHeight}px`;
+                
+                console.log('📐 Adjusted cinema layout - Player height:', playerHeight);
+            }
+        }
+        
         // ============================================
         // COSMIC BACKGROUND CREATION (from mixi.html)
         // ============================================
@@ -1424,7 +1725,7 @@
             
             const playerState = player.getPlayerState();
             const isPlaying = playerState === YT.PlayerState.PLAYING;
-            const isCinema = document.querySelector('.app-wrapper')?.classList.contains('cinema-mode');
+            const isCinema = document.body.classList.contains('cinema-mode');
             
             // Don't activate background in cinema mode on mobile
             if (isMobileView && isCinema) {
@@ -1540,184 +1841,6 @@
             console.log('🧹 Background video cleaned up');
         }
 
-  
-  chatInput.addEventListener('blur', function() {
-    isKeyboardOpen = false;
-    
-    if (isCinemaMode) {
-      setTimeout(() => {
-        chatContainer.classList.remove('keyboard-open');
-        messagesContainer.classList.remove('keyboard-padding');
-        messagesContainer.style.paddingBottom = '';
-      }, 200);
-    }
-  });
-            
-            // Blur event - لما يخلص كتابة
-            chatInput.addEventListener('blur', function() {
-                isKeyboardOpen = false;
-                
-                if (isCinemaMode) {
-                    // نرجع كل شيء لوضعه الطبيعي
-                    setTimeout(() => {
-                        chatContainer.classList.remove('keyboard-open');
-                        messagesContainer.classList.remove('keyboard-padding');
-                        chatContainer.style.transform = 'translateY(0)';
-                        messagesContainer.style.paddingBottom = '';
-                    }, 200);
-                }
-                
-                console.log('📱 Keyboard closed');
-            });
-            
-            // Handle window resize (keyboard show/hide on mobile)
-            let originalHeight = window.innerHeight;
-            
-            window.addEventListener('resize', function() {
-                if (!isMobileView) return;
-                
-                const newHeight = window.innerHeight;
-                const heightDiff = Math.abs(originalHeight - newHeight);
-                
-                // If height changed significantly (keyboard opened/closed)
-                if (heightDiff > 100) {
-                    keyboardHeight = heightDiff;
-                    
-                    if (originalHeight > newHeight) {
-                        // Keyboard opened
-                        isKeyboardOpen = true;
-                        
-                        if (isCinemaMode && document.activeElement === chatInput) {
-                            chatContainer.classList.add('keyboard-open');
-                            messagesContainer.classList.add('keyboard-padding');
-                            chatContainer.style.transform = `translateY(-${keyboardHeight}px)`;
-                            messagesContainer.style.paddingBottom = `${keyboardHeight + 80}px`;
-                            
-                            setTimeout(() => {
-                                messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                            }, 300);
-                        }
-                    } else {
-                        // Keyboard closed
-                        isKeyboardOpen = false;
-                        
-                        if (isCinemaMode) {
-                            chatContainer.classList.remove('keyboard-open');
-                            messagesContainer.classList.remove('keyboard-padding');
-                            chatContainer.style.transform = 'translateY(0)';
-                            messagesContainer.style.paddingBottom = '';
-                        }
-                    }
-                    
-                    originalHeight = newHeight;
-                }
-            });
-            
-            // Handle virtual keyboard closing on mobile when tapping outside
-            document.addEventListener('touchstart', function(e) {
-                if (isKeyboardOpen && !chatInput.contains(e.target)) {
-                    chatInput.blur();
-                }
-            });function adjustMobileLayoutForKeyboard() {
-  if (!isMobileView || !isCinemaMode) return;
-  
-  const viewportHeight = window.innerHeight;
-  const chatSection = document.querySelector('.cinema-mode .chat-section');
-  const messagesContainer = document.getElementById('messagesContainer');
-  
-  if (chatSection && messagesContainer) {
-    // ضبط ارتفاع الشات بناء على المساحة المتاحة
-    const availableHeight = viewportHeight - 56; // ناقص الـ top bar
-    chatSection.style.maxHeight = `${availableHeight}px`;
-    chatSection.style.height = 'auto';
-    
-    // Scroll to bottom عند فتح الكيبورد
-    setTimeout(() => {
-      messagesContainer.scrollTop = messagesContainer.scrollHeight;
-    }, 100);
-  }
-}
-        
-
-        // ============================================
-        // CINEMA MODE TOGGLE (MOBILE ONLY)
-        // ============================================
-        function setupCinemaModeToggle() {
-            if (!isMobileView) {
-                // Hide cinema button on desktop
-                const toggleCinemaBtn = document.getElementById('toggleCinemaBtn');
-                if (toggleCinemaBtn) {
-                    toggleCinemaBtn.style.display = 'none';
-                }
-                return;
-            }
-            
-            const toggleCinemaBtn = document.getElementById('toggleCinemaBtn');
-            const appWrapper = document.querySelector('.app-wrapper');
-
-            if (!toggleCinemaBtn) return;
-
-            toggleCinemaBtn.addEventListener('click', () => {
-                appWrapper.classList.toggle('cinema-mode');
-                isCinemaMode = appWrapper.classList.contains('cinema-mode');
-                
-                // Change icon
-                const icon = toggleCinemaBtn.querySelector('i');
-                
-                if (isCinemaMode) {
-                    icon.className = 'fas fa-compress';
-                    toggleCinemaBtn.setAttribute('title', 'Exit Cinema Mode');
-                    console.log("🎬 Cinema mode activated (Mobile)");
-                    
-                    // Clean up background video in cinema mode
-                    cleanupBackgroundVideo();
-                } else {
-                    icon.className = 'fas fa-expand';
-                    toggleCinemaBtn.setAttribute('title', 'Cinema Mode');
-                    console.log("📱 Cinema mode deactivated");
-                }
-                
-                // Update background video sync based on new state
-                setTimeout(() => {
-                    updateBackgroundVideoSync();
-                }, 100);
-                
-                
-            });
-        }
-
-        // ============================================
-        // MODIFIED MESSAGE DISPLAY FUNCTION
-        // ============================================
-        window.addMessageToChat = function(message, container) {
-            const isMyMessage = message.userId === currentUser.uid;
-            const timestamp = message.timestamp ? 
-                new Date(message.timestamp.toDate()).toLocaleTimeString('en-US', { 
-                    hour: '2-digit', 
-                    minute: '2-digit' 
-                }) : 'Just now';
-            
-            const messageDiv = document.createElement('div');
-            messageDiv.className = `message ${isMyMessage ? 'my-message' : 'their-message'}`;
-            
-            const senderName = isMyMessage ? 'Me' : '3omri';
-            
-            messageDiv.innerHTML = `
-                <div class="message-sender">${senderName}</div>
-                <div class="message-text">${message.text}</div>
-                <div class="message-time">${timestamp}</div>
-            `;
-            
-            container.appendChild(messageDiv);
-            
-            // Auto-scroll only if user is at bottom
-            if (userAtBottom && autoScrollEnabled) {
-                setTimeout(() => {
-                    container.scrollTop = container.scrollHeight;
-                }, 50);
-            }
-        };
-
         // ============================================
         // REST OF THE ORIGINAL CODE + NEW MP4 SYSTEM
         // ============================================
@@ -1817,7 +1940,7 @@
                 
                 // Setup mobile keyboard handler
                 setTimeout(() => {
-                    setupMobileKeyboardHandler();
+                    setupKeyboardDetection();
                 }, 500);
                 
                 // Setup cinema mode (mobile only)
@@ -1832,16 +1955,19 @@
                     setTimeout(createCosmicBackground, 300);
                 });
                 
+                // إضافة resize listener للتأكد من استقرار الـ layout في وضع السينما
+                window.addEventListener('resize', function() {
+                    if (isMobileView && isCinemaMode) {
+                        setTimeout(adjustCinemaLayout, 100);
+                    }
+                });
+                
                 console.log("🎉 App initialized successfully with cosmic theme");
                 
             } catch (error) {
                 console.error('❌ App initialization failed:', error);
                 alert('App initialization error. Please refresh the page.');
-            }  window.addEventListener('resize', function() {
-    if (isMobileView && isCinemaMode) {
-      adjustMobileLayoutForKeyboard();
-    }
-  });
+            }
         }
 
         // ============================================
@@ -2444,6 +2570,35 @@
             userAtBottom = (scrollHeight - scrollTop - clientHeight) <= 50;
         }
 
+        window.addMessageToChat = function(message, container) {
+            const isMyMessage = message.userId === currentUser.uid;
+            const timestamp = message.timestamp ? 
+                new Date(message.timestamp.toDate()).toLocaleTimeString('en-US', { 
+                    hour: '2-digit', 
+                    minute: '2-digit' 
+                }) : 'Just now';
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${isMyMessage ? 'my-message' : 'their-message'}`;
+            
+            const senderName = isMyMessage ? 'Me' : '3omri';
+            
+            messageDiv.innerHTML = `
+                <div class="message-sender">${senderName}</div>
+                <div class="message-text">${message.text}</div>
+                <div class="message-time">${timestamp}</div>
+            `;
+            
+            container.appendChild(messageDiv);
+            
+            // Auto-scroll only if user is at bottom
+            if (userAtBottom && autoScrollEnabled) {
+                setTimeout(() => {
+                    container.scrollTop = container.scrollHeight;
+                }, 50);
+            }
+        };
+
         async function sendMessage() {
             const input = document.getElementById('chatMessageInput');
             const text = input.value.trim();
@@ -2461,7 +2616,15 @@
                 });
                 
                 input.value = '';
-                input.focus();
+                
+                // إذا كان في وضع السينما، نعيد focus على الـ input
+                if (isMobileView && isCinemaMode) {
+                    setTimeout(() => {
+                        input.focus();
+                    }, 100);
+                } else {
+                    input.focus();
+                }
                 
                 // Scroll to bottom after sending message
                 setTimeout(() => {
@@ -2930,6 +3093,17 @@
             messagesContainer.addEventListener('scroll', () => {
                 checkIfUserAtBottom(messagesContainer);
             });
+            
+            // تحسين focus على الـ input في وضع السينما
+            const chatInput = document.getElementById('chatMessageInput');
+            chatInput.addEventListener('focus', function() {
+                if (isMobileView && isCinemaMode) {
+                    // تأخير للتأكد من فتح الكيبورد
+                    setTimeout(() => {
+                        scrollToLatestMessage();
+                    }, 400);
+                }
+            });
         }
 
         function updateTimeDisplay() {
@@ -2961,9 +3135,8 @@
             isMobileView = window.innerWidth < 768;
             
             if (wasMobileView !== isMobileView) {
-                // Re-setup mobile keyboard handler
+                // Re-setup cinema mode
                 setTimeout(() => {
-                    setupMobileKeyboardHandler();
                     setupCinemaModeToggle();
                 }, 100);
             }
@@ -2975,9 +3148,49 @@
         }
 
         // ============================================
+        // حلول خاصة لـ iOS
+        // ============================================
+        function setupIOSFixes() {
+            // كشف iOS
+            const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent);
+            if (!isIOS) return;
+            
+            console.log('📱 iOS detected, applying special fixes');
+            
+            // منع zoom تلقائي عند focus على input
+            document.addEventListener('focus', function(event) {
+                if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+                    event.target.style.fontSize = '16px';
+                }
+            }, true);
+            
+            document.addEventListener('blur', function(event) {
+                if (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA') {
+                    event.target.style.fontSize = '';
+                }
+            }, true);
+            
+            // دعم safe-area
+            document.documentElement.style.setProperty(
+                '--safe-area-inset-top', 
+                'env(safe-area-inset-top)'
+            );
+            document.documentElement.style.setProperty(
+                '--safe-area-inset-bottom', 
+                'env(safe-area-inset-bottom)'
+            );
+        }
+
+        // ============================================
         // START APPLICATION & CLEANUP
         // ============================================
-        window.addEventListener('load', initializeApp);
+        window.addEventListener('load', function() {
+            // تطبيق إصلاحات iOS أولاً
+            setupIOSFixes();
+            
+            // ثم تهيئة التطبيق
+            setTimeout(initializeApp, 100);
+        });
 
         window.addEventListener('beforeunload', () => {
             // Update user status to offline
@@ -3024,4 +3237,6 @@
                 }, backgroundSyncRate);
             }
         });
-    </script></body></html>
+    </script>
+</body>
+</html>
