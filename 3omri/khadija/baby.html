@@ -965,7 +965,7 @@
                 max-width: 100%;
                 margin: 56px 0 0;
                 padding: 0;
-                height: 100vh;
+                height: 100%;
                 overflow: hidden;
             }
             
@@ -974,7 +974,8 @@
                 top: 56px;
                 left: 0;
                 right: 0;
-                height: calc(100vw * 9 / 16);
+               height: calc((100vw * 9) / 16);
+  max-height: calc(100vh - 120px); /* لمنع التجاوز */
                 z-index: 100;
                 border-radius: 0;
                 background: #000;
@@ -991,7 +992,8 @@
                 left: 0;
                 right: 0;
                 bottom: 0;
-                height: calc(100vh - (56px + (100vw * 9 / 16)));
+                 height: calc(100% - (56px + ((100vw * 9) / 16)));
+  max-height: calc(100vh - 56px); /* حد أقصى */
                 border-radius: 0;
                 border: none;
                 display: flex;
@@ -1028,13 +1030,14 @@
             }
             
             .cinema-mode .chat-input-container.keyboard-open {
-                position: fixed;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                z-index: 10000;
-                transform: translateY(0);
-                box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+                position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 10000;
+  background: rgba(10, 1, 31, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--glass-border);
             }
             
             .cinema-mode .messages-container.keyboard-padding {
@@ -1046,7 +1049,11 @@
             .cinema-mode .history-section {
                 display: none;
             }
-        }
+        }.cinema-mode .player-section {
+    position: sticky;
+    top: 56px;
+    z-index: 99;
+  }
 
         /* ===== RESPONSIVE DESIGN ===== */
         /* Desktop Layout - Normal Mode */
@@ -1165,7 +1172,11 @@
 
         ::-webkit-scrollbar-thumb:hover {
             background: linear-gradient(to bottom, var(--accent-pink), var(--accent-purple));
-        }
+        } 
+  .app-wrapper {
+    height: 100%;
+    overflow: hidden;
+  } 
     </style>
 </head>
 <body>
@@ -1547,35 +1558,33 @@
             if (!chatInput || !chatContainer) return;
             
             // Focus event - لما يكتب
-            chatInput.addEventListener('focus', function() {
-                isKeyboardOpen = true;
-                
-                if (isCinemaMode) {
-                    // في وضع السينما: الإدخال يصير fixed فوق الكيبورد
-                    chatContainer.classList.add('keyboard-open');
-                    messagesContainer.classList.add('keyboard-padding');
-                    
-                    // حساب ارتفاع الكيبورد
-                    setTimeout(() => {
-                        const viewportHeight = window.innerHeight;
-                        const containerRect = chatContainer.getBoundingClientRect();
-                        keyboardHeight = viewportHeight - containerRect.bottom;
-                        
-                        // نرفع الإدخال فوق الكيبورد
-                        chatContainer.style.transform = `translateY(-${keyboardHeight}px)`;
-                        
-                        // نضيف padding للمسجات عشان ما يتغطى آخر مسج
-                        messagesContainer.style.paddingBottom = `${keyboardHeight + 80}px`;
-                        
-                        // نروح لآخر مسج
-                        setTimeout(() => {
-                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                        }, 300);
-                    }, 100);
-                }
-                
-                console.log('📱 Keyboard opened - Input fixed above keyboard');
-            });
+           chatInput.addEventListener('focus', function() {
+    isKeyboardOpen = true;
+    
+    if (isCinemaMode) {
+      // بفضل CSS الجديد، لا نحتاج transform
+      chatContainer.classList.add('keyboard-open');
+      messagesContainer.classList.add('keyboard-padding');
+      
+      // فقط أضف padding للرسائل
+      setTimeout(() => {
+        messagesContainer.style.paddingBottom = '80px';
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 100);
+    }
+  });
+  
+  chatInput.addEventListener('blur', function() {
+    isKeyboardOpen = false;
+    
+    if (isCinemaMode) {
+      setTimeout(() => {
+        chatContainer.classList.remove('keyboard-open');
+        messagesContainer.classList.remove('keyboard-padding');
+        messagesContainer.style.paddingBottom = '';
+      }, 200);
+    }
+  });
             
             // Blur event - لما يخلص كتابة
             chatInput.addEventListener('blur', function() {
@@ -1642,7 +1651,25 @@
                 if (isKeyboardOpen && !chatInput.contains(e.target)) {
                     chatInput.blur();
                 }
-            });
+            });function adjustMobileLayoutForKeyboard() {
+  if (!isMobileView || !isCinemaMode) return;
+  
+  const viewportHeight = window.innerHeight;
+  const chatSection = document.querySelector('.cinema-mode .chat-section');
+  const messagesContainer = document.getElementById('messagesContainer');
+  
+  if (chatSection && messagesContainer) {
+    // ضبط ارتفاع الشات بناء على المساحة المتاحة
+    const availableHeight = viewportHeight - 56; // ناقص الـ top bar
+    chatSection.style.maxHeight = `${availableHeight}px`;
+    chatSection.style.height = 'auto';
+    
+    // Scroll to bottom عند فتح الكيبورد
+    setTimeout(() => {
+      messagesContainer.scrollTop = messagesContainer.scrollHeight;
+    }, 100);
+  }
+}
         }
 
         // ============================================
@@ -1846,7 +1873,11 @@
             } catch (error) {
                 console.error('❌ App initialization failed:', error);
                 alert('App initialization error. Please refresh the page.');
-            }
+            }  window.addEventListener('resize', function() {
+    if (isMobileView && isCinemaMode) {
+      adjustMobileLayoutForKeyboard();
+    }
+  });
         }
 
         // ============================================
