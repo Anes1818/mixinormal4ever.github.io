@@ -908,7 +908,7 @@
             /* الشات يأخذ باقي المساحة تحت الفيديو */
             .cinema-mode .chat-section {
                 position: fixed;
-                top: calc(56px + (100vw * 9 / 16));
+                top: calc(55px + (100vw * 9 / 16));
                 left: 0;
                 right: 0;
                 bottom: 0;
@@ -918,14 +918,10 @@
                 display: flex;
                 flex-direction: column;
                 background: var(--primary-dark);
-                z-index: 90;
+                z-index: 99;
             }
             
-            /* إخفاء الخلفية الديناميكية في وضع السينما على الموبايل */
-            .cinema-mode .chat-video-bg {
-                display: none;
-            }
-            
+          
             /* الهيدر يبقى ثابت في أعلى الشات */
             .cinema-mode .chat-header {
                 flex-shrink: 0;
@@ -945,6 +941,7 @@
             /* الإدخال يبقى منفصل في الأسفل */
             .cinema-mode .chat-input-container {
                 flex-shrink: 0;
+                margin-bottom: 20px;
                 padding: 16px 20px;
                 background: rgba(13, 13, 23, 0.95);
                 backdrop-filter: blur(20px);
