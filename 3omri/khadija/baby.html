@@ -1054,9 +1054,25 @@
             }
             
             /* إصلاح: عندما يظهر الكيبورد، يبقى الإدخال فوقه */
-            .cinema-mode.keyboard-open .chat-input-container {
-                bottom: env(keyboard-inset-height, 0);
-            }
+          /* --> FIX: make input truly stick to the keyboard on mobile cinema mode */
+.cinema-mode .chat-input-container.keyboard-open {
+  position: fixed !important;            /* يلصق الحقل بالأسفل فعليًا */
+  bottom: env(safe-area-inset-bottom, 0) !important; /* يحترم شق الشاشة في iOS */
+  left: 0;
+  right: 0;
+  margin: 0 !important;                  /* يمنع أي هامش قد يدفع العنصر */
+  z-index: 11000;                        /* فوق كل شيء */
+  background: rgba(10, 1, 31, 0.95);
+  backdrop-filter: blur(20px);
+  border-top: 1px solid var(--glass-border);
+  /* امنع أي تحول يسبب قفز */
+  transform: none !important;
+  -webkit-transform: none !important;
+  transition: none !important;
+  /* ضمان أن العرض والpadding يطابق التصميم السابق */
+  padding-left: 20px;
+  padding-right: 20px;
+}
         }
 
         /* ===== RESPONSIVE DESIGN ===== */
@@ -1593,28 +1609,75 @@
             // Handle window resize (for virtual keyboard on mobile)
             window.addEventListener('resize', function() {
                 if (!isMobileView) return;
-                
-                const newHeight = window.innerHeight;
-                const heightDiff = originalViewportHeight - newHeight;
-                
-                // إذا كان الفرق كبير (فوق 150px) فهذا يعني ظهور أو اختفاء الكيبورد
-                if (Math.abs(heightDiff) > 150) {
-                    if (newHeight < originalViewportHeight) {
-                        // الكيبورد فتح
-                        isKeyboardOpen = true;
-                        if (isCinemaMode) {
-                            body.classList.add('keyboard-open');
-                        }
-                    } else {
-                        // الكيبورد أغلق
-                        isKeyboardOpen = false;
-                        if (isCinemaMode) {
-                            body.classList.remove('keyboard-open');
-                        }
-                    }
-                    
-                    originalViewportHeight = newHeight;
-                }
+                // --- replace existing keyboard-open logic with this safer approach ---
+const chatInputContainer = document.getElementById('chatInputContainer');
+const messagesContainer = document.getElementById('messagesContainer');
+const chatSection = document.getElementById('chatSection');
+
+window.addEventListener('resize', function() {
+  if (!isMobileView) return;
+
+  // Prefer visualViewport for accurate keyboard size if available
+  const v = window.visualViewport;
+  let viewportHeight = window.innerHeight;
+  if (v && v.height) {
+    viewportHeight = v.height;
+  }
+
+  const newHeight = viewportHeight;
+  const heightDiff = Math.abs(originalHeight - newHeight);
+
+  if (heightDiff < 100) {
+    // ignore tiny resizes
+    return;
+  }
+
+  // keyboard opened (originalHeight > newHeight)
+  if (originalHeight > newHeight) {
+    const keyboardHeight = originalHeight - newHeight;
+
+    isKeyboardOpen = true;
+
+    // Make input fixed to bottom (adds class that CSS handles)
+    if (chatInputContainer && !chatInputContainer.classList.contains('keyboard-open')) {
+      chatInputContainer.classList.add('keyboard-open');
+    }
+
+    // Ensure messages area is visible above keyboard
+    if (messagesContainer) {
+      // add padding so messages are not hidden under the fixed input
+      messagesContainer.style.paddingBottom = (keyboardHeight + chatInputContainer.offsetHeight + 16) + 'px';
+      // scroll to bottom so user sees latest messages
+      setTimeout(() => {
+        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+      }, 120);
+    }
+
+    // Do NOT translate the chat-section or player (prevents jumping)
+    if (chatSection) {
+      // ensure chat section bottom stays at 0 so it overlays above player if needed
+      chatSection.style.bottom = '0';
+    }
+
+  } else {
+    // keyboard closed
+    isKeyboardOpen = false;
+
+    if (chatInputContainer && chatInputContainer.classList.contains('keyboard-open')) {
+      chatInputContainer.classList.remove('keyboard-open');
+    }
+
+    if (messagesContainer) {
+      messagesContainer.style.paddingBottom = '';
+    }
+
+    // revert any inline adjustments
+    if (chatSection) chatSection.style.bottom = '';
+  }
+
+  // update originalHeight for next resize event
+  originalHeight = newHeight;
+});
             });
             
             // Prevent default behavior on input focus to avoid page jump
