@@ -956,6 +956,42 @@ body {
     .planet-title {
         font-size: 1.5rem !important;
     }
+} /* Add to your existing CSS */
+#watch-room-btn {
+    transition: var(--transition);
+}
+
+#watch-room-btn:hover {
+    transform: scale(1.1) translateY(-5px);
+    box-shadow: 0 8px 25px rgba(255,75,138,0.6);
+}
+
+@media (max-width: 768px) {
+    #watch-room-btn {
+        bottom: 20px;
+        left: 20px;
+        width: 60px;
+        height: 60px;
+        font-size: 2rem;
+    }
+    
+    #watch-room-btn i {
+        font-size: 1.5rem;
+    }
+    
+    #floating-moon {
+        bottom: 20px !important;
+        right: 20px !important;
+    }
+}
+
+@media (max-width: 480px) {
+    #watch-room-btn {
+        bottom: 15px;
+        left: 15px;
+        width: 55px;
+        height: 55px;
+    }
 }
 </style>
 </head>
@@ -1115,7 +1151,10 @@ body {
 </main>
 
 <a href="/3omri" id="floating-moon" style="position:fixed;bottom:30px;right:30px;font-size:3rem;cursor:pointer;z-index:100;animation:float 4s ease-in-out infinite;text-decoration:none;color:inherit">🌕</a>
-
+ <!-- Watch Room Button -->
+<a href="baby.html" id="watch-room-btn" style="position:fixed;bottom:30px;left:30px;font-size:2.5rem;cursor:pointer;z-index:100;animation:float 4s ease-in-out infinite;text-decoration:none;color:inherit;background:linear-gradient(135deg, rgba(157,78,221,0.9), rgba(255,75,138,0.9));width:70px;height:70px;border-radius:50%;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 20px rgba(157,78,221,0.4);border:2px solid rgba(255,204,0,0.5);">
+    <i class="fas fa-video" style="font-size:1.8rem;color:#fff;"></i>
+</a>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-database-compat.js"></script>
 
