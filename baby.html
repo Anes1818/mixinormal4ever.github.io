@@ -2,7 +2,8 @@
 <html lang="en" dir="ltr">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- أضفت initial-scale=1.0, maximum-scale=1.0 للتحكم في zoom -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>our watch 7afla :3 | Couple Cinema</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://www.youtube.com/iframe_api"></script>
@@ -53,12 +54,13 @@
             box-sizing: border-box;
         }
 
+        /* استخدمنا 100% بدلاً من 100vh للجسم لمنع المشاكل مع الكيبورد */
         body {
             font-family: Amiri, serif;
             background: var(--main-bg);
             color: var(--text-color);
             overflow-x: hidden;
-            min-height: 100vh;
+            min-height: 100%; /* تغيير من 100vh إلى 100% */
             position: relative;
             background-image: radial-gradient(circle at 20% 30%, rgba(157,78,221,.15) 0, transparent 30%),
                               radial-gradient(circle at 80% 70%, rgba(255,75,138,.15) 0, transparent 30%);
@@ -262,6 +264,9 @@
             margin: 76px auto 30px;
             padding: 0 20px;
             animation: fadeIn 0.8s ease;
+            display: flex;
+            flex-direction: column;
+            min-height: 100%; /* تغيير من min-height: 100vh */
         }
 
         /* ===== VIDEO INPUT SECTION ===== */
@@ -450,7 +455,10 @@
         .chat-section {
             display: flex;
             flex-direction: column;
-            height: 520px;
+            /* تغيير من height ثابتة إلى flex: 1 لملء المساحة */
+            flex: 1;
+            min-height: 520px;
+            max-height: 600px;
             background: rgba(29, 0, 61, 0.3);
             border-radius: var(--radius-xl);
             overflow: hidden;
@@ -591,6 +599,8 @@
             z-index: 1;
             -webkit-overflow-scrolling: touch;
             scroll-behavior: smooth;
+            /* إضافة overscroll-behavior لمنع scroll غير مرغوب فيه */
+            overscroll-behavior: contain;
         }
 
         .message {
@@ -961,23 +971,38 @@
 
         /* ===== MOBILE CINEMA MODE ONLY ===== */
         @media (max-width: 767px) {
+            /* تحسين viewport للجسم في وضع السينما */
+            .cinema-mode {
+                height: 100dvh; /* استخدام dvh للتعامل مع الكيبورد */
+                overflow: hidden;
+            }
+            
             .cinema-mode .app-wrapper {
                 max-width: 100%;
                 margin: 56px 0 0;
                 padding: 0;
-                height: 100vh;
+                height: 100%;
+                display: flex;
+                flex-direction: column;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
                 overflow: hidden;
             }
             
+            /* الفيديو ثابت في الأعلى */
             .cinema-mode .player-section {
-                position: fixed;
-                top: 56px;
+                position: relative;
+                top: 0;
                 left: 0;
                 right: 0;
-                height: calc(100vw * 9 / 16);
+                height: calc(100vw * 9 / 16); /* نسبة 16:9 */
                 z-index: 100;
                 border-radius: 0;
                 background: #000;
+                flex-shrink: 0; /* لا يتقلص مع الكيبورد */
             }
             
             .cinema-mode .player-container {
@@ -985,13 +1010,15 @@
                 height: 100%;
             }
             
+            /* الشات يأخذ المساحة المتبقية */
             .cinema-mode .chat-section {
-                position: fixed;
-                top: calc(55px + (100vw * 9 / 16));
+                position: relative;
+                top: 0;
                 left: 0;
                 right: 0;
-                bottom: 0;
-                height: calc(100vh - (56px + (100vw * 9 / 16)));
+                flex: 1;
+                min-height: 0; /* مهم ليعمل flex بشكل صحيح */
+                max-height: none;
                 border-radius: 0;
                 border: none;
                 display: flex;
@@ -1001,46 +1028,30 @@
                 backdrop-filter: blur(20px);
             }
             
-            .cinema-mode .chat-header {
-                flex-shrink: 0;
-                padding: 16px 20px;
-                border-bottom: 1px solid var(--glass-border);
-            }
-            
+            /* إصلاح مشكلة scroll في الشات */
             .cinema-mode .messages-container {
                 flex: 1;
-                padding: 20px;
+                min-height: 0; /* مهم جداً ليعمل overflow بشكل صحيح */
                 overflow-y: auto;
                 -webkit-overflow-scrolling: touch;
-                min-height: 0;
+                padding: 16px;
             }
             
+            /* الإدخال يبقى في الأسفل */
             .cinema-mode .chat-input-container {
                 flex-shrink: 0;
-                margin-bottom: 20px;
-                padding: 16px 20px;
+                padding: 16px;
                 background: rgba(10, 1, 31, 0.95);
                 backdrop-filter: blur(20px);
                 border-top: 1px solid var(--glass-border);
-                position: relative;
-                z-index: 101;
-                transition: transform 0.3s ease;
-            }
-            
-            .cinema-mode .chat-input-container.keyboard-open {
-                position: fixed;
+                position: sticky;
                 bottom: 0;
-                left: 0;
-                right: 0;
-                z-index: 10000;
-                transform: translateY(0);
-                box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.5);
+                z-index: 101;
+                /* إزالة التحويلات التي تسبب مشاكل */
+                transform: none !important;
             }
             
-            .cinema-mode .messages-container.keyboard-padding {
-                padding-bottom: 100px;
-            }
-            
+            /* إخفاء الأقسام الأخرى في وضع السينما */
             .cinema-mode .video-input-section,
             .cinema-mode .our-movies-section,
             .cinema-mode .history-section {
@@ -1069,7 +1080,8 @@
             .chat-section {
                 grid-column: 2;
                 grid-row: 1 / span 2;
-                height: 600px;
+                height: auto; /* تغيير من height ثابتة */
+                max-height: 600px;
             }
             
             .our-movies-section {
@@ -1527,7 +1539,7 @@
         }
 
         // ============================================
-        // MOBILE KEYBOARD HANDLER
+        // MOBILE KEYBOARD HANDLER - SIMPLIFIED
         // ============================================
         let keyboardHeight = 0;
         let isKeyboardOpen = false;
@@ -1538,56 +1550,28 @@
             if (!isMobileView) return;
             
             const chatInput = document.getElementById('chatMessageInput');
-            const chatContainer = document.getElementById('chatInputContainer');
             const messagesContainer = document.getElementById('messagesContainer');
             
-            if (!chatInput || !chatContainer) return;
+            if (!chatInput || !messagesContainer) return;
             
             // Focus event - لما يكتب
             chatInput.addEventListener('focus', function() {
                 isKeyboardOpen = true;
                 
                 if (isCinemaMode) {
-                    // في وضع السينما: الإدخال يصير fixed فوق الكيبورد
-                    chatContainer.classList.add('keyboard-open');
-                    messagesContainer.classList.add('keyboard-padding');
-                    
-                    // حساب ارتفاع الكيبورد
+                    // تأخير بسيط للتأكد من ظهور الكيبورد
                     setTimeout(() => {
-                        const viewportHeight = window.innerHeight;
-                        const containerRect = chatContainer.getBoundingClientRect();
-                        keyboardHeight = viewportHeight - containerRect.bottom;
-                        
-                        // نرفع الإدخال فوق الكيبورد
-                        chatContainer.style.transform = `translateY(-${keyboardHeight}px)`;
-                        
-                        // نضيف padding للمسجات عشان ما يتغطى آخر مسج
-                        messagesContainer.style.paddingBottom = `${keyboardHeight + 80}px`;
-                        
-                        // نروح لآخر مسج
-                        setTimeout(() => {
-                            messagesContainer.scrollTop = messagesContainer.scrollHeight;
-                        }, 300);
-                    }, 100);
+                        // تمرير لآخر رسالة
+                        messagesContainer.scrollTop = messagesContainer.scrollHeight;
+                    }, 300);
                 }
                 
-                console.log('📱 Keyboard opened - Input fixed above keyboard');
+                console.log('📱 Keyboard opened');
             });
             
             // Blur event - لما يخلص كتابة
             chatInput.addEventListener('blur', function() {
                 isKeyboardOpen = false;
-                
-                if (isCinemaMode) {
-                    // نرجع كل شيء لوضعه الطبيعي
-                    setTimeout(() => {
-                        chatContainer.classList.remove('keyboard-open');
-                        messagesContainer.classList.remove('keyboard-padding');
-                        chatContainer.style.transform = 'translateY(0)';
-                        messagesContainer.style.paddingBottom = '';
-                    }, 200);
-                }
-                
                 console.log('📱 Keyboard closed');
             });
             
@@ -1609,11 +1593,6 @@
                         isKeyboardOpen = true;
                         
                         if (isCinemaMode && document.activeElement === chatInput) {
-                            chatContainer.classList.add('keyboard-open');
-                            messagesContainer.classList.add('keyboard-padding');
-                            chatContainer.style.transform = `translateY(-${keyboardHeight}px)`;
-                            messagesContainer.style.paddingBottom = `${keyboardHeight + 80}px`;
-                            
                             setTimeout(() => {
                                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
                             }, 300);
@@ -1621,13 +1600,6 @@
                     } else {
                         // Keyboard closed
                         isKeyboardOpen = false;
-                        
-                        if (isCinemaMode) {
-                            chatContainer.classList.remove('keyboard-open');
-                            messagesContainer.classList.remove('keyboard-padding');
-                            chatContainer.style.transform = 'translateY(0)';
-                            messagesContainer.style.paddingBottom = '';
-                        }
                     }
                     
                     originalHeight = newHeight;
@@ -1657,12 +1629,20 @@
             
             const toggleCinemaBtn = document.getElementById('toggleCinemaBtn');
             const appWrapper = document.querySelector('.app-wrapper');
+            const body = document.body;
 
             if (!toggleCinemaBtn) return;
 
             toggleCinemaBtn.addEventListener('click', () => {
                 appWrapper.classList.toggle('cinema-mode');
                 isCinemaMode = appWrapper.classList.contains('cinema-mode');
+                
+                // تطبيق وضع السينما على body أيضًا
+                if (isCinemaMode) {
+                    body.classList.add('cinema-mode');
+                } else {
+                    body.classList.remove('cinema-mode');
+                }
                 
                 // Change icon
                 const icon = toggleCinemaBtn.querySelector('i');
@@ -1683,11 +1663,6 @@
                 // Update background video sync based on new state
                 setTimeout(() => {
                     updateBackgroundVideoSync();
-                }, 100);
-                
-                // Re-setup mobile keyboard handler for new layout
-                setTimeout(() => {
-                    setupMobileKeyboardHandler();
                 }, 100);
             });
         }
