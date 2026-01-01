@@ -41,7 +41,242 @@ body {
                       radial-gradient(circle at 80% 70%, rgba(255,75,138,.15) 0, transparent 30%);
 }
 
-/* === New Countdown Timer Styles === */
+/* === NEW YEAR BUTTON STYLES === */
+.new-year-button-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    padding: 15px 20px;
+    background: linear-gradient(135deg, 
+        rgba(255, 204, 0, 0.9), 
+        rgba(255, 75, 138, 0.9),
+        rgba(157, 78, 221, 0.9));
+    backdrop-filter: blur(10px);
+    border-bottom: 3px solid var(--accent-gold);
+    box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
+    transform: translateY(0);
+    transition: all 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    display: none; /* Hidden by default */
+}
+
+.new-year-button-container.show {
+    display: block;
+    animation: slideDown 1s ease-out;
+}
+
+@keyframes slideDown {
+    0% {
+        transform: translateY(-100%);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+.new-year-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 15px;
+    text-align: center;
+}
+
+.new-year-title {
+    font-family: 'Great Vibes', cursive;
+    font-size: 2.2rem;
+    color: white;
+    text-shadow: 0 2px 15px rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    flex-basis: 100%;
+}
+
+.new-year-title i {
+    color: white;
+    animation: sparkle 2s infinite;
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
+    }
+    50% {
+        transform: scale(1.2);
+        opacity: 0.8;
+        text-shadow: 0 0 20px rgba(255, 255, 255, 1);
+    }
+}
+
+.new-year-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 15px 35px;
+    background: linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.95),
+        rgba(255, 255, 255, 0.85));
+    color: #9d4edd;
+    text-decoration: none;
+    border-radius: 50px;
+    font-family: 'Cinzel', serif;
+    font-weight: 700;
+    font-size: 1.4rem;
+    letter-spacing: 1px;
+    border: 2px solid transparent;
+    box-shadow: 
+        0 5px 20px rgba(157, 78, 221, 0.4),
+        0 0 0 1px rgba(255, 255, 255, 0.2),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.1);
+    transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+
+.new-year-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgba(255, 255, 255, 0.4), 
+        transparent);
+    transition: left 0.7s ease;
+    z-index: -1;
+}
+
+.new-year-btn:hover {
+    transform: translateY(-5px) scale(1.05);
+    box-shadow: 
+        0 10px 30px rgba(157, 78, 221, 0.6),
+        0 0 0 3px rgba(255, 204, 0, 0.5),
+        inset 0 0 0 1px rgba(255, 255, 255, 0.3);
+    color: #ff4b8a;
+    border-color: rgba(255, 204, 0, 0.5);
+}
+
+.new-year-btn:hover::before {
+    left: 100%;
+}
+
+.new-year-btn i {
+    font-size: 1.6rem;
+    transition: all 0.3s ease;
+    color: #ff4b8a;
+}
+
+.new-year-btn:hover i {
+    transform: rotate(360deg) scale(1.2);
+    color: #9d4edd;
+}
+
+.new-year-message {
+    font-style: italic;
+    color: white;
+    font-size: 1rem;
+    opacity: 0.9;
+    margin-top: 10px;
+    flex-basis: 100%;
+    font-family: 'Raleway', sans-serif;
+    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.new-year-btn .btn-text {
+    background: linear-gradient(135deg, #9d4edd, #ff4b8a);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: bold;
+}
+
+/* Star burst effect */
+.star-burst {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: -1;
+}
+
+.star-burst i {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 1.2rem;
+    animation: floatStar 4s infinite ease-in-out;
+}
+
+@keyframes floatStar {
+    0%, 100% {
+        transform: translate(0, 0) rotate(0deg);
+        opacity: 0.5;
+    }
+    50% {
+        transform: translate(10px, -10px) rotate(180deg);
+        opacity: 1;
+    }
+}
+
+@media (max-width: 768px) {
+    .new-year-button-container {
+        padding: 12px 15px;
+    }
+    
+    .new-year-title {
+        font-size: 1.8rem;
+        gap: 10px;
+    }
+    
+    .new-year-btn {
+        padding: 12px 25px;
+        font-size: 1.2rem;
+    }
+    
+    .new-year-btn i {
+        font-size: 1.4rem;
+    }
+    
+    .new-year-message {
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .new-year-button-container {
+        padding: 10px 12px;
+    }
+    
+    .new-year-title {
+        font-size: 1.5rem;
+        flex-direction: column;
+        gap: 5px;
+    }
+    
+    .new-year-btn {
+        padding: 10px 20px;
+        font-size: 1.1rem;
+        gap: 8px;
+    }
+    
+    .new-year-message {
+        font-size: 0.8rem;
+    }
+}
+
+/* === Countdown Timer Styles === */
 .countdown-container {
     position: fixed;
     top: 0;
@@ -54,11 +289,13 @@ body {
     border-bottom: 2px solid var(--accent-gold);
     box-shadow: 0 5px 25px rgba(0, 0, 0, 0.3);
     transform: translateY(0);
-    transition: transform 0.5s ease;
+    transition: all 0.5s ease;
 }
 
 .countdown-container.hidden {
     transform: translateY(-100%);
+    opacity: 0;
+    pointer-events: none;
 }
 
 .countdown-content {
@@ -1347,6 +1584,57 @@ body {
     </div>
 </div>
 
+<!-- New Year 2026 Button (Shows when countdown ends) -->
+<div id="new-year-button-container" class="new-year-button-container">
+    <div class="star-burst" id="starBurst"></div>
+    <div class="new-year-content">
+        <div class="new-year-title">
+            <i class="fas fa-star"></i>
+            Happy New Year 2026!
+            <i class="fas fa-star"></i>
+        </div>
+        <a href="2026.html" class="new-year-btn">
+            <i class="fas fa-rocket"></i>
+            <span class="btn-text">Enter 2026 →</span>
+        </a>
+        <div class="new-year-message">
+            A new chapter of our love story begins... ✨
+        </div>
+    </div>
+</div>
+
+<!-- Countdown Timer -->
+<div id="countdown-timer" class="countdown-container hidden">
+    <div class="countdown-content">
+        <div class="countdown-title">
+            <i class="fas fa-heart"></i>
+            Countdown to New Year 2026
+            <i class="fas fa-heart"></i>
+        </div>
+        <div class="countdown-timer">
+            <div class="time-unit">
+                <div id="days" class="time-value">00</div>
+                <div class="time-label">Days</div>
+            </div>
+            <div class="time-unit">
+                <div id="hours" class="time-value">00</div>
+                <div class="time-label">Hours</div>
+            </div>
+            <div class="time-unit">
+                <div id="minutes" class="time-value">00</div>
+                <div class="time-label">Minutes</div>
+            </div>
+            <div class="time-unit">
+                <div id="seconds" class="time-value">00</div>
+                <div class="time-label">Seconds</div>
+            </div>
+        </div>
+        <div class="countdown-message">
+            A small surprise awaits you. I love you.
+        </div>
+    </div>
+</div>
+
 <!-- Flower & Heart Overlay -->
 <div id="flower-heart-overlay" class="flower-heart-overlay" aria-hidden="true">
     <div class="flower-heart-container">
@@ -1382,38 +1670,6 @@ body {
             <button class="flower-btn" id="replay-flower-btn" onclick="replayFlowerShow()" style="display:none;">
                 <i class="fas fa-redo"></i> Replay
             </button>
-        </div>
-    </div>
-</div>
-
-<!-- Countdown Timer -->
-<div id="countdown-timer" class="countdown-container hidden">
-    <div class="countdown-content">
-        <div class="countdown-title">
-            <i class="fas fa-heart"></i>
-            Countdown to New Year 2026
-            <i class="fas fa-heart"></i>
-        </div>
-        <div class="countdown-timer">
-            <div class="time-unit">
-                <div id="days" class="time-value">00</div>
-                <div class="time-label">Days</div>
-            </div>
-            <div class="time-unit">
-                <div id="hours" class="time-value">00</div>
-                <div class="time-label">Hours</div>
-            </div>
-            <div class="time-unit">
-                <div id="minutes" class="time-value">00</div>
-                <div class="time-label">Minutes</div>
-            </div>
-            <div class="time-unit">
-                <div id="seconds" class="time-value">00</div>
-                <div class="time-label">Seconds</div>
-            </div>
-        </div>
-        <div class="countdown-message">
-            A small surprise awaits you. I love you.
         </div>
     </div>
 </div>
@@ -1678,6 +1934,118 @@ const firebaseConfig = {
 const app = firebase.initializeApp(firebaseConfig);
 const database = firebase.database();
 
+// ===== NEW YEAR 2026 FUNCTIONALITY =====
+let countdownInterval;
+let is2026Reached = false;
+
+// Create star burst effect for the button
+function createStarBurst() {
+    const starBurst = document.getElementById('starBurst');
+    starBurst.innerHTML = '';
+    
+    for (let i = 0; i < 20; i++) {
+        const star = document.createElement('i');
+        star.className = 'fas fa-star';
+        star.style.left = `${Math.random() * 100}%`;
+        star.style.top = `${Math.random() * 100}%`;
+        star.style.animationDelay = `${Math.random() * 2}s`;
+        starBurst.appendChild(star);
+    }
+}
+
+// Function to show the New Year 2026 button
+function showNewYearButton() {
+    if (is2026Reached) return;
+    
+    is2026Reached = true;
+    
+    // Hide the countdown timer
+    const countdownTimer = document.getElementById('countdown-timer');
+    countdownTimer.classList.add('hidden');
+    
+    // Clear the countdown interval
+    if (countdownInterval) {
+        clearInterval(countdownInterval);
+    }
+    
+    // Create star burst effect
+    createStarBurst();
+    
+    // Show the New Year button after a short delay
+    setTimeout(() => {
+        const newYearButton = document.getElementById('new-year-button-container');
+        newYearButton.classList.add('show');
+        
+        // Add celebration effect
+        Swal.fire({
+            title: '🎉 Happy New Year 2026! 🎉',
+            text: 'A new chapter of our love story begins...',
+            icon: 'success',
+            timer: 3000,
+            showConfirmButton: false,
+            background: 'var(--main-bg)',
+            color: 'var(--text-color)'
+        });
+    }, 1000);
+}
+
+// Function to update the countdown timer
+function updateCountdown() {
+    const now = new Date();
+    const currentYear = now.getFullYear();
+    
+    // Check if we're already in 2026 or later
+    if (currentYear >= 2026) {
+        showNewYearButton();
+        return;
+    }
+    
+    // Set target to January 1, 2026, 00:00:00
+    const targetDate = new Date(2026, 0, 1, 0, 0, 0, 0);
+    const timeDifference = targetDate - now;
+    
+    if (timeDifference > 0) {
+        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
+        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
+        
+        // Update display with leading zeros
+        document.getElementById('days').textContent = days.toString().padStart(2, '0');
+        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        
+        // Add pulsing animation when seconds change
+        const secondsElement = document.getElementById('seconds');
+        secondsElement.classList.add('pulse');
+        setTimeout(() => secondsElement.classList.remove('pulse'), 300);
+    } else {
+        // Countdown finished - it's 2026!
+        showNewYearButton();
+    }
+}
+
+// Initialize countdown
+function initCountdown() {
+    // Show countdown timer
+    const countdownTimer = document.getElementById('countdown-timer');
+    countdownTimer.classList.remove('hidden');
+    
+    // Check immediately if we're already in 2026
+    const now = new Date();
+    if (now.getFullYear() >= 2026) {
+        showNewYearButton();
+        return;
+    }
+    
+    // Update immediately
+    updateCountdown();
+    
+    // Update every second
+    countdownInterval = setInterval(updateCountdown, 1000);
+}
+
 // ===== FLOWER & HEART INTEGRATION =====
 let flowerHeartInitialized = false;
 let hasShownNewYearMemory = false;
@@ -1843,95 +2211,6 @@ function disableCountdown() {
     
     // Stop countdown updates
     // We'll handle this by checking countdownDisabled in updateCountdown()
-}
-
-// ===== MODIFIED COUNTDOWN FUNCTION =====
-let hasCountdownEnded = false;
-
-function updateCountdown() {
-    // Don't update if countdown is disabled
-    if (countdownDisabled) return;
-    
-    const now = new Date();
-    const currentYear = now.getFullYear();
-    
-    // Set target to January 1, 2026, 00:00:00
-    let targetYear = 2026;
-    
-    // If current year is already 2026 or later, set to next year
-    if (currentYear >= 2026) {
-        targetYear = currentYear + 1;
-    }
-    
-    const targetDate = new Date(targetYear, 0, 1, 0, 0, 0, 0);
-    const timeDifference = targetDate - now;
-    
-    if (timeDifference > 0) {
-        const days = Math.floor(timeDifference / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((timeDifference % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((timeDifference % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((timeDifference % (1000 * 60)) / 1000);
-        
-        // Update display with leading zeros
-        document.getElementById('days').textContent = days.toString().padStart(2, '0');
-        document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
-        document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
-        document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
-        
-        // Add pulsing animation when seconds change
-        const secondsElement = document.getElementById('seconds');
-        secondsElement.classList.add('pulse');
-        setTimeout(() => secondsElement.classList.remove('pulse'), 300);
-    } else {
-        // Countdown finished
-        if (!hasCountdownEnded) {
-            hasCountdownEnded = true;
-            
-            document.getElementById('days').textContent = '00';
-            document.getElementById('hours').textContent = '00';
-            document.getElementById('minutes').textContent = '00';
-            document.getElementById('seconds').textContent = '00';
-            
-            // Update message
-            const messageEl = document.querySelector('.countdown-message');
-            if (messageEl) {
-                messageEl.innerHTML = '🎉 Happy New Year 2026! 🎉 The surprise is ready! I love you.';
-                messageEl.style.color = '#ffcc00';
-            }
-            
-            // Change background color
-            const countdownTimer = document.getElementById('countdown-timer');
-            countdownTimer.style.background = 
-                'linear-gradient(135deg, rgba(255, 204, 0, 0.9), rgba(255, 75, 138, 0.9))';
-            
-            // Add celebration effect
-            countdownTimer.classList.add('heart-beat');
-            
-            // Show the flower & heart animation after a short delay
-            setTimeout(() => {
-                showFlowerHeartAnimation();
-            }, 1500);
-        }
-    }
-}
-
-// Initialize countdown
-function initCountdown() {
-    // Show countdown timer
-    const countdownTimer = document.getElementById('countdown-timer');
-    countdownTimer.classList.remove('hidden');
-    
-    // Update immediately
-    updateCountdown();
-    
-    // Update every second only if not disabled
-    const countdownInterval = setInterval(() => {
-        if (!countdownDisabled) {
-            updateCountdown();
-        } else {
-            clearInterval(countdownInterval);
-        }
-    }, 1000);
 }
 
 // ===== FLOWER SYSTEM INITIALIZATION =====
