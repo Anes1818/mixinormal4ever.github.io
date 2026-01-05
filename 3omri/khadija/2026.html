@@ -1,868 +1,456 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Flower & Heart — Click To Add Flowers</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flower Garden</title>
+    <style>
+        html, body {
+            overflow: hidden;
+            padding: 0;
+            margin: 0;
+        }
+        .container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            flex-direction: column-reverse;
+            align-items: start;
+        }
+        .clean-btn {
+            z-index: 1;
+            font-family: sans-serif;
+            font-size: 15px;
+            color: white;
+            text-shadow: 0 0 10px #000000;
+            user-select: none;
+            padding: 0 0 15px 25px;
+            cursor: pointer;
+            text-decoration: underline;
+            opacity: .5;
+        }
+        canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            display: block;
+        }
 
-  <!-- Fonts: romantic script + classical display -->
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Cinzel:wght@400;700&display=swap" rel="stylesheet">
+        .name {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            font-size: 4vw;
+            text-shadow: 0 0 5px #000000;
+            user-select: none;
+            pointer-events: none;
+            transition: opacity 0.5s;
+        }
 
-  <style>
-    :root {
-      --bg: #050007;
-      --soft-white: rgba(255,255,255,0.95);
-      --accent: #ff6fb3;
-    }
-    html,body {
-      height:100%;
-      margin:0;
-      padding:0;
-      background: radial-gradient(circle at 10% 10%, #081018 0%, var(--bg) 50%);
-      font-family: "Cinzel", serif;
-      color: white;
-      overflow: hidden;
-    }
+        .counter {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            color: white;
+            font-family: sans-serif;
+            font-size: 20px;
+            text-shadow: 0 0 10px #000000;
+            z-index: 2;
+            padding: 10px 15px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+        }
 
-    /* Main canvases stack */
-    #three-wrap, #pink-wrap {
-      position:fixed;
-      top:0; left:0;
-      width:100%; height:100%;
-      pointer-events:none; /* enable pointer events only where needed */
-    }
-    canvas { display:block; width:100%; height:100%; }
+        .love-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            text-align: center;
+            font-family: sans-serif;
+            font-size: 24px;
+            text-shadow: 0 0 10px #000000;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 80%;
+            z-index: 3;
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+        }
 
-    /* UI */
-    .ui {
-      position:fixed;
-      left:24px;
-      bottom:20px;
-      z-index:30;
-      display:flex;
-      align-items:center;
-      gap:12px;
-      pointer-events:auto;
-    }
-    .clean-btn {
-      background:transparent;
-      color:var(--soft-white);
-      border:none;
-      font-size:15px;
-      text-decoration:underline;
-      opacity:0.75;
-      cursor:pointer;
-      padding:6px 10px;
-      border-radius:8px;
-      backdrop-filter: blur(4px);
-    }
-    .counter {
-      font-size:14px;
-      padding:6px 10px;
-      border-radius:8px;
-      background:linear-gradient(90deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
-      box-shadow: 0 6px 18px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.02);
-    }
-
-    /* center instructions / name */
-    .center-hud {
-      position:fixed;
-      z-index:20;
-      top:50%;
-      left:50%;
-      transform:translate(-50%,-50%);
-      pointer-events:auto;
-      text-align:center;
-      color:var(--soft-white);
-      user-select:none;
-    }
-    .center-hud .title {
-      font-size:4.5vw;
-      line-height:1;
-      text-shadow: 0 6px 30px rgba(0,0,0,0.8);
-      transition: transform .45s cubic-bezier(.2,.9,.2,1), opacity .25s;
-      cursor:pointer;
-    }
-    @media (min-width:640px){ .center-hud .title { font-size:44px; } }
-
-    /* "more!" small badge */
-    .more-badge {
-      display:inline-block;
-      margin-top:8px;
-      font-size:14px;
-      opacity:.9;
-      color: #ffdbe9;
-    }
-
-    /* Heart overlay (hidden until triggered) */
-    .heart-overlay {
-      position:fixed;
-      inset:0;
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      z-index:40;
-      pointer-events:none;
-      opacity:0;
-      transform: scale(.98);
-      transition: opacity .7s ease, transform .7s cubic-bezier(.2,.9,.2,1);
-    }
-    .heart-overlay.show {
-      opacity:1;
-      transform: scale(1);
-      pointer-events:auto;
-    }
-
-    /* Romantic center text */
-    .romance {
-      text-align:center;
-      max-width:90%;
-      padding:30px;
-      border-radius:20px;
-      backdrop-filter: blur(6px) saturate(1.2);
-      color: #fffefc;
-      text-shadow:
-        0 2px 6px rgba(0,0,0,0.6),
-        0 6px 24px rgba(255,111,179,0.08);
-      transform-origin:center;
-      animation: floatUp 2.4s ease forwards;
-      pointer-events:none;
-    }
-    @keyframes floatUp {
-      0% { transform: translateY(18px) scale(.98); opacity:0; }
-      60% { transform: translateY(-6px) scale(1.02); opacity:1; }
-      100% { transform: translateY(0) scale(1); opacity:1; }
-    }
-
-    .romance .line1 {
-      font-family: "Great Vibes", cursive;
-      font-size: clamp(26px,6.4vw,64px);
-      letter-spacing: .6px;
-      margin:0 0 6px 0;
-      color:#fff8fb;
-    }
-    .romance .line2 {
-      font-family: "Cinzel", serif;
-      font-size: clamp(12px,2.2vw,18px);
-      opacity:0.92;
-      margin:0;
-      text-transform: none;
-      color:#f6e9f1;
-    }
-
-    /* small subtle heart pulse behind copy */
-    .romance::before {
-      content:"";
-      position:absolute;
-      width:320px;height:320px;
-      border-radius:50%;
-      transform:translate(-50%,-50%) scale(.8);
-      left:50%; top:50%;
-      filter: blur(36px);
-      background: radial-gradient(circle at 40% 40%, rgba(255,111,179,0.18), rgba(255,111,179,0.06) 30%, transparent 60%);
-      z-index:-1;
-      animation: pulse 3.2s infinite;
-      mix-blend-mode:screen;
-    }
-    @keyframes pulse {
-      0% { transform: translate(-50%,-50%) scale(.9); opacity:0.9; }
-      50% { transform: translate(-50%,-50%) scale(1.05); opacity:0.65; }
-      100% { transform: translate(-50%,-50%) scale(.9); opacity:0.9; }
-    }
-
-    /* small instruction when heart is shown */
-    .romance .sub {
-      display:block;
-      margin-top:10px;
-      font-size:14px;
-      opacity:.85;
-      color:#ffeef8;
-    }
-
-    /* Heart action buttons */
-    .heart-buttons {
-      display: flex;
-      gap: 12px;
-      margin-top: 24px;
-      justify-content: center;
-      pointer-events: auto;
-    }
-
-    .heart-btn {
-      background: rgba(255, 255, 255, 0.12);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.2);
-      padding: 10px 18px;
-      border-radius: 8px;
-      font-family: "Cinzel", serif;
-      font-size: 14px;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      backdrop-filter: blur(8px);
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .heart-btn:hover {
-      background: rgba(255, 111, 179, 0.25);
-      border-color: rgba(255, 111, 179, 0.5);
-      transform: translateY(-2px);
-    }
-
-    .heart-btn.home-btn {
-      background: rgba(255, 111, 179, 0.2);
-      border-color: rgba(255, 111, 179, 0.3);
-    }
-
-    .heart-btn.reset-btn {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    /* Reset flower button in corner */
-    .reset-corner-btn {
-      position: fixed;
-      right: 24px;
-      bottom: 20px;
-      z-index: 35;
-      background: rgba(255, 255, 255, 0.1);
-      color: white;
-      border: 1px solid rgba(255, 255, 255, 0.15);
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-family: "Cinzel", serif;
-      font-size: 14px;
-      cursor: pointer;
-      backdrop-filter: blur(8px);
-      opacity: 0;
-      visibility: hidden;
-      transition: all 0.3s ease;
-      pointer-events: none;
-    }
-
-    .reset-corner-btn.show {
-      opacity: 1;
-      visibility: visible;
-      pointer-events: auto;
-    }
-
-    .reset-corner-btn:hover {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: rgba(255, 255, 255, 0.25);
-    }
-
-    /* make sure pinkboard canvas on top of three canvas when shown */
-    #pink-wrap { z-index:38; pointer-events:none; }
-    #three-wrap { z-index:10; }
-
-    /* responsive tweak for mobile */
-    @media (max-width:480px) {
-      .center-hud .title { font-size:18vw; }
-      .ui { left:12px; bottom:12px; gap:8px; }
-      .heart-buttons {
-        flex-direction: column;
-        gap: 8px;
-      }
-      .reset-corner-btn {
-        right: 12px;
-        bottom: 12px;
-      }
-    }
-  </style>
+        @media all and (min-width: 640px) {
+            .name {
+                font-size: 45px
+            }
+            .love-message {
+                font-size: 32px;
+                max-width: 600px;
+            }
+        }
+    </style>
 </head>
 <body>
-
-  <!-- Three.js flower canvas -->
-  <div id="three-wrap" aria-hidden="true">
-    <canvas id="three-canvas"></canvas>
-  </div>
-
-  <!-- Heart particles canvas (hidden until triggered) -->
-  <div id="pink-wrap" aria-hidden="true" style="display:none;">
-    <canvas id="pinkboard"></canvas>
-  </div>
-
-  <!-- Center HUD -->
-  <div class="center-hud">
-    <div class="title" id="actionTitle">Click To Add Flowers</div>
-    <div class="more-badge" id="moreBadge" style="display:none;">more !</div>
-  </div>
-
-  <!-- UI bottom left -->
-  <div class="ui">
-    <button class="clean-btn" id="cleanBtn">clean the screen</button>
-    <div class="counter" id="counter">Flowers: 0</div>
-  </div>
-
-  <!-- Reset button in corner (hidden by default) -->
-  <button class="reset-corner-btn" id="resetCornerBtn">Reset & Add Flowers</button>
-
-  <!-- Heart overlay with romantic text -->
-  <div class="heart-overlay" id="heartOverlay" aria-hidden="true">
-    <div class="romance" role="status" aria-live="polite">
-      <h1 class="line1" id="romLine">Ye beloved 3omri — my heart doth ever bloom for thee</h1>
-      <p class="line2" id="romSub">At year's end, I pledge my constancy; thou art the blossom of my nights.</p>
-      <span class="sub">— With all my love</span>
-      
-      <!-- Heart action buttons -->
-      <div class="heart-buttons">
-        <a href="index.html" class="heart-btn home-btn">Home</a>
-        <button class="heart-btn reset-btn" id="resetHeartBtn">Add More Flowers</button>
-      </div>
+    <div class="container">
+        <canvas id="canvas"></canvas>
+        <div class="clean-btn">
+            clean the screen
+        </div>
     </div>
-  </div>
 
-  <!-- shaders and scripts -->
-  <script type="x-shader/x-vertex" id="vertexShader">
-    varying vec2 vUv;
-    void main() {
-      vUv = uv;
-      gl_Position = vec4(position, 1.0);
-    }
-  </script>
+    <div class="name">
+        Click To Add Flowers
+    </div>
 
-  <script type="x-shader/x-fragment" id="fragmentShader">
-    #define PI 3.14159265359
-    uniform float u_ratio;
-    uniform vec2 u_cursor;
-    uniform float u_stop_time;
-    uniform float u_clean;
-    uniform vec2 u_stop_randomizer;
-    uniform sampler2D u_texture;
-    varying vec2 vUv;
+    <div class="counter">
+        Flowers: <span id="flowerCount">0</span>/100
+    </div>
 
-    // Simple 2D noise helpers (same as you gave)
-    vec3 mod289(vec3 x){ return x - floor(x * (1.0 / 289.0)) * 289.0; }
-    vec2 mod289(vec2 x){ return x - floor(x * (1.0 / 289.0)) * 289.0; }
-    vec3 permute(vec3 x){ return mod289(((x*34.0)+1.0)*x); }
+    <div class="love-message" id="loveMessage">
+        baby , i love u sm , ya know nchb3ek fllowers ki nkon m3aki ? (:
+    </div>
 
-    float snoise(vec2 v) {
-      const vec4 C = vec4(0.211324865405187,0.366025403784439,-0.577350269189626,0.024390243902439);
-      vec2 i = floor(v + dot(v, C.yy));
-      vec2 x0 = v - i + dot(i, C.xx);
-      vec2 i1;
-      i1 = (x0.x > x0.y) ? vec2(1.0,0.0) : vec2(0.0,1.0);
-      vec4 x12 = x0.xyxy + C.xxzz;
-      x12.xy -= i1;
-      i = mod289(i);
-      vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
-      vec3 m = max(0.5 - vec3(dot(x0,x0), dot(x12.xy,x12.xy), dot(x12.zw,x12.zw)), 0.0);
-      m = m*m; m = m*m;
-      vec3 x = 2.0 * fract(p * C.www) - 1.0;
-      vec3 h = abs(x) - 0.5;
-      vec3 ox = floor(x + 0.5);
-      vec3 a0 = x - ox;
-      m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
-      vec3 g;
-      g.x = a0.x * x0.x + h.x * x0.y;
-      g.yz = a0.yz * x12.xz + h.yz * x12.yw;
-      return 130.0 * dot(m, g);
-    }
+    <script type="x-shader/x-fragment" id="fragmentShader">
+        #define PI 3.14159265359
 
-    float get_flower_shape(vec2 _p, float _pet_n, float _angle, float _outline) {
-      _angle *= 3.;
-      _p = vec2(_p.x * cos(_angle) - _p.y * sin(_angle), _p.x * sin(_angle) + _p.y * cos(_angle));
-      float a = atan(_p.y, _p.x);
-      float flower_sectoral_shape = pow(abs(sin(a * _pet_n)), .4) + .25;
-      vec2 flower_size_range = vec2(.03, .1);
-      float size = flower_size_range[0] + u_stop_randomizer[0] * flower_size_range[1];
-      float flower_radial_shape = pow(length(_p) / size, 2.);
-      flower_radial_shape -= .1 * sin(8. * a);
-      flower_radial_shape = max(.1, flower_radial_shape);
-      flower_radial_shape += smoothstep(0., 0.03, -_p.y + .2 * abs(_p.x));
-      float grow_time = step(.25, u_stop_time) * pow(u_stop_time, .3);
-      float flower_shape = 1. - smoothstep(0., flower_sectoral_shape, _outline * flower_radial_shape / grow_time);
-      flower_shape *= (1. - step(1., grow_time));
-      return flower_shape;
-    }
+        uniform float u_ratio;
+        uniform vec2 u_cursor;
+        uniform float u_stop_time;
+        uniform float u_clean;
+        uniform vec2 u_stop_randomizer;
 
-    float get_stem_shape(vec2 _p, vec2 _uv, float _w, float _angle) {
-      _w = max(.004, _w);
-      float x_offset = _p.y * sin(_angle);
-      x_offset *= pow(3. * _uv.y, 2.);
-      _p.x -= x_offset;
-      float noise_power = .5;
-      float cursor_horizontal_noise = noise_power * snoise(2. * _uv * u_stop_randomizer[0]);
-      cursor_horizontal_noise *= pow(dot(_p.y, _p.y), .6);
-      cursor_horizontal_noise *= pow(dot(_uv.y, _uv.y), .3);
-      _p.x += cursor_horizontal_noise;
-      float left = smoothstep(-_w, 0., _p.x);
-      float right = 1. - smoothstep(0., _w, _p.x);
-      float stem_shape = left * right;
-      float grow_time = 1. - smoothstep(0., .2, u_stop_time);
-      float stem_top_mask = smoothstep(0., pow(grow_time, .5), .03 -_p.y);
-      stem_shape *= stem_top_mask;
-      stem_shape *= (1. - step(.17, u_stop_time));
-      return stem_shape;
-    }
+        uniform sampler2D u_texture;
+        varying vec2 vUv;
 
-    void main() {
-      vec3 base = texture2D(u_texture, vUv).xyz;
-      vec2 uv = vUv;
-      uv.x *= u_ratio;
-      vec2 cursor = vUv - u_cursor.xy;
-      cursor.x *= u_ratio;
-      vec3 stem_color = vec3(.1 + u_stop_randomizer[0] * .6, .6, .2);
-      vec3 flower_color = vec3(.6 + .5 * u_stop_randomizer[1], .1, .9 - .5 * u_stop_randomizer[1]);
-      float angle = .5 * (u_stop_randomizer[0] - .5);
-      float stem_shape = get_stem_shape(cursor, uv, .003, angle);
-      stem_shape += get_stem_shape(cursor + vec2(0., .2 + .5 * u_stop_randomizer[0]), uv, .003, angle);
-      float stem_mask = 1. - get_stem_shape(cursor, uv, .004, angle);
-      stem_mask -= get_stem_shape(cursor + vec2(0., .2 + .5 * u_stop_randomizer[0]), uv, .004, angle);
-      float petals_back_number = 1. + floor(u_stop_randomizer[0] * 2.);
-      float angle_offset = -(2. * step(0., angle) - 1.) * .1 * u_stop_time;
-      float flower_back_shape = get_flower_shape(cursor, petals_back_number, angle + angle_offset, 1.5);
-      float flower_back_mask = 1. - get_flower_shape(cursor, petals_back_number, angle + angle_offset, 1.6);
-      float petals_front_number = 2. + floor(u_stop_randomizer[1] * 2.);
-      float flower_front_shape = get_flower_shape(cursor, petals_front_number, angle, 1.);
-      float flower_front_mask = 1. - get_flower_shape(cursor, petals_front_number, angle, .95);
-      vec3 color = base;
-      color *= stem_mask;
-      color *= flower_back_mask;
-      color *= flower_front_mask;
-      color += (stem_shape * stem_color);
-      color += (flower_back_shape * (flower_color + vec3(0., .8 * u_stop_time, 0.)));
-      color += (flower_front_shape * flower_color);
-      color.r *= 1. - (.5 * flower_back_shape * flower_front_shape);
-      color.b *= 1. - (flower_back_shape * flower_front_shape);
-      color *= u_clean;
-      gl_FragColor = vec4(color, 1.);
-    }
-  </script>
+        // --------------------------------
+        // 2D noise
 
-  <!-- Three.js from CDN -->
-  <script type="module">
-    import * as THREE from 'https://cdn.skypack.dev/three@0.133.1';
-
-    // DOM refs
-    const threeCanvas = document.getElementById('three-canvas');
-    const cleanBtn = document.getElementById('cleanBtn');
-    const counterEl = document.getElementById('counter');
-    const actionTitle = document.getElementById('actionTitle');
-    const moreBadge = document.getElementById('moreBadge');
-    const pinkWrap = document.getElementById('pink-wrap');
-    const heartOverlay = document.getElementById('heartOverlay');
-    const resetHeartBtn = document.getElementById('resetHeartBtn');
-    const resetCornerBtn = document.getElementById('resetCornerBtn');
-
-    // click/flower counter
-    let flowerCount = 0;
-
-    // pointer state for shader
-    const pointer = { x: 0.66, y: 0.5, clicked: false, vanishCanvas: false };
-
-    // Three.js scene + render targets
-    let renderer, sceneShader, sceneBasic, camera, clock;
-    let shaderMaterial, basicMaterial;
-    let renderTargets = [];
-
-    initThree();
-    animate();
-
-    // Start with subtle demo flower after load (not counted)
-    setTimeout(() => spawnFlower(0.75, 0.5, false), 700);
-
-    // pointer handlers (desktop + touch)
-    let isTouch = false;
-    window.addEventListener('click', (e) => {
-      if (!isTouch) handlePointer(e.clientX / window.innerWidth, e.clientY / window.innerHeight);
-    });
-    window.addEventListener('touchstart', (e) => {
-      isTouch = true;
-      e.preventDefault();
-      const t = e.touches[0];
-      handlePointer(t.clientX / window.innerWidth, t.clientY / window.innerHeight);
-    }, { passive:false });
-
-    function handlePointer(nx, ny) {
-      // If heart is showing, don't add flowers
-      if (heartStarted) return;
-      
-      // spawn flower at location and increment counter
-      spawnFlower(nx, ny, true);
-      flowerCount++;
-      counterEl.textContent = `Flowers: ${flowerCount}`;
-      updateTitleByCount();
-      // after 20 flowers, show heart overlay and start particle heart if not started
-      if (flowerCount === 20) {
-        showHeartSequence();
-      }
-    }
-
-    function updateTitleByCount() {
-      if (flowerCount === 0) {
-        actionTitle.textContent = 'Click To Add Flowers';
-        moreBadge.style.display = 'none';
-      } else if (flowerCount >= 1 && flowerCount < 10) {
-        actionTitle.textContent = 'Click To Add Flowers';
-        moreBadge.style.display = 'none';
-      } else if (flowerCount >= 10 && flowerCount < 20) {
-        // after 10
-        actionTitle.textContent = 'Click To Add Flowers';
-        moreBadge.style.display = 'inline-block';
-      } else {
-        // 20+ -> keep more hidden (heart shows)
-        actionTitle.textContent = 'Click To Add Flowers';
-        moreBadge.style.display = 'none';
-      }
-    }
-
-    cleanBtn.addEventListener('click', () => {
-      // clear render target texture by toggling vanish (shader multiplies by u_clean)
-      clearFlowers();
-      
-      // reset counters & UI and hide heart
-      flowerCount = 0;
-      counterEl.textContent = 'Flowers: 0';
-      updateTitleByCount();
-      hideHeartSequence();
-    });
-
-    // Reset button in heart overlay
-    resetHeartBtn.addEventListener('click', () => {
-      clearFlowers();
-      flowerCount = 0;
-      counterEl.textContent = 'Flowers: 0';
-      updateTitleByCount();
-      hideHeartSequence();
-      // Show the corner reset button
-      resetCornerBtn.classList.add('show');
-    });
-
-    // Reset button in corner
-    resetCornerBtn.addEventListener('click', () => {
-      clearFlowers();
-      flowerCount = 0;
-      counterEl.textContent = 'Flowers: 0';
-      updateTitleByCount();
-      hideHeartSequence();
-      // Hide the corner reset button after resetting
-      resetCornerBtn.classList.remove('show');
-    });
-
-    // Spawn flower helper: sets pointer and click flag for shader to render flower into persistent render target
-    function spawnFlower(normX, normY, countThisClick=true) {
-      pointer.x = normX;
-      pointer.y = normY;
-      pointer.clicked = true;
-    }
-
-    // Clear all flowers from canvas
-    function clearFlowers() {
-      pointer.vanishCanvas = true;
-      setTimeout(() => { pointer.vanishCanvas = false; }, 60);
-    }
-
-    // --- Three.js initialization & rendering (adopted & simplified from your code) ---
-    function initThree() {
-      renderer = new THREE.WebGLRenderer({ canvas: threeCanvas, alpha:true, antialias:true });
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
-      renderer.setSize(window.innerWidth, window.innerHeight);
-
-      sceneShader = new THREE.Scene();
-      sceneBasic = new THREE.Scene();
-      camera = new THREE.OrthographicCamera(-1,1,1,-1,0,10);
-      clock = new THREE.Clock();
-
-      // create render targets for feedback (persisting drawn flowers)
-      renderTargets = [
-        new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight),
-        new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight)
-      ];
-
-      // shader material
-      shaderMaterial = new THREE.ShaderMaterial({
-        uniforms: {
-          u_stop_time: { value: 0 },
-          u_stop_randomizer: { value: new THREE.Vector2(Math.random(), Math.random()) },
-          u_cursor: { value: new THREE.Vector2(pointer.x, pointer.y) },
-          u_ratio: { value: window.innerWidth / window.innerHeight },
-          u_texture: { value: null },
-          u_clean: { value: 1 }
-        },
-        vertexShader: document.getElementById('vertexShader').textContent,
-        fragmentShader: document.getElementById('fragmentShader').textContent,
-        transparent: true
-      });
-
-      basicMaterial = new THREE.MeshBasicMaterial({ transparent:true });
-
-      const planeGeometry = new THREE.PlaneGeometry(2,2);
-      const planeBasic = new THREE.Mesh(planeGeometry, basicMaterial);
-      const planeShader = new THREE.Mesh(planeGeometry, shaderMaterial);
-
-      sceneBasic.add(planeBasic);
-      sceneShader.add(planeShader);
-
-      window.addEventListener('resize', onResize);
-    }
-
-    function onResize() {
-      const w = window.innerWidth, h = window.innerHeight;
-      renderer.setSize(w, h);
-      shaderMaterial.uniforms.u_ratio.value = w / h;
-      renderTargets.forEach(t => t.setSize(w, h));
-    }
-
-    function animate() {
-      requestAnimationFrame(animate);
-
-      shaderMaterial.uniforms.u_clean.value = pointer.vanishCanvas ? 0 : 1;
-      shaderMaterial.uniforms.u_texture.value = renderTargets[0].texture;
-
-      if (pointer.clicked) {
-        shaderMaterial.uniforms.u_cursor.value = new THREE.Vector2(pointer.x, 1 - pointer.y);
-        shaderMaterial.uniforms.u_stop_randomizer.value = new THREE.Vector2(Math.random(), Math.random());
-        shaderMaterial.uniforms.u_stop_time.value = 0;
-        pointer.clicked = false;
-      }
-
-      shaderMaterial.uniforms.u_stop_time.value += clock.getDelta();
-
-      // Render to offscreen target then to screen (feedback)
-      renderer.setRenderTarget(renderTargets[1]);
-      renderer.render(sceneShader, camera);
-
-      basicMaterial.map = renderTargets[1].texture;
-      basicMaterial.needsUpdate = true;
-
-      renderer.setRenderTarget(null);
-      renderer.render(sceneBasic, camera);
-
-      // swap targets
-      const tmp = renderTargets[0]; renderTargets[0] = renderTargets[1]; renderTargets[1] = tmp;
-    }
-
-    // --- Heart sequence control ---
-    let heartStarted = false;
-    function showHeartSequence() {
-      if (heartStarted) return;
-      heartStarted = true;
-      
-      // Clear all flowers before showing the heart
-      clearFlowers();
-      
-      // reveal pink canvas container
-      pinkWrap.style.display = 'block';
-      // show overlay text after short delay for effect
-      setTimeout(() => heartOverlay.classList.add('show'), 420);
-      // start particle heart animation
-      startPinkboard();
-      
-      // Update title to indicate heart is showing
-      actionTitle.textContent = 'Heart Appears!';
-      actionTitle.style.color = '#ffb0d8';
-      
-      // Hide the "more!" badge
-      moreBadge.style.display = 'none';
-      
-      // Show the corner reset button
-      resetCornerBtn.classList.add('show');
-    }
-    function hideHeartSequence() {
-      if (!heartStarted) return;
-      heartStarted = false;
-      heartOverlay.classList.remove('show');
-      pinkWrap.style.display = 'none';
-      stopPinkboard();
-      
-      // Reset title style
-      actionTitle.style.color = '';
-      updateTitleByCount();
-      
-      // Hide corner reset button
-      resetCornerBtn.classList.remove('show');
-    }
-
-    // Expose so console can trigger easy debugging
-    window._flowerControls = { spawnFlower, showHeartSequence, hideHeartSequence, clearFlowers };
-
-    // end of three.js module
-  </script>
-
-  <!-- Particle heart script (keeps itself paused until startPinkboard called) -->
-  <script>
-    // This block is adapted from the heart particle code you provided.
-    (function(){
-      const canvas = document.getElementById('pinkboard');
-      const wrap = document.getElementById('pink-wrap');
-      let ctx = canvas.getContext('2d');
-      let requestId = null;
-      let time = null;
-
-      // particle system settings
-      const settings = {
-        particles: {
-          length: 500,
-          duration: 2,
-          velocity: 100,
-          effect: -0.75,
-          size: 30
-        }
-      };
-
-      // Point & Particle & Pool classes (same as your code, slightly encapsulated)
-      function Point(x,y){ this.x = x||0; this.y = y||0; }
-      Point.prototype.clone = function(){ return new Point(this.x,this.y); }
-      Point.prototype.length = function(length){
-        if (typeof length === 'undefined') return Math.sqrt(this.x*this.x + this.y*this.y);
-        this.normalize(); this.x *= length; this.y *= length; return this;
-      }
-      Point.prototype.normalize = function(){
-        var l = Math.sqrt(this.x*this.x + this.y*this.y) || 1; this.x/=l; this.y/=l; return this;
-      }
-
-      function Particle(){
-        this.position = new Point();
-        this.velocity = new Point();
-        this.acceleration = new Point();
-        this.age = 0;
-      }
-      Particle.prototype.initialize = function(x,y,dx,dy){
-        this.position.x = x; this.position.y = y;
-        this.velocity.x = dx; this.velocity.y = dy;
-        this.acceleration.x = dx * settings.particles.effect;
-        this.acceleration.y = dy * settings.particles.effect;
-        this.age = 0;
-      }
-      Particle.prototype.update = function(deltaTime){
-        this.position.x += this.velocity.x * deltaTime;
-        this.position.y += this.velocity.y * deltaTime;
-        this.velocity.x += this.acceleration.x * deltaTime;
-        this.velocity.y += this.acceleration.y * deltaTime;
-        this.age += deltaTime;
-      }
-      Particle.prototype.draw = function(context,image){
-        function ease(t){ return --t * t * t + 1; }
-        let size = image.width * ease(this.age / settings.particles.duration);
-        context.globalAlpha = Math.max(0, 1 - this.age / settings.particles.duration);
-        context.drawImage(image, this.position.x - size/2, this.position.y - size/2, size, size);
-      }
-
-      function ParticlePool(length){
-        this.particles = new Array(length);
-        for (let i=0;i<length;i++) this.particles[i] = new Particle();
-        this.firstActive = 0; this.firstFree = 0;
-        this.duration = settings.particles.duration;
-      }
-      ParticlePool.prototype.add = function(x,y,dx,dy){
-        this.particles[this.firstFree].initialize(x,y,dx,dy);
-        this.firstFree++;
-        if (this.firstFree === this.particles.length) this.firstFree = 0;
-        if (this.firstActive === this.firstFree) { this.firstActive++; if (this.firstActive === this.particles.length) this.firstActive = 0; }
-      }
-      ParticlePool.prototype.update = function(deltaTime){
-        let p = this.particles;
-        if (this.firstActive < this.firstFree) {
-          for (let i=this.firstActive;i<this.firstFree;i++) p[i].update(deltaTime);
-        }
-        if (this.firstFree < this.firstActive) {
-          for (let i=this.firstActive;i<p.length;i++) p[i].update(deltaTime);
-          for (let i=0;i<this.firstFree;i++) p[i].update(deltaTime);
-        }
-        while (p[this.firstActive].age >= this.duration && this.firstActive != this.firstFree) {
-          this.firstActive++;
-          if (this.firstActive === p.length) this.firstActive = 0;
-        }
-      }
-      ParticlePool.prototype.draw = function(context,image){
-        let p = this.particles;
-        if (this.firstActive < this.firstFree) {
-          for (let i=this.firstActive;i<this.firstFree;i++) p[i].draw(context,image);
-        }
-        if (this.firstFree < this.firstActive) {
-          for (let i=this.firstActive;i<p.length;i++) p[i].draw(context,image);
-          for (let i=0;i<this.firstFree;i++) p[i].draw(context,image);
-        }
-      }
-
-      // heart param function
-      function pointOnHeart(t){
-        return new Point(
-          160 * Math.pow(Math.sin(t), 3),
-          130 * Math.cos(t) - 50 * Math.cos(2*t) - 20 * Math.cos(3*t) - 10 * Math.cos(4*t) + 25
-        );
-      }
-
-      // create particle image
-      let particleImage = (function(){
-        const c = document.createElement('canvas');
-        const s = settings.particles.size;
-        c.width = s; c.height = s;
-        const cx = c.getContext('2d');
-        function to(t){
-          const pt = pointOnHeart(t);
-          pt.x = s/2 + (pt.x * s) / 350;
-          pt.y = s/2 - (pt.y * s) / 350;
-          return pt;
-        }
-        cx.beginPath();
-        let t = -Math.PI; let p = to(t);
-        cx.moveTo(p.x,p.y);
-        while (t < Math.PI) {
-          t += 0.01;
-          p = to(t);
-          cx.lineTo(p.x,p.y);
-        }
-        cx.closePath();
-        cx.fillStyle = '#ffb0d8';
-        cx.fill();
-        const img = new Image();
-        img.src = c.toDataURL();
-        return img;
-      })();
-
-      // pool
-      const pool = new ParticlePool(settings.particles.length);
-      let particleRate = settings.particles.length / settings.particles.duration;
-
-      // render loop
-      function renderLoop() {
-        requestId = requestAnimationFrame(renderLoop);
-        let newTime = Date.now()/1000;
-        let deltaTime = newTime - (time || newTime);
-        time = newTime;
-
-        ctx.clearRect(0,0,canvas.width,canvas.height);
-
-        // create new particles
-        let amount = particleRate * deltaTime;
-        for (let i=0;i<amount;i++){
-          let pos = pointOnHeart(Math.PI - 2*Math.PI*Math.random());
-          let dir = pos.clone().length(settings.particles.velocity);
-          pool.add(canvas.width/2 + pos.x, canvas.height/2 - pos.y, dir.x, -dir.y);
+        vec3 mod289(vec3 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec2 mod289(vec2 x) { return x - floor(x * (1.0 / 289.0)) * 289.0; }
+        vec3 permute(vec3 x) { return mod289(((x*34.0)+1.0)*x); }
+        float snoise(vec2 v) {
+            const vec4 C = vec4(0.211324865405187, 0.366025403784439, -0.577350269189626, 0.024390243902439);
+            vec2 i = floor(v + dot(v, C.yy));
+            vec2 x0 = v - i + dot(i, C.xx);
+            vec2 i1;
+            i1 = (x0.x > x0.y) ? vec2(1.0, 0.0) : vec2(0.0, 1.0);
+            vec4 x12 = x0.xyxy + C.xxzz;
+            x12.xy -= i1;
+            i = mod289(i);
+            vec3 p = permute(permute(i.y + vec3(0.0, i1.y, 1.0)) + i.x + vec3(0.0, i1.x, 1.0));
+            vec3 m = max(0.5 - vec3(dot(x0, x0), dot(x12.xy, x12.xy), dot(x12.zw, x12.zw)), 0.0);
+            m = m*m;
+            m = m*m;
+            vec3 x = 2.0 * fract(p * C.www) - 1.0;
+            vec3 h = abs(x) - 0.5;
+            vec3 ox = floor(x + 0.5);
+            vec3 a0 = x - ox;
+            m *= 1.79284291400159 - 0.85373472095314 * (a0*a0 + h*h);
+            vec3 g;
+            g.x = a0.x * x0.x + h.x * x0.y;
+            g.yz = a0.yz * x12.xz + h.yz * x12.yw;
+            return 130.0 * dot(m, g);
         }
 
-        pool.update(deltaTime);
-        pool.draw(ctx, particleImage);
-      }
 
-      function resize() {
-        canvas.width = canvas.clientWidth;
-        canvas.height = canvas.clientHeight;
-      }
-      window.addEventListener('resize', resize);
+        float get_flower_shape(vec2 _p, float _pet_n, float _angle, float _outline) {
+            _angle *= 3.;
 
-      // start/stop functions exposed to page
-      window.startPinkboard = function(){
-        // ensure visible & sized
-        wrap.style.display = 'block';
-        resize();
-        if (!requestId) {
-          time = null;
-          requestId = requestAnimationFrame(renderLoop);
+            _p = vec2(_p.x * cos(_angle) - _p.y * sin(_angle),
+            _p.x * sin(_angle) + _p.y * cos(_angle));
+
+            float a = atan(_p.y, _p.x);
+
+            float flower_sectoral_shape = pow(abs(sin(a * _pet_n)), .4) + .25;
+
+            vec2 flower_size_range = vec2(.03, .1);
+            float size = flower_size_range[0] + u_stop_randomizer[0] * flower_size_range[1];
+
+            float flower_radial_shape = pow(length(_p) / size, 2.);
+            flower_radial_shape -= .1 * sin(8. * a); // add noise
+            flower_radial_shape = max(.1, flower_radial_shape);
+            flower_radial_shape += smoothstep(0., 0.03, -_p.y + .2 * abs(_p.x));
+
+            float grow_time = step(.25, u_stop_time) * pow(u_stop_time, .3);
+            float flower_shape = 1. - smoothstep(0., flower_sectoral_shape, _outline * flower_radial_shape / grow_time);
+
+            flower_shape *= (1. - step(1., grow_time));
+
+            return flower_shape;
         }
-      };
-      window.stopPinkboard = function(){
-        if (requestId) { cancelAnimationFrame(requestId); requestId = null; }
-        // clear canvas visually and hide container
-        ctx && ctx.clearRect(0,0,canvas.width,canvas.height);
-        wrap.style.display = 'none';
-      };
 
-      // Initially don't run (startPinkboard called by Three module when needed)
-      // Expose for debugging
-      window._pink = { start: window.startPinkboard, stop: window.stopPinkboard };
-    })();
-  </script>
+        float get_stem_shape(vec2 _p, vec2 _uv, float _w, float _angle) {
+
+            _w = max(.004, _w);
+            
+            float x_offset = _p.y * sin(_angle);
+            x_offset *= pow(3. * _uv.y, 2.);
+            _p.x -= x_offset;
+
+            // add horizontal noise to the cursor coordinale
+            float noise_power = .5;
+            float cursor_horizontal_noise = noise_power * snoise(2. * _uv * u_stop_randomizer[0]);
+            cursor_horizontal_noise *= pow(dot(_p.y, _p.y), .6);// moise to be zero at cursor
+            cursor_horizontal_noise *= pow(dot(_uv.y, _uv.y), .3);// moise to be zero at bottom
+            _p.x += cursor_horizontal_noise;
+
+            // vertical line through the cursor point (_p.x)
+            float left = smoothstep(-_w, 0., _p.x);
+            float right = 1. - smoothstep(0., _w, _p.x);
+            float stem_shape = left * right;
+
+            // make it grow + don't go up to the cursor point
+            float grow_time = 1. - smoothstep(0., .2, u_stop_time);
+            float stem_top_mask = smoothstep(0., pow(grow_time, .5), .03 -_p.y);
+            stem_shape *= stem_top_mask;
+
+            // stop drawing once done
+            stem_shape *= (1. - step(.17, u_stop_time));
+
+            return stem_shape;
+        }
+
+        void main() {
+
+            vec3 base = texture2D(u_texture, vUv).xyz;
+
+            vec2 uv = vUv;
+            uv.x *= u_ratio;
+            vec2 cursor = vUv - u_cursor.xy;
+            cursor.x *= u_ratio;
+            
+            vec3 stem_color = vec3(.1 + u_stop_randomizer[0] * .6, .6, .2);
+            vec3 flower_color = vec3(.6 + .5 * u_stop_randomizer[1], .1, .9 - .5 * u_stop_randomizer[1]);
+
+            float angle = .5 * (u_stop_randomizer[0] - .5);
+
+            float stem_shape = get_stem_shape(cursor, uv, .003, angle);
+            stem_shape += get_stem_shape(cursor + vec2(0., .2 + .5 * u_stop_randomizer[0]), uv, .003, angle);
+            float stem_mask = 1. - get_stem_shape(cursor, uv, .004, angle);
+            stem_mask -= get_stem_shape(cursor + vec2(0., .2 + .5 * u_stop_randomizer[0]), uv, .004, angle);
+
+            float petals_back_number = 1. + floor(u_stop_randomizer[0] * 2.);
+            float angle_offset = -(2. * step(0., angle) - 1.) * .1 * u_stop_time;
+            float flower_back_shape = get_flower_shape(cursor, petals_back_number, angle + angle_offset, 1.5);
+            float flower_back_mask = 1. - get_flower_shape(cursor, petals_back_number, angle + angle_offset, 1.6);
+
+            float petals_front_number = 2. + floor(u_stop_randomizer[1] * 2.);
+            float flower_front_shape = get_flower_shape(cursor, petals_front_number, angle, 1.);
+            float flower_front_mask = 1. - get_flower_shape(cursor, petals_front_number, angle, .95);
+
+            vec3 color = base;
+            color *= stem_mask;
+            color *= flower_back_mask;
+            color *= flower_front_mask;
+
+            color += (stem_shape * stem_color);
+
+            color += (flower_back_shape * (flower_color + vec3(0., .8 * u_stop_time, 0.)));
+            color += (flower_front_shape * flower_color);
+
+            color.r *= 1. - (.5 * flower_back_shape * flower_front_shape);
+            color.b *= 1. - (flower_back_shape * flower_front_shape);
+
+            color *= u_clean;
+
+            gl_FragColor = vec4(color, 1.);
+        }
+    </script>
+
+    <script type="x-shader/x-vertex" id="vertexShader">
+        varying vec2 vUv;
+        void main() {
+            vUv = uv;
+            gl_Position = vec4(position, 1.);
+        }
+    </script>
+
+    <script type="module">
+        import * as THREE from 'https://cdn.skypack.dev/three@0.133.1/build/three.module'
+
+        const canvasEl = document.querySelector('#canvas')
+        const cleanBtn = document.querySelector('.clean-btn')
+        const flowerCountEl = document.querySelector('#flowerCount')
+        const nameEl = document.querySelector('.name')
+        const loveMessageEl = document.querySelector('#loveMessage')
+
+        const pointer = {
+            x: 0.66,
+            y: 0.3,
+            clicked: true,
+        }
+
+        // Flower counter
+        let flowerCount = 0
+        let maxFlowers = 100
+        let messageShown = false
+
+        // for codepen preview
+        window.setTimeout(() => {
+            pointer.x = 0.75
+            pointer.y = 0.5
+            pointer.clicked = true
+        }, 700)
+
+        let basicMaterial, shaderMaterial
+        let renderer = new THREE.WebGLRenderer({
+            canvas: canvasEl,
+            alpha: true,
+        })
+        renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
+        let sceneShader = new THREE.Scene()
+        let sceneBasic = new THREE.Scene()
+        let camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 10)
+        let clock = new THREE.Clock()
+
+        let renderTargets = [
+            new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight),
+            new THREE.WebGLRenderTarget(window.innerWidth, window.innerHeight),
+        ]
+
+        createPlane()
+        updateSize()
+
+        window.addEventListener('resize', () => {
+            updateSize()
+            cleanCanvas()
+        })
+
+        render()
+
+        let isTouchScreen = false
+
+        window.addEventListener('click', e => {
+            if (!isTouchScreen && !messageShown) {
+                pointer.x = e.pageX / window.innerWidth
+                pointer.y = e.pageY / window.innerHeight
+                pointer.clicked = true
+                
+                // Increment flower count
+                flowerCount++
+                flowerCountEl.textContent = flowerCount
+                
+                // Check if we reached 100 flowers
+                if (flowerCount >= maxFlowers && !messageShown) {
+                    showLoveMessage()
+                }
+            }
+        })
+        
+        window.addEventListener('touchstart', e => {
+            if (!messageShown) {
+                isTouchScreen = true
+                pointer.x = e.targetTouches[0].pageX / window.innerWidth
+                pointer.y = e.targetTouches[0].pageY / window.innerHeight
+                pointer.clicked = true
+                
+                // Increment flower count
+                flowerCount++
+                flowerCountEl.textContent = flowerCount
+                
+                // Check if we reached 100 flowers
+                if (flowerCount >= maxFlowers && !messageShown) {
+                    showLoveMessage()
+                }
+            }
+        })
+
+        cleanBtn.addEventListener('click', cleanCanvas)
+
+        function cleanCanvas() {
+            pointer.vanishCanvas = true
+            flowerCount = 0
+            flowerCountEl.textContent = flowerCount
+            messageShown = false
+            loveMessageEl.style.opacity = 0
+            nameEl.style.opacity = 1
+            
+            setTimeout(() => {
+                pointer.vanishCanvas = false
+            }, 50)
+        }
+
+        function showLoveMessage() {
+            messageShown = true
+            nameEl.style.opacity = 0
+            loveMessageEl.style.opacity = 1
+            
+            // Hide message after 10 seconds
+            setTimeout(() => {
+                loveMessageEl.style.opacity = 0
+                nameEl.style.opacity = 1
+                messageShown = false
+            }, 10000)
+        }
+
+        function createPlane() {
+            shaderMaterial = new THREE.ShaderMaterial({
+                uniforms: {
+                    u_stop_time: { type: 'f', value: 0 },
+                    u_stop_randomizer: {
+                        type: 'v2',
+                        value: new THREE.Vector2(Math.random(), Math.random()),
+                    },
+                    u_cursor: { type: 'v2', value: new THREE.Vector2(pointer.x, pointer.y) },
+                    u_ratio: { type: 'f', value: window.innerWidth / window.innerHeight },
+                    u_texture: { type: 't', value: null },
+                    u_clean: { type: 'f', value: 1 },
+                },
+                vertexShader: document.getElementById('vertexShader').textContent,
+                fragmentShader: document.getElementById('fragmentShader').textContent,
+            })
+            basicMaterial = new THREE.MeshBasicMaterial()
+            const planeGeometry = new THREE.PlaneGeometry(2, 2)
+            const planeBasic = new THREE.Mesh(planeGeometry, basicMaterial)
+            const planeShader = new THREE.Mesh(planeGeometry, shaderMaterial)
+            sceneBasic.add(planeBasic)
+            sceneShader.add(planeShader)
+        }
+
+        function render() {
+            shaderMaterial.uniforms.u_clean.value = pointer.vanishCanvas ? 0 : 1
+            shaderMaterial.uniforms.u_texture.value = renderTargets[0].texture
+
+            if (pointer.clicked) {
+                shaderMaterial.uniforms.u_cursor.value = new THREE.Vector2(
+                    pointer.x,
+                    1 - pointer.y
+                )
+                shaderMaterial.uniforms.u_stop_randomizer.value = new THREE.Vector2(
+                    Math.random(),
+                    Math.random()
+                )
+                shaderMaterial.uniforms.u_stop_time.value = 0
+                pointer.clicked = false
+            }
+            shaderMaterial.uniforms.u_stop_time.value += clock.getDelta()
+
+            renderer.setRenderTarget(renderTargets[1])
+            renderer.render(sceneShader, camera)
+            basicMaterial.map = renderTargets[1].texture
+            renderer.setRenderTarget(null)
+            renderer.render(sceneBasic, camera)
+
+            let tmp = renderTargets[0]
+            renderTargets[0] = renderTargets[1]
+            renderTargets[1] = tmp
+
+            requestAnimationFrame(render)
+        }
+
+        function updateSize() {
+            shaderMaterial.uniforms.u_ratio.value = window.innerWidth / window.innerHeight
+            renderer.setSize(window.innerWidth, window.innerHeight)
+        }
+    </script>
 </body>
 </html>
